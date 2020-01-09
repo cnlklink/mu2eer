@@ -23,6 +23,11 @@ using namespace std;
 static const unsigned int WAVEFORM_MAX = 512;
 
 /**
+ * ADCDevice object
+ */
+static ADCDevice DEVICE;
+
+/**
  * Waveform Test Buffer
  */
 static float WAVEFORM_BUF[WAVEFORM_MAX];
@@ -36,7 +41,7 @@ TEST_GROUP( WaveformGroup )
 {
   void setup()
   {
-    // Reset the waveform buffer to all 999.99's
+    // Reset the waveform buffer to all INFINITY!
     for( unsigned int i = 0; i != WAVEFORM_MAX; i++ )
       {
         WAVEFORM_BUF[i] = INFINITY;
@@ -62,8 +67,7 @@ TEST( WaveformGroup, ReadFirstValueTest )
   ReqInfo request;
 
   // Read one value
-  ADCDevice device;
-  device.waveformRead( dest, &request );
+  DEVICE.waveformRead( dest, &request );
 
   // Test
   CHECK( !isinf( dest[0] ) );
@@ -83,8 +87,7 @@ TEST( WaveformGroup, ReadMultipleValuesTest )
   ReqInfo request;
 
   // Read WAVEFORM_MAX values
-  ADCDevice device;
-  device.waveformRead( dest, &request );
+  DEVICE.waveformRead( dest, &request );
 
   // Test
   for( unsigned int i = 0; i != WAVEFORM_MAX; i++ )
