@@ -23,6 +23,14 @@ namespace Mu2eER
      * Constructor
      */
     ADCDevice();
+
+    /**
+     * Reading Property for Waveform data
+     *
+     * @param dest ACNET destination buffer
+     * @param req ACNET request object
+     */
+    void waveformRead( Array<float>& dest, ReqInfo const* reqinfo __attribute((unused)) );
     
   private:
   };

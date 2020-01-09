@@ -8,6 +8,12 @@
 
 #include "CppUTest/TestHarness.h"
 
+#include "ADCDevice.H"
+
+using namespace Mu2eER;
+using namespace FFF;
+using namespace std;
+
 /**
  * WaveformGroup
  *
@@ -22,7 +28,20 @@ TEST_GROUP( WaveformGroup )
  *
  * Tests the reading property for the Waveform attribute.
  */
-TEST( WaveformGroup, ReadTest )
+TEST( WaveformGroup, ReadFirstValueTest )
 {
-  FAIL( "tbd" );
+  // Create destination buffer
+  float buf[1];
+  Array<float> dest( buf, Index( 0 ), Count( 1 ) );
+  dest[0] = 999.99;
+
+  // Create a request object
+  ReqInfo request;
+
+  // Read one value
+  ADCDevice device;
+  device.waveformRead( dest, &request );
+
+  // Test
+  CHECK_EQUAL( 0.0, dest[0] );
 }
