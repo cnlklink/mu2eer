@@ -28,6 +28,19 @@ static ADCDevice DEVICE;
 static float WAVEFORM_BUF[ADCDevice::WAVEFORM_MAX];
 
 /**
+ * Reset Waveform Buffer
+ *
+ * Sets every element in WAVEFORM_BUF to INFINITY.
+ */
+static void _bufferReset()
+{
+  for( unsigned int i = 0; i != ADCDevice::WAVEFORM_MAX; i++ )
+    {
+      WAVEFORM_BUF[i] = INFINITY;
+    }
+}
+
+/**
  * WaveformGroup
  *
  * Tests related to the Waveform attribute.
@@ -36,11 +49,7 @@ TEST_GROUP( WaveformGroup )
 {
   void setup()
   {
-    // Reset the waveform buffer to all INFINITY!
-    for( unsigned int i = 0; i != ADCDevice::WAVEFORM_MAX; i++ )
-      {
-        WAVEFORM_BUF[i] = INFINITY;
-      }
+    _bufferReset();
   }
 
   void teardown()
