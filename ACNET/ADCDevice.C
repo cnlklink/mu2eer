@@ -18,6 +18,7 @@ ADCDevice::ADCDevice()
 
 void ADCDevice::waveformRead( Array<float>& dest, ReqInfo const* reqinfo __attribute((unused)) )
 {
+  dest[0] = 0.0;
   for( unsigned int i = 0; i != dest.total.getValue(); i++ )
     {
       dest[i] = i * 1.1;
