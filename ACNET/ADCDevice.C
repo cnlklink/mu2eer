@@ -19,8 +19,15 @@ ADCDevice::ADCDevice()
 void ADCDevice::waveformRead( Array<float>& dest, ReqInfo const* reqinfo __attribute((unused)) )
 {
   dest[0] = 0.0;
-  for( unsigned int i = 0; i != dest.total.getValue(); i++ )
+  for( unsigned int i = 0, j = dest.offset.getValue(); 
+       i != dest.total.getValue(); 
+       i++, j++ )
     {
+      if( j >= WAVEFORM_MAX )
+        {
+          throw runtime_error( "Request out of bounds" );
+        }
+
       dest[i] = i * 1.1;
     }
 }

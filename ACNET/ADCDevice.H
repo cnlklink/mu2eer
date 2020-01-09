@@ -20,6 +20,11 @@ namespace Mu2eER
   {
   public:
     /**
+     * Size of the ADC waveform buffer
+     */
+    static const unsigned int WAVEFORM_MAX = 512;
+
+    /**
      * Constructor
      */
     ADCDevice();

@@ -18,11 +18,6 @@ using namespace FFF;
 using namespace std;
 
 /**
- * Size of the Waveform Test Buffer
- */
-static const unsigned int WAVEFORM_MAX = 512;
-
-/**
  * ADCDevice object
  */
 static ADCDevice DEVICE;
@@ -30,7 +25,7 @@ static ADCDevice DEVICE;
 /**
  * Waveform Test Buffer
  */
-static float WAVEFORM_BUF[WAVEFORM_MAX];
+static float WAVEFORM_BUF[ADCDevice::WAVEFORM_MAX];
 
 /**
  * WaveformGroup
@@ -42,7 +37,7 @@ TEST_GROUP( WaveformGroup )
   void setup()
   {
     // Reset the waveform buffer to all INFINITY!
-    for( unsigned int i = 0; i != WAVEFORM_MAX; i++ )
+    for( unsigned int i = 0; i != ADCDevice::WAVEFORM_MAX; i++ )
       {
         WAVEFORM_BUF[i] = INFINITY;
       }
@@ -74,14 +69,14 @@ TEST( WaveformGroup, ReadFirstValueTest )
 }
 
 /**
- * WaveformGroup / Read Multiple Test
+ * WaveformGroup / Read All Test
  *
- * Tests that the reading property returns multiple values for the Waveform attribute.
+ * Tests that the reading property returns all values for the Waveform attribute.
  */
-TEST( WaveformGroup, ReadMultipleValuesTest )
+TEST( WaveformGroup, ReadAllValuesTest )
 {
   // Create destination buffer
-  Array<float> dest( WAVEFORM_BUF, Index( 0 ), Count( WAVEFORM_MAX ) );
+  Array<float> dest( WAVEFORM_BUF, Index( 0 ), Count( ADCDevice::WAVEFORM_MAX ) );
 
   // Create a request object
   ReqInfo request;
@@ -90,8 +85,81 @@ TEST( WaveformGroup, ReadMultipleValuesTest )
   DEVICE.waveformRead( dest, &request );
 
   // Test
-  for( unsigned int i = 0; i != WAVEFORM_MAX; i++ )
+  for( unsigned int i = 0; i != ADCDevice::WAVEFORM_MAX; i++ )
     {
       CHECK( !isinf( dest[i] ) );
     }
+}
+
+/**
+ * WaveformGroup / Read Some from Middle Test
+ *
+ * Tests that the reading property handles a requests for a slice of the waveform from the middle.
+ */
+TEST( WaveformGroup, ReadSomeValuesInMiddleTest )
+{
+  // Create a request object
+  ReqInfo request;
+
+  // Read multiple values from an offset of 100 into the waveform
+  Array<float> dest( WAVEFORM_BUF, Index( 100 ), Count( 100 ) );
+  DEVICE.waveformRead( dest, &request );
+
+  // Test
+  for( unsigned int i = 0; i != dest.total.getValue(); i++ )
+    {
+      CHECK( !isinf( dest[i] ) );
+    }
+}
+
+/**
+ * WaveformGroup / Read Some to End Test
+ *
+ * Tests that the reading property handles a request for a slice of the waveform up to the end.
+ */
+TEST( WaveformGroup, ReadSomeValuesToEndTest )
+{
+  // Create a request object
+  ReqInfo request;
+
+  // Read multiple values just up to the end of the waveform
+  Array<float> dest( WAVEFORM_BUF, Index( ADCDevice::WAVEFORM_MAX - 10 ), Count( 10 ) );
+  DEVICE.waveformRead( dest, &request );
+
+  // Test
+  for( unsigned int i = 0; i != dest.total.getValue(); i++ )
+    {
+      CHECK( !isinf( dest[i] ) );
+    }
+}
+
+/**
+ * WaveformGroup / Read Invalid Offset/Count Test
+ *
+ * Tests that the reading property handles requests with invalid index & count parameters.
+ */
+TEST( WaveformGroup, ReadOutOfBoundsValuesTest )
+{
+  // Create a request object
+  ReqInfo request;
+
+  try
+    {
+      // Create destination buffer with an Index outside of the expected range and read 
+      // waveform data
+      Array<float> destA( WAVEFORM_BUF, Index( ADCDevice::WAVEFORM_MAX + 1 ), Count( 1 ) );
+      DEVICE.waveformRead( destA, &request );
+
+      // Offset is within range but count extends out of range
+      Array<float> destB( WAVEFORM_BUF, Index( 1 ), Count( ADCDevice::WAVEFORM_MAX ) );
+      DEVICE.waveformRead( destB, &request );
+    }
+  catch( runtime_error e )
+    {
+      // Expected runtime_error to be thrown
+      return;
+    }
+
+  // Test
+  FAIL( "should have thrown runtime_error" );
 }
