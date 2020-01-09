@@ -134,11 +134,11 @@ TEST( WaveformGroup, ReadSomeValuesToEndTest )
 }
 
 /**
- * WaveformGroup / Read Invalid Offset/Count Test
+ * WaveformGroup / Read Out-of-Bounds Offset Test
  *
  * Tests that the reading property handles requests with invalid index & count parameters.
  */
-TEST( WaveformGroup, ReadOutOfBoundsValuesTest )
+TEST( WaveformGroup, ReadOutOfBoundsOffsetTest )
 {
   // Create a request object
   ReqInfo request;
@@ -147,12 +147,34 @@ TEST( WaveformGroup, ReadOutOfBoundsValuesTest )
     {
       // Create destination buffer with an Index outside of the expected range and read 
       // waveform data
-      Array<float> destA( WAVEFORM_BUF, Index( ADCDevice::WAVEFORM_MAX + 1 ), Count( 1 ) );
-      DEVICE.waveformRead( destA, &request );
+      Array<float> dest( WAVEFORM_BUF, Index( ADCDevice::WAVEFORM_MAX + 1 ), Count( 1 ) );
+      DEVICE.waveformRead( dest, &request );
+    }
+  catch( runtime_error e )
+    {
+      // Expected runtime_error to be thrown
+      return;
+    }
 
+  // Test
+  FAIL( "should have thrown runtime_error" );
+}
+
+/**
+ * WaveformGroup / Read Out-of-Bounds Count Test
+ *
+ * Tests that the reading property handles requests with an out-of-bounds count parameter.
+ */
+TEST( WaveformGroup, ReadOutOfBoundsCountTest )
+{
+  // Create a request object
+  ReqInfo request;
+
+  try
+    {
       // Offset is within range but count extends out of range
-      Array<float> destB( WAVEFORM_BUF, Index( 1 ), Count( ADCDevice::WAVEFORM_MAX ) );
-      DEVICE.waveformRead( destB, &request );
+      Array<float> dest( WAVEFORM_BUF, Index( 1 ), Count( ADCDevice::WAVEFORM_MAX ) );
+      DEVICE.waveformRead( dest, &request );
     }
   catch( runtime_error e )
     {
