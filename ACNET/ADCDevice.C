@@ -16,16 +16,17 @@ ADCDevice::ADCDevice()
   : Device<32>( "ADCDevice", "Mu2eER ADC Device" )
 {
   // Register read/write methods for each attribute
+  // registerMethod( ATTR_WAVEFORM_READ, *this, &ADCDevice::waveformRead, WAVEFORM_READ_MAX );
 }
 
-void ADCDevice::waveformRead( Array<float>& dest, ReqInfo const* reqinfo __attribute((unused)) )
+void ADCDevice::waveformRead( Array<waveform_read_t>& dest, 
+                              ReqInfo const* reqinfo __attribute((unused)) )
 {
-  dest[0] = 0.0;
   for( unsigned int i = 0, j = dest.offset.getValue(); 
        i != dest.total.getValue(); 
        i++, j++ )
     {
-      if( j >= WAVEFORM_MAX )
+      if( j >= WAVEFORM_READ_MAX )
         {
           throw runtime_error( "Request out of bounds" );
         }
