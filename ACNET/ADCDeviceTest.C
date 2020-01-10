@@ -20,23 +20,23 @@ using namespace std;
 /**
  * ADCDevice object
  */
-static ADCDevice DEVICE;
+static ADCDevice _gDevice;
 
 /**
  * Waveform Test Buffer
  */
-static float WAVEFORM_BUF[ADCDevice::WAVEFORM_READ_MAX];
+static float _gWaveformBuf[ADCDevice::WAVEFORM_READ_MAX];
 
 /**
  * Reset Waveform Buffer
  *
- * Sets every element in WAVEFORM_BUF to INFINITY.
+ * Sets every element in _gWaveformBuf to INFINITY.
  */
 static void _bufferReset()
 {
   for( unsigned int i = 0; i != ADCDevice::WAVEFORM_READ_MAX; i++ )
     {
-      WAVEFORM_BUF[i] = INFINITY;
+      _gWaveformBuf[i] = INFINITY;
     }
 }
 
@@ -50,7 +50,9 @@ static void _bufferReset()
  * @param count Number of elements to check
  * @return True if NO INFINITY is found
  */
-static bool _checkForNoInfinity( Array<float> const& buf, unsigned int start, unsigned int count )
+static bool _checkForNoInfinity( Array<ADCDevice::waveform_read_t> const& buf, 
+                                 unsigned int start, 
+                                 unsigned int count )
 {
   for( unsigned int i = start; i != (start + count); i++ )
     {
@@ -82,26 +84,6 @@ TEST_GROUP( WaveformGroup )
 };
 
 /**
- * WaveformGroup / ReadFirstValueTest
- *
- * Tests the reading property for the Waveform attribute.
- */
-TEST( WaveformGroup, ReadFirstValueTest )
-{
-  // Create destination buffer
-  Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, Index( 0 ), Count( 1 ) );
-
-  // Create a request object
-  ReqInfo request;
-
-  // Read one value
-  DEVICE.waveformRead( dest, &request );
-
-  // Test
-  CHECK( _checkForNoInfinity( dest, 0, 1 ) );
-}
-
-/**
  * WaveformGroup / Read All Test
  *
  * Tests that the reading property returns all values for the Waveform attribute.
@@ -111,46 +93,58 @@ TEST( WaveformGroup, ReadAllValuesTest )
   ReqInfo request;
 
   // Read WAVEFORM_READ_MAX values
-  Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, 
+  Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                           Index( 0 ), 
                                           Count( ADCDevice::WAVEFORM_READ_MAX ) );
-  DEVICE.waveformRead( dest, &request );
+  _gDevice.waveformRead( dest, &request );
 
   CHECK( _checkForNoInfinity( dest, 0, ADCDevice::WAVEFORM_READ_MAX ) );
 }
 
 /**
- * WaveformGroup / Read Some from Test
+ * WaveformGroup / ReadFirstValueTest
  *
- * Tests that the reading property handles a requests for a slice of the waveform from the middle.
+ * Tests the reading property for the Waveform attribute.
  */
-TEST( WaveformGroup, ReadSomeValuesInMiddleTest )
+TEST( WaveformGroup, ReadFirstValueTest )
 {
+  // Create destination buffer
+  Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, Index( 0 ), Count( 1 ) );
+
+  // Create a request object
   ReqInfo request;
 
-  // Read multiple values from an offset of 100 into the waveform
-  Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, Index( 100 ), Count( 100 ) );
-  DEVICE.waveformRead( dest, &request );
+  // Read one value
+  _gDevice.waveformRead( dest, &request );
 
-  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
+  // Test
+  CHECK( _checkForNoInfinity( dest, 0, 1 ) );
 }
 
 /**
- * WaveformGroup / Read Some to End Test
+ * WaveformGroup / Read Out-of-Bounds Count Test
  *
- * Tests that the reading property handles a request for a slice of the waveform up to the end.
+ * Tests that the reading property handles requests with an out-of-bounds count parameter.
  */
-TEST( WaveformGroup, ReadSomeValuesToEndTest )
+TEST( WaveformGroup, ReadOutOfBoundsCountTest )
 {
   ReqInfo request;
 
-  // Read multiple values just up to the end of the waveform
-  Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, 
-                                          Index( ADCDevice::WAVEFORM_READ_MAX - 10 ), 
-                                          Count( 10 ) );
-  DEVICE.waveformRead( dest, &request );
+  try
+    {
+      // Offset is within range but count extends out of range
+      Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
+                                              Index( 1 ), 
+                                              Count( ADCDevice::WAVEFORM_READ_MAX ) );
+      _gDevice.waveformRead( dest, &request );
+    }
+  catch( runtime_error e )
+    {
+      // Expected runtime_error to be thrown
+      return;
+    }
 
-  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
+  FAIL( "should have thrown runtime_error" );
 }
 
 /**
@@ -166,10 +160,10 @@ TEST( WaveformGroup, ReadOutOfBoundsOffsetTest )
     {
       // Create destination buffer with an Index outside of the expected range and read 
       // waveform data
-      Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, 
+      Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                               Index( ADCDevice::WAVEFORM_READ_MAX + 1 ), 
                                               Count( 1 ) );
-      DEVICE.waveformRead( dest, &request );
+      _gDevice.waveformRead( dest, &request );
     }
   catch( runtime_error e )
     {
@@ -182,27 +176,35 @@ TEST( WaveformGroup, ReadOutOfBoundsOffsetTest )
 }
 
 /**
- * WaveformGroup / Read Out-of-Bounds Count Test
+ * WaveformGroup / Read Some from Test
  *
- * Tests that the reading property handles requests with an out-of-bounds count parameter.
+ * Tests that the reading property handles a requests for a slice of the waveform from the middle.
  */
-TEST( WaveformGroup, ReadOutOfBoundsCountTest )
+TEST( WaveformGroup, ReadSomeValuesInMiddleTest )
 {
   ReqInfo request;
 
-  try
-    {
-      // Offset is within range but count extends out of range
-      Array<ADCDevice::waveform_read_t> dest( WAVEFORM_BUF, 
-                                              Index( 1 ), 
-                                              Count( ADCDevice::WAVEFORM_READ_MAX ) );
-      DEVICE.waveformRead( dest, &request );
-    }
-  catch( runtime_error e )
-    {
-      // Expected runtime_error to be thrown
-      return;
-    }
+  // Read multiple values from an offset of 100 into the waveform
+  Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, Index( 100 ), Count( 100 ) );
+  _gDevice.waveformRead( dest, &request );
 
-  FAIL( "should have thrown runtime_error" );
+  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
+}
+
+/**
+ * WaveformGroup / Read Some to End Test
+ *
+ * Tests that the reading property handles a request for a slice of the waveform up to the end.
+ */
+TEST( WaveformGroup, ReadSomeValuesToEndTest )
+{
+  ReqInfo request;
+
+  // Read multiple values just up to the end of the waveform
+  Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
+                                          Index( ADCDevice::WAVEFORM_READ_MAX - 10 ), 
+                                          Count( 10 ) );
+  _gDevice.waveformRead( dest, &request );
+
+  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
 }
