@@ -41,6 +41,30 @@ static void _bufferReset()
 }
 
 /**
+ * Check for No Infinity
+ *
+ * Scans the waveform buffer for an elements equal to INFINITY.
+ *
+ * @param buf Reference to buffer
+ * @param start Start index
+ * @param count Number of elements to check
+ * @return True if NO INFINITY is found
+ */
+static bool _checkForNoInfinity( Array<float> const& buf, unsigned int start, unsigned int count )
+{
+  for( unsigned int i = start; i != (start + count); i++ )
+    {
+      if( isinf( buf[i] ) )
+        {
+          return false;
+        }
+    }
+
+  // No INFINITY found
+  return true;
+}
+
+/**
  * WaveformGroup
  *
  * Tests related to the Waveform attribute.
@@ -58,7 +82,7 @@ TEST_GROUP( WaveformGroup )
 };
 
 /**
- * WaveformGroup / ReadTest
+ * WaveformGroup / ReadFirstValueTest
  *
  * Tests the reading property for the Waveform attribute.
  */
@@ -74,7 +98,7 @@ TEST( WaveformGroup, ReadFirstValueTest )
   DEVICE.waveformRead( dest, &request );
 
   // Test
-  CHECK( !isinf( dest[0] ) );
+  CHECK( _checkForNoInfinity( dest, 0, 1 ) );
 }
 
 /**
@@ -94,14 +118,11 @@ TEST( WaveformGroup, ReadAllValuesTest )
   DEVICE.waveformRead( dest, &request );
 
   // Test
-  for( unsigned int i = 0; i != ADCDevice::WAVEFORM_MAX; i++ )
-    {
-      CHECK( !isinf( dest[i] ) );
-    }
+  CHECK( _checkForNoInfinity( dest, 0, ADCDevice::WAVEFORM_MAX ) );
 }
 
 /**
- * WaveformGroup / Read Some from Middle Test
+ * WaveformGroup / Read Some from Test
  *
  * Tests that the reading property handles a requests for a slice of the waveform from the middle.
  */
@@ -115,10 +136,7 @@ TEST( WaveformGroup, ReadSomeValuesInMiddleTest )
   DEVICE.waveformRead( dest, &request );
 
   // Test
-  for( unsigned int i = 0; i != dest.total.getValue(); i++ )
-    {
-      CHECK( !isinf( dest[i] ) );
-    }
+  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
 }
 
 /**
@@ -136,10 +154,7 @@ TEST( WaveformGroup, ReadSomeValuesToEndTest )
   DEVICE.waveformRead( dest, &request );
 
   // Test
-  for( unsigned int i = 0; i != dest.total.getValue(); i++ )
-    {
-      CHECK( !isinf( dest[i] ) );
-    }
+  CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
 }
 
 /**

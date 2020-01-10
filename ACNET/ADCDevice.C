@@ -6,6 +6,8 @@
  * @author jdiamond
  */
 
+#include <cmath>
+
 #include "ADCDevice.H"
 
 using namespace Mu2eER;
