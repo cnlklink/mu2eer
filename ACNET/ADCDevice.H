@@ -25,6 +25,14 @@ namespace Mu2eER
     typedef float waveform_read_t;
 
     /**
+     * SSDN Attribute IDs
+     */
+    enum
+      {
+        ATTR_WAVEFORM_READ = 0x00
+      };
+
+    /**
      * Size of the ADC waveform buffer
      */
     static const unsigned int WAVEFORM_READ_MAX = 512;
