@@ -16,7 +16,7 @@ using namespace std;
 /**
  * ADCDriverStub object
  */
-static ADCDriverStub _adcDriver;
+static ADCDriverStub _gADCDriver;
 
 /**
  * ADCDriverStubGroup
@@ -45,7 +45,7 @@ TEST( ADCDriverStubGroup, CopyWaveform )
   vector<ADCDriverStub::waveform_sample_t> buf;
 
   // Copy an entire waveform
-  _adcDriver.waveformCopy( buf, 0, ADCDriverStub::WAVEFORM_SAMPLES_MAX );
+  _gADCDriver.waveformCopy( buf, 0, ADCDriverStub::WAVEFORM_SAMPLES_MAX );
 
   // Veriy the correct number of samples were copied
   CHECK_EQUAL( ADCDriverStub::WAVEFORM_SAMPLES_MAX, buf.size() );
@@ -53,11 +53,6 @@ TEST( ADCDriverStubGroup, CopyWaveform )
   // Verify that the samples increases linearly
   for( unsigned int i = 0; i != buf.size(); i++ )
     {
-      if( i == 0 )
-        {
-          continue;
-        }
-
-      CHECK_EQUAL( buf[i], buf[i-1] + 1 );
+      CHECK_EQUAL( buf[i], i );
     }
 }
