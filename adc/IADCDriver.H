@@ -33,7 +33,7 @@ namespace Mu2eER
     /**
      * Maximum number of waveform samples
      */
-    static const unsigned int WAVEFORM_SAMPLES_MAX = 512;
+    static const unsigned int WAVEFORM_SAMPLES_MAX = 16000;
 
     /**
      * Destructor
