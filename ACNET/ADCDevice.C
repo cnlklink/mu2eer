@@ -24,7 +24,7 @@ using namespace Mu2eER;
  * @param vec Source vector
  */
 template<typename T> 
-void copyToACNETArray( Array<T>& dest, vector<T>& vec )
+static void _copyToACNETArray( Array<T>& dest, vector<T>& vec )
 {
   unsigned int i = 0;
   for( auto& v : vec )
@@ -45,16 +45,16 @@ void ADCDevice::waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqin
 {
   if( dest.offset.getValue() > WAVEFORM_READ_MAX )
     {
-      throw runtime_error( "Bad offset" );
+      throw Ex_BADOFF;
     }
 
   if( (dest.offset.getValue() + dest.total.getValue()) > WAVEFORM_READ_MAX )
     {
-      throw runtime_error( "Bad offset + count" );
+      throw Ex_BADOFLEN;
     }
 
   // Copy waveform data to ACNET response buffer
   vector<waveform_read_t> v;
   _adcDrv->waveformCopy( v, dest.offset.getValue(), dest.total.getValue() );
-  copyToACNETArray<waveform_read_t>( dest, v );
+  _copyToACNETArray<waveform_read_t>( dest, v );
 }

@@ -48,9 +48,9 @@ static void _bufferReset()
 }
 
 /**
- * Check for No Infinity
+ * Check for Linear Ramp
  *
- * Verifies that the waveform elements are a linear ramp.
+ * Verifies that the waveform elements returned by the driver are arranged in a linear ramp.
  *
  * @param buf Reference to buffer
  * @param start Start index
@@ -149,9 +149,9 @@ TEST( WaveformGroup, ReadOutOfBoundsCountTest )
                                               Count( ADCDevice::WAVEFORM_READ_MAX ) );
       _gDevice->waveformRead( dest, &request );
     }
-  catch( runtime_error e )
+  catch( AcnetError e )
     {
-      // Expected runtime_error to be thrown
+      CHECK( e.getValue() == Ex_BADOFLEN.getValue() );
       return;
     }
 
@@ -176,14 +176,14 @@ TEST( WaveformGroup, ReadOutOfBoundsOffsetTest )
                                               Count( 1 ) );
       _gDevice->waveformRead( dest, &request );
     }
-  catch( runtime_error e )
+  catch( AcnetError e )
     {
-      // Expected runtime_error to be thrown
+      CHECK( e.getValue() == Ex_BADOFF.getValue() );
       return;
     }
 
   // Test
-  FAIL( "should have thrown runtime_error" );
+  FAIL( "should have thrown Ex_BADOFLEN" );
 }
 
 /**
