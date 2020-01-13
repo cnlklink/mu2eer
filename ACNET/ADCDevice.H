@@ -45,8 +45,10 @@ namespace Mu2eER
 
     /**
      * Constructor
+     *
+     * @param driver ADC driver object
      */
-    ADCDevice();
+    ADCDevice( unique_ptr<IADCDriver> driver );
 
     /**
      * Reading Property for Waveform data
@@ -57,6 +59,10 @@ namespace Mu2eER
     void waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqinfo __attribute((unused)) );
     
   private:
+    /**
+     * The ADC driver
+     */
+    unique_ptr<IADCDriver> _adcDrv;
   };
 };
 

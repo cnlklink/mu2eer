@@ -8,12 +8,15 @@
 
 #include <cmath>
 
+#include "../adc/IADCDriver.H"
+
 #include "ADCDevice.H"
 
 using namespace Mu2eER;
 
-ADCDevice::ADCDevice() 
-  : Device<32>( "ADCDevice", "Mu2eER ADC Device" )
+ADCDevice::ADCDevice( unique_ptr<IADCDriver> adcDrv ) 
+  : Device<32>( "ADCDevice", "Mu2eER ADC Device" ),
+    _adcDrv( move( adcDrv ) )
 {
   // Register read/write methods for each attribute
   registerMethod( ATTR_WAVEFORM_READ, *this, &ADCDevice::waveformRead, WAVEFORM_READ_MAX );

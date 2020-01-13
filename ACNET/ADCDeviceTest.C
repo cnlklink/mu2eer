@@ -11,6 +11,7 @@
 
 #include "CppUTest/TestHarness.h"
 
+#include "../adc/ADCDriverStub.H"
 #include "ADCDevice.H"
 
 using namespace Mu2eER;
@@ -20,7 +21,7 @@ using namespace std;
 /**
  * ADCDevice object
  */
-static ADCDevice _gDevice;
+static unique_ptr<ADCDevice> _gDevice( new ADCDevice( unique_ptr<IADCDriver>( new ADCDriverStub() ) ) );
 
 /**
  * Waveform Test Buffer
@@ -43,7 +44,7 @@ static void _bufferReset()
 /**
  * Check for No Infinity
  *
- * Scans the waveform buffer for an elements equal to INFINITY.
+ * Scans the waveform buffer for elements equal to INFINITY.
  *
  * @param buf Reference to buffer
  * @param start Start index
@@ -96,7 +97,7 @@ TEST( WaveformGroup, ReadAllValuesTest )
   Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                           Index( 0 ), 
                                           Count( ADCDevice::WAVEFORM_READ_MAX ) );
-  _gDevice.waveformRead( dest, &request );
+  _gDevice->waveformRead( dest, &request );
 
   CHECK( _checkForNoInfinity( dest, 0, ADCDevice::WAVEFORM_READ_MAX ) );
 }
@@ -115,7 +116,7 @@ TEST( WaveformGroup, ReadFirstValueTest )
   ReqInfo request;
 
   // Read one value
-  _gDevice.waveformRead( dest, &request );
+  _gDevice->waveformRead( dest, &request );
 
   // Test
   CHECK( _checkForNoInfinity( dest, 0, 1 ) );
@@ -136,7 +137,7 @@ TEST( WaveformGroup, ReadOutOfBoundsCountTest )
       Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                               Index( 1 ), 
                                               Count( ADCDevice::WAVEFORM_READ_MAX ) );
-      _gDevice.waveformRead( dest, &request );
+      _gDevice->waveformRead( dest, &request );
     }
   catch( runtime_error e )
     {
@@ -163,7 +164,7 @@ TEST( WaveformGroup, ReadOutOfBoundsOffsetTest )
       Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                               Index( ADCDevice::WAVEFORM_READ_MAX + 1 ), 
                                               Count( 1 ) );
-      _gDevice.waveformRead( dest, &request );
+      _gDevice->waveformRead( dest, &request );
     }
   catch( runtime_error e )
     {
@@ -186,7 +187,7 @@ TEST( WaveformGroup, ReadSomeValuesInMiddleTest )
 
   // Read multiple values from an offset of 100 into the waveform
   Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, Index( 100 ), Count( 100 ) );
-  _gDevice.waveformRead( dest, &request );
+  _gDevice->waveformRead( dest, &request );
 
   CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
 }
@@ -204,7 +205,7 @@ TEST( WaveformGroup, ReadSomeValuesToEndTest )
   Array<ADCDevice::waveform_read_t> dest( _gWaveformBuf, 
                                           Index( ADCDevice::WAVEFORM_READ_MAX - 10 ), 
                                           Count( 10 ) );
-  _gDevice.waveformRead( dest, &request );
+  _gDevice->waveformRead( dest, &request );
 
   CHECK( _checkForNoInfinity( dest, 0, dest.total.getValue() ) );
 }
