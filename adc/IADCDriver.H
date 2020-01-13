@@ -11,6 +11,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 using namespace std;
 
@@ -30,6 +31,11 @@ namespace Mu2eER
     typedef int16_t waveform_sample_t;
 
     /**
+     * Maximum number of waveform samples
+     */
+    static const unsigned int WAVEFORM_SAMPLES_MAX = 512;
+
+    /**
      * Destructor
      */
     virtual ~IADCDriver();
@@ -42,7 +48,7 @@ namespace Mu2eER
      * @param offset Offset into the waveform data to begin copying from
      * @param n Number of waveform samples to copy
      */
-    virtual void waveformCopy( unique_ptr<waveform_sample_t> dest, 
+    virtual void waveformCopy( vector<waveform_sample_t>& dest, 
                                unsigned int offset, 
                                unsigned int n ) const = 0;
   };

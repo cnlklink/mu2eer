@@ -9,6 +9,8 @@
 #ifndef ADCDRIVERSTUB_H
 #define ADCDRIVERSTUB_H
 
+#include <vector>
+
 #include "IADCDriver.H"
 
 namespace Mu2eER
@@ -22,6 +24,11 @@ namespace Mu2eER
   {
   public:
     /**
+     * Constructor
+     */
+    ADCDriverStub();
+
+    /**
      * @Override
      */
     virtual ~ADCDriverStub();
@@ -29,9 +36,15 @@ namespace Mu2eER
     /**
      * @Override
      */
-    virtual void waveformCopy( unique_ptr<waveform_sample_t> dest, 
+    virtual void waveformCopy( vector<waveform_sample_t>& dest, 
                                unsigned int offset, 
                                unsigned int n ) const;
+
+  private:
+    /**
+     * Waveform test data
+     */
+    vector<waveform_sample_t> _waveformData;
   };
 };
 

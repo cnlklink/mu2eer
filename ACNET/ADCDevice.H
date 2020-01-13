@@ -11,6 +11,8 @@
 
 #include "device.h"
 
+#include "../adc/IADCDriver.H"
+
 using namespace FFF;
 using namespace std;
 
@@ -22,7 +24,7 @@ namespace Mu2eER
     /**
      * Type of data returned by the Waveform reading property
      */
-    typedef float waveform_read_t;
+    typedef IADCDriver::waveform_sample_t waveform_read_t;
 
     /**
      * SSDN Attribute IDs
@@ -35,7 +37,7 @@ namespace Mu2eER
     /**
      * Size of the ADC waveform buffer
      */
-    static const unsigned int WAVEFORM_READ_MAX = 512;
+    static const unsigned int WAVEFORM_READ_MAX = 16000;
 
     /**
      * Maximum amount of data returned by the Waveform reading property
