@@ -8,8 +8,9 @@ EES_CPPFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/in
 # ERLANG_INT	= erl_interface-3.8.2
 # MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 
-CPPUTEST_HOME = /home/jdiamond/cpputest
-TEST_FLAGS = -I$(CPPUTEST_HOME)/include -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+#CPPUTEST_HOME = /home/jdiamond/cpputest
+#TEST_FLAGS = -I$(CPPUTEST_HOME)/include -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+TEST_FLAGS = -lCppUTest -lCppUTestExt
 
 DEV_LIBS = -lpthread
 TARGET_LIBS = -lpthread -lerl_interface -lei
@@ -41,6 +42,8 @@ ALL_TEST =
 include ACNET/ACNET.mk
 include adc/adc.mk
 include tclk/tclk.mk
+
+.PHONY: all test clean
 
 all: $(ALL_TARGETS)
 
