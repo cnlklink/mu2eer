@@ -43,12 +43,12 @@ ADCDevice::ADCDevice( unique_ptr<IADCDriver> adcDrv )
 
 void ADCDevice::waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqinfo __attribute((unused)) )
 {
-  if( dest.offset.getValue() > WAVEFORM_READ_MAX )
+  if( dest.offset.getValue() > static_cast<int>( WAVEFORM_READ_MAX ) )
     {
       throw Ex_BADOFF;
     }
 
-  if( (dest.offset.getValue() + dest.total.getValue()) > WAVEFORM_READ_MAX )
+  if( (dest.offset.getValue() + dest.total.getValue()) > static_cast<int>( WAVEFORM_READ_MAX ) )
     {
       throw Ex_BADOFLEN;
     }
