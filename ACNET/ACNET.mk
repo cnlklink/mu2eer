@@ -1,11 +1,11 @@
 ALL_CLEAN += acnet_clean
 ALL_TARGETS +=
-ALL_TEST += acnet_test
+ALL_TEST += acnet_tests
 
 acnet: acnet_adc
 
-acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o
-	$(CXX) output/target/ACNET/ADCDevice.o output/target/adc/IADCDriver.o -o output/target/ACNET/acnet_adc $(EES_LDFLAGS) $(DEV_OBJS) -L{$MYLIBS} $(DEV_LIBS)
+acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o adc/ADCDriverStub.o ACNET/adc_fef_init.o
+	$(CXX) $(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o output/target/adc/ADCDriverStub.o output/target/ACNET/adc_fef_init.o output/target/ACNET/ADCDevice.o output/target/adc/IADCDriver.o -o output/target/ACNET/acnet_adc $(EES_LDFLAGS) $(DEV_OBJS) -L$(MYLIBS) $(DEV_LIBS) -lerl_interface -lei
 
 acnet_clean:
 	-rm -f ACNET/*.o

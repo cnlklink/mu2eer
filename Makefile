@@ -15,7 +15,7 @@ include /usr/local/products/elsd/include/elsd-2.5.mk
 EES_CFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CFLAGS)	$(EES_PREF_LXRT_CFLAGS)	-fno-strict-aliasing -D'BOARD_SUPPORT=$(BPMD_BOARD_ID)'
 EES_CPPFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS)	$(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include -I$(EES_PREFIX)/usr/include/libnl3 -D'BOARD_SUPPORT=$(BPMD_BOARD_ID)'
 EES_LDFLAGS	= $(EES_PREF_LDFLAGS)	$(EES_PREF_LXRT_LDFLAGS)
-ERLANG_INT	= erl_interface-3.8.2
+ERLANG_INT	= erl_interface-3.10.4
 MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 
 TEST_FLAGS = -lCppUTest -lCppUTestExt
@@ -64,7 +64,7 @@ HOST_CXX = g++
 
 all: $(ALL_TARGETS)
 
-test: $(ALL_TEST)
+tests: $(ALL_TEST)
 
 clean: $(ALL_CLEAN)
 
