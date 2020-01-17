@@ -1,4 +1,7 @@
 *~
 *.o
 *.d
-tests
+acnet_tests
+acnet_adc
+adc_tests
+tclk_tests
