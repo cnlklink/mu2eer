@@ -18,6 +18,11 @@ using namespace std;
 
 namespace Mu2eER
 {
+  /**
+   * ADCDevice
+   *
+   * Implements a ACSys/cdev interface to the ADC functions of Mu2eER.
+   */
   class ADCDevice : public Device<32>
   {
   public:
@@ -56,7 +61,7 @@ namespace Mu2eER
      * Reading Property for Waveform data
      *
      * @param dest ACNET destination buffer
-     * @param req ACNET request object
+     * @param reqinfo ACNET request object
      */
     void waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqinfo __attribute((unused)) );
     

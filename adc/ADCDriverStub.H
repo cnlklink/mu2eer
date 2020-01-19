@@ -28,14 +28,8 @@ namespace Mu2eER
      */
     ADCDriverStub();
 
-    /**
-     * @Override
-     */
     virtual ~ADCDriverStub();
 
-    /**
-     * @Override
-     */
     virtual void waveformCopy( vector<waveform_sample_t>& dest, 
                                unsigned int offset, 
                                unsigned int n ) const;
