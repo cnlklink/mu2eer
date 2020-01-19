@@ -72,6 +72,6 @@ clean: $(ALL_CLEAN)
 
 docs: output/docs/html/index.html
 
-output/docs/html/index.html: $(EES_CPPSOURCES_B) $(EES_HEADERS)
+output/docs/html/index.html: $(EES_CPPSOURCES_B) $(EES_HEADERS) Doxyfile
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
