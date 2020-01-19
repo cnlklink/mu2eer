@@ -67,6 +67,7 @@ all: $(ALL_TARGETS)
 tests: $(ALL_TEST)
 
 clean: $(ALL_CLEAN)
+	-rm -rf output/docs
 
 docs: $(EES_CPPSOURCES_B)
 	@ echo "-m-> Generating documentation..."
