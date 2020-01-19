@@ -50,14 +50,14 @@ HOST_CXX = g++
 #
 .cpp.o: $(EES_CPPSOURCES_A) %.d Makefile
 	@ echo "-m-> Compiling C++ file $< (target) ..."
-	${EES_OUT} $(CXX) -c -o $*.o $(EES_CPPFLAGS) $<
+	$(EES_OUT) $(CXX) -c -o $*.o $(EES_CPPFLAGS) $<
 	touch $*.o
 
 .C.o: $(EES_CPPSOURCES_B) %.d Makefile
 	@ echo "-m-> Compiling C++ file $< (target) ..."
-	${EES_OUT} $(CXX) -c -o output/target/$*.o $(EES_CPPFLAGS) $<
+	$(EES_OUT) $(CXX) -c -o output/target/$*.o $(EES_CPPFLAGS) $<
 	@ echo "-m-> Compiling C++ file $< (host) ..."
-	${EES_OUT} $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
+	$(EES_OUT) $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
 
 .PHONY: all test clean
@@ -67,4 +67,8 @@ all: $(ALL_TARGETS)
 tests: $(ALL_TEST)
 
 clean: $(ALL_CLEAN)
+
+docs: $(EES_CPPSOURCES_B)
+	@ echo "-m-> Generating documentation..."
+	$(EES_OUT) doxygen
 
