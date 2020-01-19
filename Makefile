@@ -60,7 +60,7 @@ HOST_CXX = g++
 	$(EES_OUT) $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
 
-.PHONY: all test clean
+.PHONY: all test clean docs
 
 all: $(ALL_TARGETS)
 
@@ -69,7 +69,8 @@ tests: $(ALL_TEST)
 clean: $(ALL_CLEAN)
 	-rm -rf output/docs
 
-docs: $(EES_CPPSOURCES_B)
+docs: output/docs/html/index.html
+
+output/docs/html/index.html: $(EES_CPPSOURCES_B)
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
-
