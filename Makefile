@@ -63,12 +63,13 @@ HOST_CXX = g++
 
 .PHONY: all test clean docs
 
-all: $(ALL_TARGETS)
+all: $(ALL_TARGETS) docs
 
 tests: $(ALL_TEST)
 
 clean: $(ALL_CLEAN)
-	-rm -rf output/docs
+	@ echo "-m-> Cleaning..."
+	$(EES_OUT) -rm -rf output/docs
 
 docs: output/docs/html/index.html
 
