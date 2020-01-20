@@ -63,7 +63,7 @@ namespace Mu2eER
      * @param dest ACNET destination buffer
      * @param reqinfo ACNET request object
      */
-    void waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqinfo __attribute((unused)) );
+    void waveformRead( Array<waveform_read_t>& dest, ReqInfo const* reqinfo );
     
   private:
     /**
