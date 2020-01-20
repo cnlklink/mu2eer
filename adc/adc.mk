@@ -1,5 +1,5 @@
 ALL_CLEAN   += adc_clean
-ALL_TARGETS +=
+ALL_TARGETS += adc
 ALL_TEST    += adc_tests
 
 adc: adc/ADCDriverStub.o

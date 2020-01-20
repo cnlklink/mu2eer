@@ -1,5 +1,5 @@
 ALL_CLEAN += acnet_clean
-ALL_TARGETS +=
+ALL_TARGETS += acnet
 ALL_TEST += acnet_tests
 
 acnet: acnet_adc
