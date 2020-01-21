@@ -36,7 +36,9 @@ namespace Mu2eER
       {
         TCLK_720HZ_EVENT = 0x07,
         TCLK_15HZ_EVENT = 0x0f,
-        TCLK_1HZ_EVENT = 0x8f
+        TCLK_1HZ_EVENT = 0x8f,
+        TCLK_NEVER_EVENT = 0xfe,
+        TCLK_SOMETIMES_EVENT = 0xff
       };
 
     /**
@@ -76,7 +78,7 @@ namespace Mu2eER
      *
      * @return TCLK event
      */
-    virtual tclk_event_t waitForEvents() const = 0;
+    virtual tclk_event_t waitForEvents() = 0;
   };
 };
 

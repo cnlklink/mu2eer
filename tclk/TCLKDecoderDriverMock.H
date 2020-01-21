@@ -9,6 +9,8 @@
 #ifndef TCLKDECODERDRIVERMOCK_H
 #define TCLKDECODERDRIVERMOCK_H
 
+#include <queue>
+
 #include "ITCLKDecoderDriver.H"
 
 namespace Mu2eER
@@ -35,8 +37,15 @@ namespace Mu2eER
     // Override
     virtual unsigned int eventListMaxGet() const;
 
+    /**
+     * Set TCLK Event Sequence
+     *
+     * Sets a sequence of TCLK events to be played back through calls to waitForEvents(..).
+     */
+    void eventSequenceSet( const vector<tclk_event_t>& sequence );
+
     // Override
-    virtual tclk_event_t waitForEvents() const;
+    virtual tclk_event_t waitForEvents();
 
   private:
     /**
@@ -48,6 +57,12 @@ namespace Mu2eER
      * TCLK Event List
      */
     vector<tclk_event_t> _eventList;
+
+    /**
+     * A sequence of TCLK events programmed by the test code to be played back to the API through
+     * calls to waitForEvents(..)
+     */
+    deque<tclk_event_t> _eventSequence;
   };
 };
 

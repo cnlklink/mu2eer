@@ -45,7 +45,26 @@ unsigned int TCLKDecoderDriverMock::eventListMaxGet() const
   return EVENT_LIST_MAX;
 }
 
-ITCLKDecoderDriver::tclk_event_t TCLKDecoderDriverMock::waitForEvents() const
+void 
+TCLKDecoderDriverMock::eventSequenceSet( const vector<ITCLKDecoderDriver::tclk_event_t>& sequence )
 {
-  // TODO
+  _eventSequence.clear();
+
+  for( auto event : sequence )
+    {
+      _eventSequence.push_back( event );
+    }
+}
+
+ITCLKDecoderDriver::tclk_event_t TCLKDecoderDriverMock::waitForEvents()
+{
+  if( _eventSequence.empty() )
+    {
+      return ITCLKDecoderDriver::TCLK_NEVER_EVENT;
+    }
+    
+  auto ret = _eventSequence[0];
+  _eventSequence.pop_front();
+
+  return ret;
 }
