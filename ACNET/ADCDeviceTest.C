@@ -155,7 +155,7 @@ TEST( WaveformGroup, ReadOutOfBoundsCountTest )
       return;
     }
 
-  FAIL( "should have thrown runtime_error" );
+  FAIL( "should have thrown Ex_BADOFLEN" );
 }
 
 /**

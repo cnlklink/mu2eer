@@ -30,8 +30,8 @@ EES_HOST_CPPFLAGS = -fno-strict-aliasing -std=c++0x -D'BOARD_SUPPORT=$(BPMD_BOAR
 
 # List of all C++ source files
 EES_CPPSOURCES_A       = $(wildcard *.cpp) $(wildcard adc/*.cpp)
-EES_CPPSOURCES_B       = $(wildcard *.C) $(wildcard adc/*.C) $(wildcard ACNET/*.C)
-EES_HEADERS            = $(wildcard *.H) $(wildcard adc/*.H) $(wildcard ACNET/*.H)
+EES_CPPSOURCES_B       = $(wildcard *.C) $(wildcard adc/*.C) $(wildcard ACNET/*.C) $(wildcard tclk/*.C)
+EES_HEADERS            = $(wildcard *.H) $(wildcard adc/*.H) $(wildcard ACNET/*.H) $(wildcard tclk/*.H)
 
 # List of modules (.o files)
 EES_OBJS               = $(EES_CPPSOURCES_A:.cpp=.o) $(EES_CPPSOURCES_B:.C=.o) $(CSOURCES:.c=.o)
