@@ -53,6 +53,6 @@ TEST( ADCDriverStubGroup, CopyWaveform )
   // Verify that the samples increases linearly
   for( unsigned int i = 0; i != buf.size(); i++ )
     {
-      CHECK_EQUAL( buf[i], i );
+      CHECK_EQUAL( buf[i], static_cast<int>( i ) );
     }
 }
