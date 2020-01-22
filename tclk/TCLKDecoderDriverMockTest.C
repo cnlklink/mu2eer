@@ -49,6 +49,7 @@ TEST( DecoderGroup, GetEmptyEventList )
   auto events = _gDriver->eventListGet();
 
   CHECK_EQUAL( 0, events.size() );
+  FAIL( "this is a test" );
 }
 
 /**
