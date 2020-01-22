@@ -1,6 +1,16 @@
+ACNET_HOST_OUT   = output/host/ACNET
+ACNET_TARGET_OUT = output/target/ACNET
+
 ALL_CLEAN += acnet_clean
 ALL_TARGETS += acnet
 ALL_TEST += acnet_tests
+ALL_OUT += $(ACNET_HOST_OUT) $(ACNET_TARGET_OUT)
+
+$(ACNET_TARGET_OUT):
+	$(EES_OUT) mkdir -p $(ACNET_TARGET_OUT)
+
+$(ACNET_HOST_OUT):
+	$(EES_OUT) mkdir -p $(ACNET_HOST_OUT)
 
 acnet: acnet_adc
 
@@ -10,15 +20,9 @@ acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o adc/ADCDriverStub.o ACNET/adc_fef_
 
 acnet_clean:
 	$(EES_OUT) -rm -f ACNET/*.o
-	$(EES_OUT) -rm -f output/host/ACNET/*.o
-	$(EES_OUT) -rm -f output/target/ACNET/*.o
-	$(EES_OUT) -rm -f output/host/ACNET/adc_acsys
-	$(EES_OUT) -rm -f output/target/ACNET/adc_acsys
-	$(EES_OUT) -rm -f output/host/ACNET/tests
-	$(EES_OUT) -rm -f output/target/ACNET/tests
 
-acnet_tests: ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
+acnet_tests: output ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) output/host/ACNET/ADCDevice.o output/host/ACNET/ADCDeviceTest.o output/host/ACNET/AllTests.o output/host/adc/IADCDriver.o output/host/adc/ADCDriverStub.o -o output/host/ACNET/acnet_tests $(DEV_OBJS) -L{$MYLIBS} $(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
-	@./output/host/ACNET/acnet_tests
+	@./$(ACNET_HOST_OUT)/acnet_tests

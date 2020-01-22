@@ -36,9 +36,10 @@ EES_HEADERS            = $(wildcard *.H) $(wildcard adc/*.H) $(wildcard ACNET/*.
 # List of modules (.o files)
 EES_OBJS               = $(EES_CPPSOURCES_A:.cpp=.o) $(EES_CPPSOURCES_B:.C=.o) $(CSOURCES:.c=.o)
 
-ALL_CLEAN =
 ALL_TARGETS =
 ALL_TEST =
+ALL_CLEAN =
+ALL_OUT =
 
 include ACNET/ACNET.mk
 include adc/adc.mk
@@ -49,12 +50,12 @@ HOST_CXX = g++
 #
 # Compile all C++ modules
 #
-.cpp.o: $(EES_CPPSOURCES_A) %.d Makefile
+.cpp.o: output $(EES_CPPSOURCES_A) %.d Makefile
 	@ echo "-m-> Compiling C++ file $< (target) ..."
 	$(EES_OUT) $(CXX) -c -o $*.o $(EES_CPPFLAGS) $<
 	touch $*.o
 
-.C.o: $(EES_CPPSOURCES_B) %.d Makefile
+.C.o: output $(EES_CPPSOURCES_B) %.d Makefile
 	@ echo "-m-> Compiling C++ file $< (target) ..."
 	$(EES_OUT) $(CXX) -c -o output/target/$*.o $(EES_CPPFLAGS) $<
 	@ echo "-m-> Compiling C++ file $< (host) ..."
@@ -63,16 +64,22 @@ HOST_CXX = g++
 
 .PHONY: all test clean docs
 
-all: $(ALL_TARGETS) docs
+all: output $(ALL_TARGETS) docs
 
 tests: $(ALL_TEST)
 
 clean: $(ALL_CLEAN)
 	@ echo "-m-> Cleaning..."
-	$(EES_OUT) -rm -rf output/docs
+	$(EES_OUT) -rm -rf output/
 
 docs: output/docs/html/index.html
 
-output/docs/html/index.html: $(EES_CPPSOURCES_B) $(EES_HEADERS) Doxyfile
+output/docs/html/index.html: output $(EES_CPPSOURCES_B) $(EES_HEADERS) Doxyfile
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
+
+output: $(ALL_OUT)
+	$(EES_OUT) mkdir -p output
+	$(EES_OUT) mkdir -p output/target
+	$(EES_OUT) mkdir -p output/host
+	$(EES_OUT) mkdir -p output/docs/html
