@@ -46,6 +46,10 @@ include adc/adc.mk
 include tclk/tclk.mk
 
 HOST_CXX = g++
+SCP      = scp -q
+SSH      = ssh -K
+TARGET_TEST_HOSTNAME = srsd
+TAR_FILENAME = mu2eer.tar
 
 #
 # Compile all C++ modules
@@ -62,7 +66,7 @@ HOST_CXX = g++
 	$(EES_OUT) $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
 
-.PHONY: all test clean docs
+.PHONY: all test clean docs deploy_test
 
 all: output $(ALL_TARGETS) docs
 
@@ -83,3 +87,11 @@ output: $(ALL_OUT)
 	$(EES_OUT) mkdir -p output/target
 	$(EES_OUT) mkdir -p output/host
 	$(EES_OUT) mkdir -p output/docs/html
+
+deploy_test: 
+	@ echo "-m-> Deploying to $(TARGET_TEST_HOSTNAME)..."
+	@ echo "-m-> (please make sure $(TARGET_TEST_HOSTNAME) is in your ~/.ssh/config file)"
+	$(EES_OUT) $(SCP) $(ACNET_TARGET_OUT)/acnet_adc $(TARGET_TEST_HOSTNAME):/tmp
+	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/mkdir -p /usr/local/products/bin"
+	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/chmod 755 /usr/local/products/bin"
+	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/busybox mv /tmp/acnet_adc /usr/local/products/bin"
