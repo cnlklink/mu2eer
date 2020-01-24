@@ -36,7 +36,7 @@ EES_HEADERS            = $(wildcard *.H) $(wildcard adc/*.H) $(wildcard ACNET/*.
 # List of modules (.o files)
 EES_OBJS               = $(EES_CPPSOURCES_A:.cpp=.o) $(EES_CPPSOURCES_B:.C=.o) $(CSOURCES:.c=.o)
 
-ALL_TARGETS =
+ALL_TARGETS = output
 ALL_TEST =
 ALL_CLEAN =
 ALL_OUT =
@@ -66,28 +66,37 @@ TAR_FILENAME = mu2eer.tar
 	$(EES_OUT) $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
 
-.PHONY: all test clean docs deploy_test
+.PHONY: all all_buildroot test clean docs deploy_test install_buildroot_target
 
-all: output $(ALL_TARGETS) docs
+# Make everything
+all: $(ALL_TARGETS) docs
 
+all_buildroot: $(ALL_TARGETS)
+
+# Make and run unit test suite
 tests: $(ALL_TEST)
 
+# Clean output/ directory
 clean: $(ALL_CLEAN)
 	@ echo "-m-> Cleaning..."
 	$(EES_OUT) -rm -rf output/
 
+# Run Doxygen to generate API documentation
 docs: output/docs/html/index.html
 
+# Main Doxygen target
 output/docs/html/index.html: output $(EES_CPPSOURCES_B) $(EES_HEADERS) Doxyfile
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
 
+# Creates the output/ directory structure
 output: $(ALL_OUT)
 	$(EES_OUT) mkdir -p output
 	$(EES_OUT) mkdir -p output/target
 	$(EES_OUT) mkdir -p output/host
 	$(EES_OUT) mkdir -p output/docs/html
 
+# Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
 deploy_test: 
 	@ echo "-m-> Deploying to $(TARGET_TEST_HOSTNAME)..."
 	@ echo "-m-> (please make sure $(TARGET_TEST_HOSTNAME) is in your ~/.ssh/config file)"
@@ -95,3 +104,7 @@ deploy_test:
 	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/mkdir -p /usr/local/products/bin"
 	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/chmod 755 /usr/local/products/bin"
 	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/busybox mv /tmp/acnet_adc /usr/local/products/bin"
+
+install_buildroot_target:
+	install -d $(EES_BIN)
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv
