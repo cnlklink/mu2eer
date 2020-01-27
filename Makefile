@@ -2,15 +2,16 @@
 EES_PREFIX	      = $(prefix)
 EES_PROJECT	      = mu2eer
 
-EES_TARGET_ARCH       = arm
-EES_TARGET_ARCH2      = -gnueabihf
-EES_TARGET_BOARD      = achilles
-EES_TARGET_OS         = linux
-EES_TARGET_OS_VERSION = 4.1.22-ltsi
+EES_TARGET_ARCH          = arm
+EES_TARGET_ARCH2         = -gnueabihf
+EES_TARGET_BOARD         = achilles
+EES_TARGET_BOARD_VARIANT = mu2eer
+EES_TARGET_OS            = linux
+EES_TARGET_OS_VERSION    = 4.1.22-ltsi
 
-EES_BR_BASE           = /usr/local/products/buildroot/ees/ees_buildroot_achilles
+EES_BR_BASE           = /usr/local/products/buildroot/achilles_mu2eer
 
-include /usr/local/products/elsd/include/elsd-2.5.mk
+include /usr/local/products/elsd/include/elsd-3.0.mk
 
 EES_CFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CFLAGS)	$(EES_PREF_LXRT_CFLAGS)	-fno-strict-aliasing -D'BOARD_SUPPORT=$(BPMD_BOARD_ID)'
 EES_CPPFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS)	$(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include -I$(EES_PREFIX)/usr/include/libnl3 -D'BOARD_SUPPORT=$(BPMD_BOARD_ID)'
