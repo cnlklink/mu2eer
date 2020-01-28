@@ -74,7 +74,8 @@ tests: $(ALL_TEST)
 # Clean output/ directory
 clean: $(ALL_CLEAN)
 	@ echo "-m-> Cleaning..."
-	$(EES_OUT) -rm -rf output/
+	$(EES_OUT) -rm -rf $(BIN_DIR)
+	$(EES_OUT) -rm -rf $(DOC_DIR)
 
 # Generate API documentation
 docs: $(DOC_DIR)/html/index.html
@@ -91,7 +92,7 @@ $(BIN_DIR): $(ALL_OUT)
 	$(EES_OUT) mkdir -p $(HOST_BIN_DIR)
 
 # Creates the doc directory structure
-$(DOC_DIR):
+$(DOC_DIR)/:
 	$(EES_OUT) mkdir -p $(DOC_DIR)/html
 
 # Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
