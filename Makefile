@@ -34,6 +34,13 @@ ALL_TEST        :=
 ALL_CLEAN       :=
 ALL_OUT         :=
 
+SRC_DIR         := src
+BIN_DIR         := output
+TARGET_BIN_DIR  := $(BIN_DIR)/target
+HOST_BIN_DIR    := $(BIN_DIR)/host
+DOC_DIR         := docs
+INC_DIR         := include
+
 # Some more host utilities
 SCP             = scp -q
 SSH             = ssh -K
@@ -70,19 +77,22 @@ clean: $(ALL_CLEAN)
 	$(EES_OUT) -rm -rf output/
 
 # Generate API documentation
-docs: output/docs/html/index.html
+docs: $(DOC_DIR)/html/index.html
 
 # Main Doxygen target
-output/docs/html/index.html: output Doxyfile $(ALL_SOURCES) $(ALL_HEADERS)
+$(DOC_DIR)/html/index.html: $(DOC_DIR)/ Doxyfile $(ALL_SOURCES) $(ALL_HEADERS)
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
 
-# Creates the output/ directory structure
-output: $(ALL_OUT)
-	$(EES_OUT) mkdir -p output
-	$(EES_OUT) mkdir -p output/target
-	$(EES_OUT) mkdir -p output/host
-	$(EES_OUT) mkdir -p output/docs/html
+# Creates the binary directory structure
+$(BIN_DIR): $(ALL_OUT)
+	$(EES_OUT) mkdir -p $(BIN_DIR)
+	$(EES_OUT) mkdir -p $(TARGET_BIN_DIR)
+	$(EES_OUT) mkdir -p $(HOST_BIN_DIR)
+
+# Creates the doc directory structure
+$(DOC_DIR):
+	$(EES_OUT) mkdir -p $(DOC_DIR)/html
 
 # Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
 deploy_test: 

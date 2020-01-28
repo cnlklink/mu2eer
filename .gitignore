@@ -5,5 +5,5 @@ acnet_tests
 acnet_adc
 adc_tests
 tclk_tests
-output
-
+bin
+docs
