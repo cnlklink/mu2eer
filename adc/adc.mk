@@ -26,6 +26,6 @@ adc_tests: output adc/ADCDriverStub.o adc/ADCDriverStubTest.o adc/AllTests.o adc
 		$(ADC_HOST_OUT)/ADCDriverStub.o \
 		$(ADC_HOST_OUT)/ADCDriverStubTest.o \
 		$(ADC_HOST_OUT)/AllTests.o \
-		$(DEV_OBJS) -L$(MYLIBS) $(DEV_LIBS) $(TEST_FLAGS)
+		-L$(MYLIBS) $(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(ADC_HOST_OUT)/adc_tests

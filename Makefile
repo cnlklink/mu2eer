@@ -10,40 +10,40 @@ EES_TARGET_OS            = linux
 EES_TARGET_OS_VERSION    = 4.1.22-ltsi
 EES_BR_BASE              = /usr/local/products/buildroot/achilles_mu2eer
 
+# Include ELSD build tools
 include /usr/local/products/elsd/include/elsd-3.0.mk
 
-EES_CFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CFLAGS)	$(EES_PREF_LXRT_CFLAGS)	-fno-strict-aliasing 
 EES_CPPFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS)	$(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include
 EES_LDFLAGS	= $(EES_PREF_LDFLAGS)	$(EES_PREF_LXRT_LDFLAGS)
 ERLANG_INT	= erl_interface-3.10.4
 MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 
-TEST_FLAGS = -lCppUTest -lCppUTestExt
+TEST_FLAGS      = -lCppUTest -lCppUTestExt
 
-DEV_LIBS = -lpthread
-TARGET_LIBS = -lpthread -lerl_interface -lei
-
-DEV_OBJS =
-TARGET_OBJS = $(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o
+DEV_LIBS        = -lpthread
+TARGET_LIBS     = -lpthread -lerl_interface -lei
 
 EES_HOST_CPPFLAGS = -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS) 
 
 # List of all C++ source files
-ALL_SOURCES := $(wildcard *.C) 
-ALL_HEADERS := $(wildcard *.H) 
+ALL_SOURCES     := $(wildcard *.C) 
+ALL_HEADERS     := $(wildcard *.H) 
 
-ALL_TARGETS := output
-ALL_TEST    :=
-ALL_CLEAN   :=
-ALL_OUT     :=
+ALL_TARGETS     := output
+ALL_TEST        :=
+ALL_CLEAN       :=
+ALL_OUT         :=
 
+# Some more host utilities
+SCP             = scp -q
+SSH             = ssh -K
+
+TARGET_TEST_HOSTNAME = srsd
+
+# Include module makefiles
 include ACNET/ACNET.mk
 include adc/adc.mk
 include tclk/tclk.mk
-
-SCP      = scp -q
-SSH      = ssh -K
-TARGET_TEST_HOSTNAME = srsd
 
 .PHONY: all all_buildroot test clean docs deploy_test install_buildroot_target
 

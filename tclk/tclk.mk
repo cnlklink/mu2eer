@@ -24,7 +24,7 @@ tclk_tests: output tclk/ITCLKDecoderDriver.o tclk/TCLKDecoderDriverMock.o tclk/A
 		$(TCLK_HOST_OUT)/TCLKDecoderDriverMock.o \
 		$(TCLK_HOST_OUT)/AllTests.o \
 		$(TCLK_HOST_OUT)/TCLKDecoderDriverMockTest.o \
-		$(DEV_OBJS) $(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(TCLK_HOST_OUT)/tclk_tests
 

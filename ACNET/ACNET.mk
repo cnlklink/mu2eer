@@ -27,7 +27,7 @@ acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o adc/ADCDriverStub.o ACNET/adc_fef_
 		$(ACNET_TARGET_OUT)/adc_fef_init.o \
 		$(ACNET_TARGET_OUT)/ADCDevice.o \
 		$(ADC_TARGET_OUT)/IADCDriver.o \
-		$(EES_LDFLAGS) $(DEV_OBJS) -L$(MYLIBS) $(DEV_LIBS) -lerl_interface -lei
+		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS) -lerl_interface -lei
 
 acnet_tests: output ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
 	@echo "-m-> Linking $@ (host)..."
@@ -37,6 +37,6 @@ acnet_tests: output ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc
 		$(ACNET_HOST_OUT)/AllTests.o \
 		$(ADC_HOST_OUT)/IADCDriver.o \
 		$(ADC_HOST_OUT)/ADCDriverStub.o \
-		$(DEV_OBJS) -L{$MYLIBS} $(DEV_LIBS) $(TEST_FLAGS)
+		-L{$MYLIBS} $(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(ACNET_HOST_OUT)/acnet_tests
