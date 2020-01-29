@@ -1,12 +1,12 @@
-ACNET_HOST_OUT   = output/host/ACNET
-ACNET_TARGET_OUT = output/target/ACNET
+ACNET_HOST_OUT   = $(HOST_BIN_DIR)/ACNET
+ACNET_TARGET_OUT = $(TARGET_BIN_DIR)/ACNET
 
-ALL_CLEAN += acnet_clean
-ALL_TARGETS += acnet
-ALL_TEST += acnet_tests
-ALL_OUT += $(ACNET_HOST_OUT) $(ACNET_TARGET_OUT)
-ALL_SOURCES += $(wildcard ACNET/*.C)
-ALL_HEADERS += $(wildcard ACNET/*.H)
+ALL_CLEAN        += acnet_clean
+ALL_TARGETS      += acnet
+ALL_TEST         += acnet_tests
+ALL_OUT          += $(ACNET_HOST_OUT) $(ACNET_TARGET_OUT)
+ALL_SOURCES      += $(wildcard ACNET/*.C)
+ALL_HEADERS      += $(wildcard ACNET/*.H)
 
 $(ACNET_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(ACNET_TARGET_OUT)
@@ -29,7 +29,7 @@ acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o adc/ADCDriverStub.o ACNET/adc_fef_
 		$(ADC_TARGET_OUT)/IADCDriver.o \
 		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS) -lerl_interface -lei
 
-acnet_tests: output ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
+acnet_tests: $(BIN_DIR) ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(ACNET_HOST_OUT)/acnet_tests \
 		$(ACNET_HOST_OUT)/ADCDevice.o \

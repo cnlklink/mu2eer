@@ -1,5 +1,7 @@
+# Un-comment to display shell commands
+# EES_OUT = 
+
 # Configure ELSD build tools
-# EES_OUT                = 
 EES_PREFIX	         = $(prefix)
 EES_PROJECT	         = mu2eer
 EES_TARGET_ARCH          = arm
@@ -29,13 +31,13 @@ EES_HOST_CPPFLAGS = -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS)
 ALL_SOURCES     := $(wildcard *.C) 
 ALL_HEADERS     := $(wildcard *.H) 
 
-ALL_TARGETS     := output
+ALL_TARGETS     := $(BIN_DIR)
 ALL_TEST        :=
 ALL_CLEAN       :=
 ALL_OUT         :=
 
 SRC_DIR         := src
-BIN_DIR         := output
+BIN_DIR         := bin
 TARGET_BIN_DIR  := $(BIN_DIR)/target
 HOST_BIN_DIR    := $(BIN_DIR)/host
 DOC_DIR         := docs
@@ -55,11 +57,11 @@ include tclk/tclk.mk
 .PHONY: all all_buildroot test clean docs deploy_test install_buildroot_target
 
 # Compile all C++ modules
-%.o: %.C output Makefile
+%.o: %.C Makefile $(BIN_DIR)
 	@ echo "-m-> Compiling C++ file $< (target) ..."
-	$(EES_OUT) $(CXX) -c -o output/target/$*.o $(EES_CPPFLAGS) $<
+	$(EES_OUT) $(CXX) -c -o $(TARGET_BIN_DIR)/$*.o $(EES_CPPFLAGS) $<
 	@ echo "-m-> Compiling C++ file $< (host) ..."
-	$(EES_OUT) $(HOST_CXX) -c -o output/host/$*.o $(EES_HOST_CPPFLAGS) $<
+	$(EES_OUT) $(HOST_CXX) -c -o $(HOST_BIN_DIR)/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
 
 # Make everything
