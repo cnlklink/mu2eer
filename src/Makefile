@@ -36,12 +36,11 @@ ALL_TEST        :=
 ALL_CLEAN       :=
 ALL_OUT         :=
 
-SRC_DIR         := src
-BIN_DIR         := bin
+BIN_DIR         := ../bin
 TARGET_BIN_DIR  := $(BIN_DIR)/target
 HOST_BIN_DIR    := $(BIN_DIR)/host
-DOC_DIR         := docs
-INC_DIR         := include
+DOC_DIR         := ../docs
+INC_DIR         := ../include
 
 # Some more host utilities
 SCP             = scp -q
