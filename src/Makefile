@@ -41,6 +41,7 @@ TARGET_BIN_DIR  := $(BIN_DIR)/target
 HOST_BIN_DIR    := $(BIN_DIR)/host
 DOC_DIR         := ../docs
 INC_DIR         := ../include
+ETC_DIR         := ../etc
 
 # Some more host utilities
 SCP             = scp -q
@@ -86,15 +87,15 @@ $(DOC_DIR)/html/index.html: $(DOC_DIR)/ Doxyfile $(ALL_SOURCES) $(ALL_HEADERS)
 	@ echo "-m-> Generating documentation..."
 	$(EES_OUT) doxygen
 
+# Creates the doc directory structure
+$(DOC_DIR)/:
+	$(EES_OUT) mkdir -p $(DOC_DIR)/html
+
 # Creates the binary directory structure
 $(BIN_DIR): $(ALL_OUT)
 	$(EES_OUT) mkdir -p $(BIN_DIR)
 	$(EES_OUT) mkdir -p $(TARGET_BIN_DIR)
 	$(EES_OUT) mkdir -p $(HOST_BIN_DIR)
-
-# Creates the doc directory structure
-$(DOC_DIR)/:
-	$(EES_OUT) mkdir -p $(DOC_DIR)/html
 
 # Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
 deploy_test: 
