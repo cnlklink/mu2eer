@@ -50,7 +50,7 @@ TEST( CoreGroup, ToString )
   // Loop through each possible value.  If it is undefined we expect the string to be "undefined".
   for( uint8_t stateNum = 0; stateNum < 255; stateNum++ )
     {
-      ISSMDeviceDriver::State state = static_cast<ISSMDeviceDriver::State>( stateNum );
+      ISSMDeviceDriver::state_t state = static_cast<ISSMDeviceDriver::state_t>( stateNum );
       stringstream ss;
       ss << state;
 
@@ -72,8 +72,63 @@ TEST( CoreGroup, ToString )
         case ISSMDeviceDriver::STATE_END_CYCLE: STRCMP_EQUAL( "end_cycle", ss.str().c_str() ); break;
         case ISSMDeviceDriver::STATE_LEARNING: STRCMP_EQUAL( "learning", ss.str().c_str() ); break;
         case ISSMDeviceDriver::STATE_ABORT: STRCMP_EQUAL( "abort", ss.str().c_str() ); break;
+        case ISSMDeviceDriver::STATE_FAULT: STRCMP_EQUAL( "fault", ss.str().c_str() ); break;
           
         default: STRCMP_EQUAL( "UNDEFINED", ss.str().c_str() ); break;
         }
     }
+}
+
+/**
+ * Read State
+ *
+ * Verify that we can read the state and that this initial state is idle.
+ */
+TEST( CoreGroup, ReadState )
+{
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_IDLE, _gDriver->stateGet() );
+}
+
+/**
+ * Wait for Single State Change
+ *
+ * Verify that we can wait for a single spill state change to occur.
+ */
+TEST( CoreGroup, WaitForSingleStateChange )
+{
+  _gDriver->stateSequenceSet( { ISSMDeviceDriver::STATE_INIT } );
+
+  // Initial state should be idle
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_IDLE, _gDriver->stateGet() );
+
+  auto state = _gDriver->waitForStateChange();
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_INIT, state );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_INIT, _gDriver->stateGet() );
+
+  // A wait for more state changes should return a fault state
+  state = _gDriver->waitForStateChange();
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_FAULT, state );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_FAULT, _gDriver->stateGet() );
+}
+
+/**
+ * Wait for Multiple State Changes
+ *
+ * Verifies that we can wait for multiple state changes to occur.
+ */
+TEST( CoreGroup, WaitForMultipleStateChanges )
+{
+  _gDriver->stateSequenceSet( { ISSMDeviceDriver::STATE_INIT,
+        ISSMDeviceDriver::STATE_BETWEEN_CYCLES,
+        ISSMDeviceDriver::STATE_START_CYCLE,
+        ISSMDeviceDriver::STATE_BETWEEN_SPILLS,
+        ISSMDeviceDriver::STATE_RAMP } );
+
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_IDLE, _gDriver->stateGet() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_INIT, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_START_CYCLE, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_BETWEEN_SPILLS, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_RAMP, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( ISSMDeviceDriver::STATE_FAULT, _gDriver->waitForStateChange() );
 }

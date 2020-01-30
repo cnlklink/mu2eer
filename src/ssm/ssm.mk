@@ -17,12 +17,13 @@ $(SSM_HOST_OUT):
 ssm_clean:
 	$(EES_OUT) rm -f ssm/*.o
 
-ssm_tests: $(BIN_DIR) ssm/ISSMDeviceDriver.o ssm/AllTests.o ssm/SSMDeviceDriverMockTest.o
+ssm_tests: $(BIN_DIR) ssm/ISSMDeviceDriver.o ssm/AllTests.o ssm/SSMDeviceDriverMockTest.o ssm/SSMDeviceDriverMock.o
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(SSM_HOST_OUT)/ssm_tests \
 		$(SSM_HOST_OUT)/ISSMDeviceDriver.o \
 		$(SSM_HOST_OUT)/AllTests.o \
 		$(SSM_HOST_OUT)/SSMDeviceDriverMockTest.o \
+		$(SSM_HOST_OUT)/SSMDeviceDriverMock.o \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(SSM_HOST_OUT)/ssm_tests

@@ -28,7 +28,7 @@ namespace Mu2eER
     /**
      * Spill State Machine State Definitions
      */
-    enum State
+    enum state_t
       {
         STATE_IDLE = 0,
         STATE_INIT = 1,
@@ -44,7 +44,8 @@ namespace Mu2eER
         STATE_AFTER_SPILL = 20,
         STATE_END_CYCLE = 22,
         STATE_LEARNING = 14,
-        STATE_ABORT = 23
+        STATE_ABORT = 23,
+        STATE_FAULT = 255
       };
 
     /**
@@ -56,6 +57,24 @@ namespace Mu2eER
      * Destructor
      */
     virtual ~ISSMDeviceDriver();
+
+    /**
+     * Read State
+     *
+     * Returns the current state of Spill State Machine.
+     *
+     * @return Current state
+     */
+    virtual state_t stateGet() const = 0;
+
+    /**
+     * Wait for State Change
+     *
+     * Blocks until a state change occurs and notification is received from the hardware.
+     *
+     * @return New state
+     */
+    virtual state_t waitForStateChange() = 0;
 
   private:
   };
@@ -69,7 +88,7 @@ namespace Mu2eER
    * @param state State to convert
    * @return Output stream
    */
-  ostream& operator<<( ostream& os, const ISSMDeviceDriver::State state );
+  ostream& operator<<( ostream& os, const ISSMDeviceDriver::state_t state );
 };
 
 

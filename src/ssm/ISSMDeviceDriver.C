@@ -19,7 +19,7 @@ ISSMDeviceDriver::~ISSMDeviceDriver()
 {
 }
 
-ostream& Mu2eER::operator<<( ostream& os, const ISSMDeviceDriver::State state )
+ostream& Mu2eER::operator<<( ostream& os, const ISSMDeviceDriver::state_t state )
 {
   switch( state )
     {
@@ -38,6 +38,7 @@ ostream& Mu2eER::operator<<( ostream& os, const ISSMDeviceDriver::State state )
     case ISSMDeviceDriver::STATE_END_CYCLE: os << "end_cycle"; break;
     case ISSMDeviceDriver::STATE_LEARNING: os << "learning"; break;
     case ISSMDeviceDriver::STATE_ABORT: os << "abort"; break;
+    case ISSMDeviceDriver::STATE_FAULT: os << "fault"; break;
 
     default: os << "UNDEFINED"; break;
     }
