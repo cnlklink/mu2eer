@@ -53,6 +53,7 @@ TARGET_TEST_HOSTNAME = srsd
 include ACNET/ACNET.mk
 include adc/adc.mk
 include tclk/tclk.mk
+include ssm/ssm.mk
 
 .PHONY: all all_buildroot test clean docs deploy_test install_buildroot_target
 
