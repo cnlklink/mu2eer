@@ -15,8 +15,8 @@ EES_BR_BASE              = /usr/local/products/buildroot/achilles_mu2eer
 # Include ELSD build tools
 include /usr/local/products/elsd/include/elsd-3.0.mk
 
-EES_CPPFLAGS	= -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS)	$(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include
-EES_LDFLAGS	= $(EES_PREF_LDFLAGS)	$(EES_PREF_LXRT_LDFLAGS)
+EES_CPPFLAGS	= -I$(INC_DIR) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS) $(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include
+EES_LDFLAGS	= $(EES_PREF_LDFLAGS) $(EES_PREF_LXRT_LDFLAGS)
 ERLANG_INT	= erl_interface-3.10.4
 MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 
@@ -25,7 +25,7 @@ TEST_FLAGS      = -lCppUTest -lCppUTestExt
 DEV_LIBS        = -lpthread
 TARGET_LIBS     = -lpthread -lerl_interface -lei
 
-EES_HOST_CPPFLAGS = -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS) 
+EES_HOST_CPPFLAGS = -I$(INC_DIR) -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS) 
 
 # List of all C++ source files
 ALL_SOURCES     := $(wildcard *.C) 
@@ -52,8 +52,9 @@ TARGET_TEST_HOSTNAME = srsd
 # Include module makefiles
 include ACNET/ACNET.mk
 include adc/adc.mk
-include tclk/tclk.mk
+include mu2eerd/mu2eerd.mk
 include ssm/ssm.mk
+include tclk/tclk.mk
 
 .PHONY: all all_buildroot test clean docs deploy_test install_buildroot_target
 
