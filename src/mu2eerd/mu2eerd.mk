@@ -25,4 +25,4 @@ mu2eerd: mu2eerd/main.o
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(MU2EERD_HOST_OUT)/mu2eerd \
 		$(MU2EERD_HOST_OUT)/main.o \
-		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS)
+		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS) $(TEST_FLAGS)

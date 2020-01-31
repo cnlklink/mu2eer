@@ -20,7 +20,9 @@ EES_LDFLAGS	= $(EES_PREF_LDFLAGS) $(EES_PREF_LXRT_LDFLAGS)
 ERLANG_INT	= erl_interface-3.10.4
 MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 
-TEST_FLAGS      = -lCppUTest -lCppUTestExt
+# Include CppUTest unit testing libraries
+# -fprofile-arcs and -ftest-coverage enable gcov test coverage analysis
+TEST_FLAGS      = -lCppUTest -lCppUTestExt -fprofile-arcs -ftest-coverage 
 
 DEV_LIBS        = -lpthread
 TARGET_LIBS     = -lpthread -lerl_interface -lei
