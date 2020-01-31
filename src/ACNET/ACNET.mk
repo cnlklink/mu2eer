@@ -8,6 +8,15 @@ ALL_OUT          += $(ACNET_HOST_OUT) $(ACNET_TARGET_OUT)
 ALL_SOURCES      += $(wildcard ACNET/*.C)
 ALL_HEADERS      += $(wildcard ACNET/*.H)
 
+ACNET_ADC_OBJS        = ADCDevice.o adc_fef_init.o
+ACNET_ADC_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_ADC_OBJS))
+ACNET_ADC_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_ADC_OBJS))
+ACNET_ADC_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_ADC_OBJS))
+
+ACNET_TEST_OBJS        = ADCDevice.o ADCDeviceTest.o AllTests.o 
+ACNET_TEST_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_TEST_OBJS))
+ACNET_TEST_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_TEST_OBJS))
+
 $(ACNET_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(ACNET_TARGET_OUT)
 
@@ -19,24 +28,19 @@ acnet_clean:
 
 acnet: acnet_adc
 
-acnet_adc: ACNET/ADCDevice.o adc/IADCDriver.o adc/ADCDriverStub.o ACNET/adc_fef_init.o
+acnet_adc: $(TARGET_BIN_DIR)/adc.a $(ACNET_ADC_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_adc \
 		$(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o \
-		$(ADC_TARGET_OUT)/ADCDriverStub.o \
-		$(ACNET_TARGET_OUT)/adc_fef_init.o \
-		$(ACNET_TARGET_OUT)/ADCDevice.o \
-		$(ADC_TARGET_OUT)/IADCDriver.o \
-		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS) -lerl_interface -lei
+		$(ACNET_ADC_OBJS_TARGET) \
+		$(TARGET_BIN_DIR)/adc.a \
+		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
 
-acnet_tests: $(BIN_DIR) ACNET/ADCDevice.o ACNET/ADCDeviceTest.o ACNET/AllTests.o adc/IADCDriver.o adc/ADCDriverStub.o
+acnet_tests: $(BIN_DIR) $(ACNET_TEST_OBJS_PREFIX) $(ACNET_ADC_OBJS_PREFIX) $(HOST_BIN_DIR)/adc.a
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(ACNET_HOST_OUT)/acnet_tests \
-		$(ACNET_HOST_OUT)/ADCDevice.o \
-		$(ACNET_HOST_OUT)/ADCDeviceTest.o \
-		$(ACNET_HOST_OUT)/AllTests.o \
-		$(ADC_HOST_OUT)/IADCDriver.o \
-		$(ADC_HOST_OUT)/ADCDriverStub.o \
-		-L{$MYLIBS} $(DEV_LIBS) $(TEST_FLAGS)
+		$(ACNET_TEST_OBJS_HOST) \
+		$(HOST_BIN_DIR)/adc.a \
+		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(ACNET_HOST_OUT)/acnet_tests
