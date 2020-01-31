@@ -15,7 +15,7 @@ ADC_OBJS_TARGET      = $(addprefix $(ADC_TARGET_OUT)/,$(ADC_OBJS))
 
 ADC_TEST_OBJS        = AllTests.o ADCDriverStubTest.o
 ADC_TEST_OBJS_PREFIX = $(addprefix adc/,$(ADC_TEST_OBJS))
-ADC_TEST_OBJS_HOST   = $(addprefix $(ADC_HOST_OUT),$(ADC_TEST_OBJS))
+ADC_TEST_OBJS_HOST   = $(addprefix $(ADC_HOST_OUT)/,$(ADC_TEST_OBJS))
 
 $(ADC_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(ADC_TARGET_OUT)
@@ -42,7 +42,7 @@ $(ADC_TARGET_OUT)/adc.a: $(ADC_OBJS_PREFIX)
 adc_tests: $(BIN_DIR) $(ADC_HOST_OUT)/adc.a $(ADC_TEST_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(ADC_HOST_OUT)/adc_tests \
-		$(ADC_TEST_OBJS_HOSTS) \
+		$(ADC_TEST_OBJS_HOST) \
 		$(ADC_HOST_OUT)/adc.a \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
