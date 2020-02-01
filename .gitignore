@@ -1,5 +1,7 @@
 *~
 *.o
+*.gcov
+*.info
 acnet_tests
 acnet_adc
 adc_tests
