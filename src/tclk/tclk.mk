@@ -2,7 +2,7 @@ TCLK_HOST_OUT   = $(HOST_BIN_DIR)/tclk
 TCLK_TARGET_OUT = $(TARGET_BIN_DIR)/tclk
 
 ALL_CLEAN       += tclk_clean
-ALL_TARGETS     +=
+ALL_TARGETS     += $(HOST_BIN_DIR)/tclk.a $(TARGET_BIN_DIR)/tclk.a
 ALL_TEST        += tclk_tests
 ALL_OUT         += $(TCLK_HOST_OUT) $(TCLK_TARGET_OUT)
 ALL_SOURCES     += $(wildcard tclk/*.C)
@@ -26,11 +26,24 @@ $(TCLK_HOST_OUT):
 tclk_clean:
 	$(EES_OUT) rm -f tclk/*.o
 
-tclk_tests: $(TCLK_OBJS_PREFIX) $(TCLK_TEST_OBJS_PREFIX)
+# Host tclk library
+$(HOST_BIN_DIR)/tclk.a: $(TCLK_OBJS_PREFIX)
+	@echo "-m-> Linking $@ (host)..."
+	$(EES_OUT) $(HOST_AR) ru $@ $(TCLK_OBJS_HOST)
+	$(EES_OUT) $(HOST_RANLIB) $@
+
+# Target tclk library
+$(TARGET_BIN_DIR)/tclk.a: $(TCLK_OBJS_PREFIX)
+	@echo "-m-> Linking $@ (target)..."
+	$(EES_OUT) $(AR) ru $@ $(TCLK_OBJS_TARGET)
+	$(EES_OUT) $(RANLIB) $@
+
+# Unit test suite
+tclk_tests: $(HOST_BIN_DIR)/tclk.a $(TCLK_TEST_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(TCLK_HOST_OUT)/tclk_tests \
-		$(TCLK_OBJS_HOST) \
 		$(TCLK_TEST_OBJS_HOST) \
+		$(HOST_BIN_DIR)/tclk.a \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(TCLK_HOST_OUT)/tclk_tests
