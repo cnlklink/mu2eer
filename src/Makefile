@@ -80,6 +80,7 @@ tests: $(ALL_TEST)
 # Clean output/ directory
 clean: $(ALL_CLEAN)
 	@ echo "-m-> Cleaning..."
+	$(EES_OUT) -rm -rf *.gcov
 	$(EES_OUT) -rm -rf $(BIN_DIR)
 	$(EES_OUT) -rm -rf $(DOC_DIR)
 
