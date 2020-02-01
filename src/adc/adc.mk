@@ -47,3 +47,5 @@ adc_tests: $(BIN_DIR) $(HOST_BIN_DIR)/adc.a $(ADC_TEST_OBJS_PREFIX)
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(ADC_HOST_OUT)/adc_tests
+	@echo "-m-> Coverage report for $(ADC_OBJS)..."
+	$(EES_OUT) $(HOST_GCOV) $(ADC_OBJS_HOST)

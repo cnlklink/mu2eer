@@ -48,6 +48,7 @@ ETC_DIR         := ../etc
 # Some more host utilities
 SCP             = scp -q
 SSH             = ssh -K
+HOST_GCOV       = gcov -r
 
 TARGET_TEST_HOSTNAME = srsd
 
