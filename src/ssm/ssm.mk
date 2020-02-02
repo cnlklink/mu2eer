@@ -17,6 +17,8 @@ SSM_TEST_OBJS   = AllTests.o SSMDeviceDriverMockTest.o
 SSM_TEST_OBJS_PREFIX = $(addprefix ssm/,$(SSM_TEST_OBJS))
 SSM_TEST_OBJS_HOST = $(addprefix $(SSM_HOST_OUT)/,$(SSM_TEST_OBJS))
 
+ALL_COVERAGE    += $(SSM_OBJS_HOST)
+
 $(SSM_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(SSM_TARGET_OUT)
 
@@ -47,5 +49,3 @@ ssm_tests: $(HOST_BIN_DIR)/ssm.a $(SSM_TEST_OBJS_PREFIX)
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(SSM_HOST_OUT)/ssm_tests
-	@echo "-m-> Coverage report for $(SSM_OBJS)..."
-	$(EES_OUT) $(HOST_GCOV) $(SSM_OBJS_HOST)

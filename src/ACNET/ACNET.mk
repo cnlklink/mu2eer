@@ -17,6 +17,8 @@ ACNET_TEST_OBJS        = ADCDevice.o ADCDeviceTest.o AllTests.o
 ACNET_TEST_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_TEST_OBJS))
 ACNET_TEST_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_TEST_OBJS))
 
+ALL_COVERAGE += $(ACNET_ADC_OBJS_HOST)
+
 $(ACNET_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(ACNET_TARGET_OUT)
 
@@ -44,5 +46,4 @@ acnet_tests: $(BIN_DIR) $(ACNET_TEST_OBJS_PREFIX) $(ACNET_ADC_OBJS_PREFIX) $(HOS
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(ACNET_HOST_OUT)/acnet_tests
-	@echo "-m-> Coverage report for $(ACNET_ADC_OBJS)..."
-	$(EES_OUT) $(HOST_GCOV) $(ACNET_ADC_OBJS_HOST)
+

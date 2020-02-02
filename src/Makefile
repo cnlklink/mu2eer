@@ -37,6 +37,7 @@ ALL_TARGETS     := $(BIN_DIR)
 ALL_TEST        :=
 ALL_CLEAN       :=
 ALL_OUT         :=
+ALL_COVERAGE    :=
 
 BIN_DIR         := ../bin
 TARGET_BIN_DIR  := $(BIN_DIR)/target
@@ -77,6 +78,8 @@ all_buildroot: $(ALL_TARGETS)
 
 # Make and run unit test suite
 tests: $(ALL_TEST)
+	@echo "-m-> Coverage report for $(ALL_COVERAGE)..."
+	$(EES_OUT) $(HOST_GCOV) $(ALL_COVERAGE)
 
 # Clean output/ directory
 clean: $(ALL_CLEAN)

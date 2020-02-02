@@ -17,6 +17,8 @@ TCLK_TEST_OBJS   = AllTests.o TCLKDecoderDriverMockTest.o
 TCLK_TEST_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_TEST_OBJS))
 TCLK_TEST_OBJS_HOST = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_TEST_OBJS))
 
+ALL_COVERAGE     += $(TCLK_OBJS_HOST)
+
 $(TCLK_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(TCLK_TARGET_OUT)
 
@@ -47,5 +49,3 @@ tclk_tests: $(HOST_BIN_DIR)/tclk.a $(TCLK_TEST_OBJS_PREFIX)
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(TCLK_HOST_OUT)/tclk_tests
-	@echo "-m-> Coverage report for $(TCLK_OBJS)..."
-	$(EES_OUT) $(HOST_GCOV) $(TCLK_OBJS_HOST)
