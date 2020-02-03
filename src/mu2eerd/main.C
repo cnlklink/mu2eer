@@ -8,12 +8,16 @@
 
 #include <iostream>
 
-#include "ssm.H"
+#include "SpillStateMachine.H"
 
+using namespace Mu2eER;
 using namespace std;
 
 int main( int argc, char* argv[] )
 {
+  SpillStateMachine ssm;
+  ssm.initialize();
+
   cout << "mu2eerd started." << endl;
   return 0;
 }
