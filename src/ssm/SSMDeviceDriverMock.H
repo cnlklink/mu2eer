@@ -24,10 +24,22 @@ namespace Mu2eER
   class SSMDeviceDriverMock : public ISSMDeviceDriver
   {
   public:
+    // Override
+    virtual void initialize();
+
     /**
-     * Constructor
+     * Default Constructor
      */
     SSMDeviceDriverMock();
+
+    /**
+     * Constructor from State Sequence
+     *
+     * Initializes the state sequence during construction.
+     *
+     * @param sequence State sequence
+     */
+    SSMDeviceDriverMock( const vector<ssm_state_t>& sequence );
 
     /**
      * Destructor
@@ -35,7 +47,7 @@ namespace Mu2eER
     virtual ~SSMDeviceDriverMock();
 
     // Override
-    virtual state_t stateGet() const;
+    virtual ssm_state_t stateGet() const;
 
     /**
      * State Sequence Set
@@ -44,21 +56,42 @@ namespace Mu2eER
      *
      * @param sequence Sequence of states, 0 being the first
      */
-    virtual void stateSequenceSet( const vector<ISSMDeviceDriver::state_t>& sequence );
+    virtual void stateSequenceSet( const vector<ssm_state_t>& sequence );
 
     // Override
-    virtual state_t waitForStateChange();
+    virtual ssm_state_t waitForStateChange();
 
   private:
     /**
+     * Initial state sequence.  _stateSequence can be reset to this by calling initialize().
+     */
+    vector<ssm_state_t> _initialSequence;
+
+    /**
      * Current state
      */
-    state_t _state;
+    ssm_state_t _state;
 
     /**
      * A sequence of state changes to be played back by calls to waitForStateChange(..).
      */
-    deque<state_t> _stateSequence;
+    deque<ssm_state_t> _stateSequence;
+
+    /**
+     * Reset Sequence
+     *
+     * Resets _stateSequence to _initialSequence.
+     */
+    void _resetSequence();
+
+    /**
+     * Next State
+     *
+     * Advances to the next state in the sequence.  If the sequence is empty, set to FAULT.
+     *
+     * @return The next state in the sequence
+     */
+    ssm_state_t _stateNext();
   };
 };
 

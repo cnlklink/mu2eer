@@ -11,35 +11,47 @@
 using namespace Mu2eER;
 using namespace std;
 
-SSMDeviceDriverMock::SSMDeviceDriverMock()
-  : _state( ISSMDeviceDriver::STATE_IDLE )
+void SSMDeviceDriverMock::initialize()
 {
+  _resetSequence();
+
+  _stateNext();
+}
+
+void SSMDeviceDriverMock::_resetSequence()
+{
+  _stateSequence.clear();
+  for( auto state : _initialSequence )
+    {
+      _stateSequence.push_back( state );
+    }
+}
+
+SSMDeviceDriverMock::SSMDeviceDriverMock()
+  : _state( SSM_IDLE )
+{
+}
+
+SSMDeviceDriverMock::SSMDeviceDriverMock( const vector<ssm_state_t>& sequence )
+  : SSMDeviceDriverMock()
+{
+  stateSequenceSet( sequence );
 }
 
 SSMDeviceDriverMock::~SSMDeviceDriverMock()
 {
 }
 
-ISSMDeviceDriver::state_t SSMDeviceDriverMock::stateGet() const
+ssm_state_t SSMDeviceDriverMock::stateGet() const
 {
   return _state;
 }
 
-void SSMDeviceDriverMock::stateSequenceSet( const vector<ISSMDeviceDriver::state_t>& sequence )
-{
-  _stateSequence.clear();
-
-  for( auto state : sequence )
-    {
-      _stateSequence.push_back( state );
-    }
-}
-
-ISSMDeviceDriver::state_t SSMDeviceDriverMock::waitForStateChange()
+ssm_state_t SSMDeviceDriverMock::_stateNext()
 {
   if( _stateSequence.empty() )
     {
-      _state = ISSMDeviceDriver::STATE_FAULT;
+      _state = SSM_FAULT;
     }
   else
     {
@@ -48,4 +60,15 @@ ISSMDeviceDriver::state_t SSMDeviceDriverMock::waitForStateChange()
     }
 
   return _state;
+}
+
+void SSMDeviceDriverMock::stateSequenceSet( const vector<ssm_state_t>& sequence )
+{
+  _initialSequence = sequence;
+  _resetSequence();
+}
+
+ssm_state_t SSMDeviceDriverMock::waitForStateChange()
+{
+  return _stateNext();
 }

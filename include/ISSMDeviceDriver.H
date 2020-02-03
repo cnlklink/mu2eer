@@ -11,6 +11,8 @@
 
 #include <ostream>
 
+#include "ssm.H"
+
 using namespace std;
 
 namespace Mu2eER
@@ -26,27 +28,11 @@ namespace Mu2eER
   {
   public:
     /**
-     * Spill State Machine State Definitions
+     * Initialize firmware
+     *
+     * Send a message to the firmware to initlialize (or re-initialize).
      */
-    enum state_t
-      {
-        STATE_IDLE = 0,
-        STATE_INIT = 1,
-        STATE_BETWEEN_CYCLES = 2,
-        STATE_START_CYCLE = 3,
-        STATE_BETWEEN_SPILLS = 4,
-        STATE_READ_IBEAM = 5,
-        STATE_RAMP = 6,
-        STATE_SPILL = 7,
-        STATE_START_EOS_TIMER = 8,
-        STATE_SPILL_PARABOLA = 21,
-        STATE_START_CLEANUP_TIMER = 19,
-        STATE_AFTER_SPILL = 20,
-        STATE_END_CYCLE = 22,
-        STATE_LEARNING = 14,
-        STATE_ABORT = 23,
-        STATE_FAULT = 255
-      };
+    virtual void initialize() = 0;
 
     /**
      * Constructor
@@ -65,7 +51,7 @@ namespace Mu2eER
      *
      * @return Current state
      */
-    virtual state_t stateGet() const = 0;
+    virtual ssm_state_t stateGet() const = 0;
 
     /**
      * Wait for State Change
@@ -74,7 +60,7 @@ namespace Mu2eER
      *
      * @return New state
      */
-    virtual state_t waitForStateChange() = 0;
+    virtual ssm_state_t waitForStateChange() = 0;
 
   private:
   };
@@ -88,7 +74,7 @@ namespace Mu2eER
    * @param state State to convert
    * @return Output stream
    */
-  ostream& operator<<( ostream& os, const ISSMDeviceDriver::state_t state );
+  ostream& operator<<( ostream& os, const ssm_state_t state );
 };
 
 
