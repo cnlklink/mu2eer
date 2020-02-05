@@ -8,6 +8,10 @@ ALL_OUT         += $(SSM_HOST_OUT) $(SSM_TARGET_OUT)
 ALL_SOURCES     += $(wildcard ssm/*.C)
 ALL_HEADERS     += $(wildcard ssm/*.H)
 
+SSM_LIBS        = ssm.a config.a
+SSM_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(SSM_LIBS))
+SSM_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(SSM_LIBS))
+
 SSM_OBJS        = ISSMDeviceDriver.o SSMDeviceDriverMock.o SpillStateMachine.o
 SSM_OBJS_PREFIX = $(addprefix ssm/,$(SSM_OBJS))
 SSM_OBJS_HOST   = $(addprefix $(SSM_HOST_OUT)/,$(SSM_OBJS))
@@ -41,11 +45,11 @@ $(TARGET_BIN_DIR)/ssm.a: $(SSM_OBJS_PREFIX)
 	$(EES_OUT) $(RANLIB) $@
 
 # Unit test suite
-ssm_tests: $(HOST_BIN_DIR)/ssm.a $(SSM_TEST_OBJS_PREFIX)
+ssm_tests: $(SSM_LIBS_HOST) $(SSM_TEST_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(SSM_HOST_OUT)/ssm_tests \
 		$(SSM_TEST_OBJS_HOST) \
-		$(HOST_BIN_DIR)/ssm.a \
+		$(SSM_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(SSM_HOST_OUT)/ssm_tests

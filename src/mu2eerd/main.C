@@ -15,7 +15,9 @@ using namespace std;
 
 int main( int argc, char* argv[] )
 {
-  SpillStateMachine ssm;
+  ConfigurationManager cm;
+
+  SpillStateMachine ssm( cm );
   ssm.initialize();
 
   cout << "mu2eerd started." << endl;

@@ -44,6 +44,7 @@ TEST_GROUP( CoreGroup )
 TEST( CoreGroup, DefaultConfig )
 {
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
+  STRCMP_EQUAL( "mock", _cm->ssmDriverGet().c_str() );
 }
 
 /**

@@ -19,6 +19,11 @@ using namespace std;
  */
 ssm_error SSM_NOT_READY( "SSM Not Ready" );
 
+SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm )
+  : _cm( cm )
+{
+}
+
 void SpillStateMachine::initialize()
 {
   cout << "Initializing Spill Statate Machine...";

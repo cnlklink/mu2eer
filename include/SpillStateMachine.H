@@ -11,6 +11,7 @@
 
 #include <memory>
 
+#include "ConfigurationManager.H"
 #include "ISSMDeviceDriver.H"
 #include "ssm.H"
 
@@ -29,6 +30,13 @@ namespace Mu2eER
   {
   public:
     /**
+     * Constructor
+     *
+     * @param cm Reference to the configuration manager
+     */
+    SpillStateMachine( const ConfigurationManager& cm );
+
+    /**
      * Initialize
      *
      * Initializes the spill state machine.
@@ -43,6 +51,11 @@ namespace Mu2eER
     ssm_state_t stateGet() const;
     
   private:
+    /**
+     * Configuration manager
+     */
+    const ConfigurationManager& _cm;
+
     /**
      * Spill state machine device driver object
      */

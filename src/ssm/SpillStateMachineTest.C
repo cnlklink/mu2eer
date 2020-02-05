@@ -14,6 +14,11 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
+ * Use a default configuration for testing
+ */
+static ConfigurationManager _cm;
+
+/**
  * A global SpillStateMachine object used for all tests
  */
 static SpillStateMachine* _ssm;
@@ -27,7 +32,7 @@ TEST_GROUP( InitGroup )
 {
   void setup()
   {
-    _ssm = new SpillStateMachine();
+    _ssm = new SpillStateMachine( _cm );
   }
 
   void teardown()

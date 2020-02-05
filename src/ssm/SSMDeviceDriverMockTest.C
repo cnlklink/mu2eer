@@ -117,7 +117,7 @@ TEST( CoreGroup, ToString )
 {
   // The state register is 8-bits so there are 256 possible states.
   // Loop through each possible value.  If it is undefined we expect the string to be "undefined".
-  for( uint8_t stateNum = 0; stateNum < 255; stateNum++ )
+  for( uint16_t stateNum = 0; stateNum < 256; stateNum++ )
     {
       ssm_state_t state = static_cast<ssm_state_t>( stateNum );
       stringstream ss;

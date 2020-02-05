@@ -61,6 +61,13 @@ namespace Mu2eER
     void reload();
 
     /**
+     * Set Spill State Machine Driver
+     *
+     * @return "mock" or "real"
+     */
+    string ssmDriverGet() const;
+
+    /**
      * Get TCLK Driver
      *
      * @return "mock" or "real"

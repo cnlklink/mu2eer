@@ -42,8 +42,16 @@ ConfigurationManager::ConfigurationManager()
 
 void ConfigurationManager::_defaultInit()
 {
-  // TCLK defaults
   auto& root = _cfg.getRoot();
+
+  // Spill state machine defaults
+  root.add( "ssm", libconfig::Setting::TypeGroup );
+  auto& ssm = root["ssm"];
+
+  ssm.add( "driver", libconfig::Setting::TypeString );
+  ssm["driver"] = "mock";
+
+  // TCLK defaults
   root.add( "tclk", libconfig::Setting::TypeGroup );
   auto& tclk = root["tclk"];
   
@@ -86,6 +94,12 @@ void ConfigurationManager::reload()
     {
       throw CONFIG_PARSE_ERR;
     }
+}
+
+string ConfigurationManager::ssmDriverGet() const
+{
+  const auto& root = _cfg.getRoot();
+  return root["ssm"]["driver"];
 }
 
 string ConfigurationManager::tclkDriverGet() const
