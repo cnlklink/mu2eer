@@ -70,7 +70,7 @@ namespace Mu2eER
     /**
      * Set TCLK Driver
      *
-     * @param TCLK driver
+     * @param driver TCLK driver
      */
     void tclkDriverSet( const string& driver );
 
