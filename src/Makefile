@@ -24,8 +24,9 @@ MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 # -fprofile-arcs and -ftest-coverage enable gcov test coverage analysis
 TEST_FLAGS      = -lCppUTest -lCppUTestExt -fprofile-arcs -ftest-coverage 
 
-DEV_LIBS        = -lpthread -lconfig++
-TARGET_LIBS     = -lpthread -lerl_interface -lei -lconfig++
+# -lrt needed for POSIX shared memory
+DEV_LIBS        = -lconfig++ -lrt
+TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt
 
 EES_HOST_CPPFLAGS = -I$(INC_DIR) -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS) 
 
@@ -56,6 +57,7 @@ TARGET_TEST_HOSTNAME = srsd
 # Include module makefiles
 include ACNET/ACNET.mk
 include adc/adc.mk
+include api/api.mk
 include config/config.mk
 include mu2eerd/mu2eerd.mk
 include ssm/ssm.mk
