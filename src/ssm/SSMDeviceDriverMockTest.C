@@ -141,6 +141,7 @@ TEST( CoreGroup, ToString )
         case SSM_LEARNING: STRCMP_EQUAL( "learning", ss.str().c_str() ); break;
         case SSM_ABORT: STRCMP_EQUAL( "abort", ss.str().c_str() ); break;
         case SSM_FAULT: STRCMP_EQUAL( "fault", ss.str().c_str() ); break;
+        case SSM_UNKNOWN: STRCMP_EQUAL( "UNKNOWN", ss.str().c_str() ); break;
           
         default: STRCMP_EQUAL( "UNDEFINED", ss.str().c_str() ); break;
         }

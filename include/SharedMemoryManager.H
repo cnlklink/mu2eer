@@ -40,6 +40,13 @@ namespace Mu2eER
     ~SharedMemoryManager();
 
     /**
+     * Get SSM Block
+     *
+     * Returns a reference to the Spill State Machine block.
+     */
+    SpillStateMachineSMB& ssmBlockGet();
+
+    /**
      * Get Version
      *
      * @return Shared memory API version

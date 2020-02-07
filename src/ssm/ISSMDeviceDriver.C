@@ -39,6 +39,7 @@ ostream& Mu2eER::operator<<( ostream& os, const ssm_state_t state )
     case SSM_LEARNING: os << "learning"; break;
     case SSM_ABORT: os << "abort"; break;
     case SSM_FAULT: os << "fault"; break;
+    case SSM_UNKNOWN: os << "UNKNOWN"; break;
 
     default: os << "UNDEFINED"; break;
     }

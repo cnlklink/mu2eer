@@ -16,6 +16,11 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
+ * Global SharedMemoryManager object
+ */
+static SharedMemoryManager* _shmm;
+
+/**
  * Initialization Group
  *
  * Tests related to constructing and destructing the shared memory interface.
@@ -28,6 +33,24 @@ TEST_GROUP( InitGroup )
 
   void teardown()
   {
+  }
+};
+
+/**
+ * Spill State Machine Group
+ *
+ * Tests related to the Spill State Machine shared memory block.
+ */
+TEST_GROUP( SMMGroup )
+{
+  void setup()
+  {
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+  }
+
+  void teardown()
+  {
+    delete _shmm;
   }
 };
 
@@ -59,4 +82,24 @@ TEST( InitGroup, Construction )
 
   // Verify API version
   STRCMP_EQUAL( API_VERSION, shmmB.versionGet().c_str() );
+}
+
+/**
+ * Test Spill State Machine Block Construction
+ *
+ * Verify that the spill state machine block is constructed.
+ */
+TEST( SMMGroup, Construction )
+{
+  try
+    {
+      SpillStateMachineSMB& ssmb = _shmm->ssmBlockGet();
+
+      CHECK_EQUAL( SSM_UNKNOWN, ssmb.currentStateGet() );
+    }
+  catch( api_error e )
+    {
+      cerr << "Exception: " << e.what() << endl;
+      FAIL( "Failed to get SSM shared memory block" );
+    }
 }

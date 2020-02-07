@@ -31,7 +31,8 @@ enum ssm_state_t
     SSM_END_CYCLE = 22,
     SSM_LEARNING = 14,
     SSM_ABORT = 23,
-    SSM_FAULT = 255
+    SSM_FAULT = 254,
+    SSM_UNKNOWN = 255,
   };
 
 /**

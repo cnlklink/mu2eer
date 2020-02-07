@@ -14,6 +14,7 @@
 
 #include "api.H"
 #include "ssm.H"
+#include "SpillStateMachineSMB.H"
 
 using namespace std;
 
@@ -34,6 +35,16 @@ namespace Mu2eER
     }
 
     /**
+     * Get Spill State Machine Block
+     *
+     * @return Reference to the SSM Block
+     */
+    SpillStateMachineSMB& ssmBlockGet()
+    {
+      return _ssmBlock;
+    }
+
+    /**
      * Get Version
      *
      * @return API version string
@@ -50,9 +61,9 @@ namespace Mu2eER
     char _api_version[32];
 
     /**
-     * Current state of the Spill State Machine
+     * Spill State Machine Block
      */
-    ssm_state_t _ssm_state;
+    SpillStateMachineSMB _ssmBlock;
   };
 };
 

@@ -125,6 +125,11 @@ SharedMemoryManager::~SharedMemoryManager()
     }
 }
 
+SpillStateMachineSMB& SharedMemoryManager::ssmBlockGet()
+{
+  return _shmPtr->ssmBlockGet();
+}
+
 string SharedMemoryManager::versionGet() const
 {
   return _shmPtr->versionGet();
