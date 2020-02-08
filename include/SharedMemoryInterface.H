@@ -39,7 +39,7 @@ namespace Mu2eER
      *
      * @return Reference to the SSM Block
      */
-    SpillStateMachineSMB& ssmBlockGet()
+    inline SpillStateMachineSMB& ssmBlockGet()
     {
       return _ssmBlock;
     }

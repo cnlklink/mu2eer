@@ -8,7 +8,7 @@ ALL_OUT         += $(SSM_HOST_OUT) $(SSM_TARGET_OUT)
 ALL_SOURCES     += $(wildcard ssm/*.C)
 ALL_HEADERS     += $(wildcard ssm/*.H)
 
-SSM_LIBS        = ssm.a config.a
+SSM_LIBS        = ssm.a config.a api.a
 SSM_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(SSM_LIBS))
 SSM_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(SSM_LIBS))
 

@@ -16,6 +16,11 @@ SpillStateMachineSMB::SpillStateMachineSMB()
 {
 }
 
+void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
+{
+  _currentState = state;
+}
+
 ssm_state_t SpillStateMachineSMB::currentStateGet() const
 {
   return _currentState;

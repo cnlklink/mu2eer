@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "SpillStateMachine.H"
+#include "SpillStateMachineSMB.H"
 #include "SSMDeviceDriverMock.H"
 
 using namespace Mu2eER;
@@ -19,8 +20,9 @@ using namespace std;
  */
 ssm_error SSM_NOT_READY( "SSM Not Ready" );
 
-SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm )
-  : _cm( cm )
+SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm, SpillStateMachineSMB& smb )
+  : _cm( cm ),
+    _smb( smb )
 {
 }
 
@@ -38,8 +40,11 @@ void SpillStateMachine::initialize()
           SSM_FAULT
     } ) );
 
+  _smb.currentStateSet( _ssmDev->stateGet() );
+
   // Initialize firmware
   _ssmDev->initialize();
+  _smb.currentStateSet( _ssmDev->stateGet() );
 
   cout << " done." << endl;
 }

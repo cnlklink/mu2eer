@@ -13,6 +13,7 @@
 
 #include "ConfigurationManager.H"
 #include "ISSMDeviceDriver.H"
+#include "SpillStateMachineSMB.H"
 #include "ssm.H"
 
 using namespace std;
@@ -33,8 +34,9 @@ namespace Mu2eER
      * Constructor
      *
      * @param cm Reference to the configuration manager
+     * @param smb Reference to the SSM shared memory block
      */
-    SpillStateMachine( const ConfigurationManager& cm );
+    SpillStateMachine( const ConfigurationManager& cm, SpillStateMachineSMB& smb );
 
     /**
      * Initialize
@@ -55,6 +57,11 @@ namespace Mu2eER
      * Configuration manager
      */
     const ConfigurationManager& _cm;
+
+    /**
+     * Spill State Machine shared memory block
+     */
+    SpillStateMachineSMB& _smb;
 
     /**
      * Spill state machine device driver object

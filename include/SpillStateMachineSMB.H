@@ -27,6 +27,13 @@ namespace Mu2eER
     SpillStateMachineSMB();
 
     /**
+     * Set Current State
+     *
+     * @param state Current spill state machine state
+     */
+    void currentStateSet( ssm_state_t state );
+
+    /**
      * Get Current State
      *
      * @return Current state of the spill state machine

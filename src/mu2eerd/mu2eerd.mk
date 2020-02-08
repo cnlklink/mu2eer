@@ -1,7 +1,7 @@
 MU2EERD_HOST_OUT   = $(HOST_BIN_DIR)/mu2eerd
 MU2EERD_TARGET_OUT = $(TARGET_BIN_DIR)/mu2eerd
 
-MU2EERD_LIBS        = ssm.a config.a
+MU2EERD_LIBS        = ssm.a config.a api.a
 MU2EERD_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(MU2EERD_LIBS))
 MU2EERD_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(MU2EERD_LIBS))
 
