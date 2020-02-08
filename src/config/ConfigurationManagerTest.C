@@ -44,7 +44,9 @@ TEST_GROUP( CoreGroup )
 TEST( CoreGroup, DefaultConfig )
 {
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
+
   STRCMP_EQUAL( "mock", _cm->ssmDriverGet().c_str() );
+  CHECK_EQUAL( false, _cm->ssmAutoInitGet() );
 }
 
 /**
@@ -69,6 +71,9 @@ TEST( CoreGroup, LoadReferenceConfig )
   _cm->load( "../etc/mu2eer.d/reference.conf" );
   
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
+
+  STRCMP_EQUAL( "mock", _cm->ssmDriverGet().c_str() );
+  CHECK_EQUAL( true, _cm->ssmAutoInitGet() );
 }
 
 /**

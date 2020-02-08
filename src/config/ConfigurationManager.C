@@ -42,6 +42,8 @@ ConfigurationManager::ConfigurationManager()
 
 void ConfigurationManager::_defaultInit()
 {
+  // The default configuration should put the system in the least-operable state.
+
   auto& root = _cfg.getRoot();
 
   // Spill state machine defaults
@@ -50,6 +52,9 @@ void ConfigurationManager::_defaultInit()
 
   ssm.add( "driver", libconfig::Setting::TypeString );
   ssm["driver"] = "mock";
+
+  ssm.add( "auto_init", libconfig::Setting::TypeBoolean );
+  ssm["auto_init"] = false;
 
   // TCLK defaults
   root.add( "tclk", libconfig::Setting::TypeGroup );
@@ -94,6 +99,12 @@ void ConfigurationManager::reload()
     {
       throw CONFIG_PARSE_ERR;
     }
+}
+
+bool ConfigurationManager::ssmAutoInitGet() const
+{
+  const auto& root = _cfg.getRoot();
+  return root["ssm"]["auto_init"];
 }
 
 string ConfigurationManager::ssmDriverGet() const
