@@ -54,7 +54,7 @@ TEST_GROUP( InitGroup )
  */
 TEST( InitGroup, Initialize )
 {
-  CHECK_THROWS( ssm_error, _ssm->stateGet() );
+  CHECK_EQUAL( SSM_IDLE, _ssm->stateGet() );
 
   _ssm->initialize();
 

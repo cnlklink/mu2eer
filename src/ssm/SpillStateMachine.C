@@ -22,25 +22,15 @@ ssm_error SSM_NOT_READY( "SSM Not Ready" );
 
 SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm, SpillStateMachineSMB& smb )
   : _cm( cm ),
-    _smb( smb )
+    _smb( smb ),
+    _ssmDev( ISSMDeviceDriver::factory( _cm.ssmDriverGet() ) )
 {
+  _smb.currentStateSet( _ssmDev->stateGet() );
 }
 
 void SpillStateMachine::initialize()
 {
   cout << "Initializing Spill Statate Machine...";
-
-  // Create a mock SSM device and program some state changes
-  _ssmDev = 
-    unique_ptr<ISSMDeviceDriver>( new SSMDeviceDriverMock( { 
-          SSM_BETWEEN_CYCLES, 
-          SSM_START_CYCLE, 
-          SSM_BETWEEN_SPILLS, 
-          SSM_RAMP, 
-          SSM_FAULT
-    } ) );
-
-  _smb.currentStateSet( _ssmDev->stateGet() );
 
   // Initialize firmware
   _ssmDev->initialize();
@@ -51,10 +41,5 @@ void SpillStateMachine::initialize()
 
 ssm_state_t SpillStateMachine::stateGet() const
 {
-  if( _ssmDev.get() == nullptr )
-    {
-      throw SSM_NOT_READY;
-    }
-
   return _ssmDev->stateGet();
 }

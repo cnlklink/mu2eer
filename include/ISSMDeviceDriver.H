@@ -9,7 +9,9 @@
 #ifndef ISSMDEVICEDRIVER_H
 #define ISSMDEVICEDRIVER_H
 
+#include <memory>
 #include <ostream>
+#include <string>
 
 #include "ssm.H"
 
@@ -27,6 +29,14 @@ namespace Mu2eER
   class ISSMDeviceDriver
   {
   public:
+    /**
+     * ISSMDeviceDriver Factory
+     *
+     * @param driverId Identifier for the type of device driver to create
+     * @return Device driver (returns a SSMDeviceDriverMock if driverId is not found)
+     */
+    static unique_ptr<ISSMDeviceDriver> factory( string driverId );
+
     /**
      * Initialize firmware
      *
