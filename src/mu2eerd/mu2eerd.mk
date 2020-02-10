@@ -34,12 +34,12 @@ mu2eerd_clean:
 # mu2eerd daemon
 mu2eerd: $(MU2EERD_OBJS_PREFIX) $(MU2EERD_LIBS_HOST) $(MU2EERD_LIBS_TARGET)
 	@echo "-m-> Linking $@ (target)..."
-	$(EES_OUT) $(CXX) -o $(TARGET_BIN_DIR)/mu2eerd \
+	$(EES_OUT) $(CXX) -o $(MU2EERD_TARGET_OUT)/mu2eerd \
 		$(MU2EERD_OBJS_TARGET) \
 		$(MU2EERD_LIBS_TARGET) \
 		$(EES_LDFLAGS) -L$(MYLIBS) $(DEV_LIBS)
 	@echo "-m-> Linking $@ (host)..."
-	$(EES_OUT) $(HOST_CXX) -o $(HOST_BIN_DIR)/mu2eerd \
+	$(EES_OUT) $(HOST_CXX) -o $(MU2EERD_HOST_OUT)/mu2eerd \
 		$(MU2EERD_OBJS_HOST) \
 		$(MU2EERD_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
