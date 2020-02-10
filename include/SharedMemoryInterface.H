@@ -45,6 +45,16 @@ namespace Mu2eER
     }
 
     /**
+     * Get Read-only Spill State Machine Block
+     *
+     * @return Read-only reference to the SSM block
+     */
+    inline const SpillStateMachineSMB& ssmBlockGet() const
+    {
+      return _ssmBlock;
+    }
+
+    /**
      * Get Version
      *
      * @return API version string

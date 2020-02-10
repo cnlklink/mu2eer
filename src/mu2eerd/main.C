@@ -8,20 +8,16 @@
 
 #include <iostream>
 
-#include "SharedMemoryManager.H"
-#include "SpillStateMachine.H"
+#include "Controller.H"
 
 using namespace Mu2eER;
 using namespace std;
 
 int main( int argc, char* argv[] )
 {
-  ConfigurationManager cm;
+  Controller ctlr;
 
-  SharedMemoryManager shmm( "mu2eer" );
-
-  SpillStateMachine ssm( cm, shmm.ssmBlockGet() );
-  ssm.initialize();
+  ctlr.start();
 
   cout << "mu2eerd started." << endl;
   return 0;

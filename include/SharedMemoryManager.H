@@ -30,7 +30,7 @@ namespace Mu2eER
     /**
      * Constructor
      *
-     * @param name A name for the shared memory segment (must begin with a '/')
+     * @param name A name for the shared memory segment
      */
     SharedMemoryManager( const string& name );
 
@@ -42,7 +42,7 @@ namespace Mu2eER
     /**
      * Get SSM Block
      *
-     * Returns a reference to the Spill State Machine block.
+     * @return Reference to the Spill State Machine block.
      */
     SpillStateMachineSMB& ssmBlockGet();
 
