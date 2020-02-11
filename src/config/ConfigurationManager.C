@@ -107,6 +107,12 @@ bool ConfigurationManager::ssmAutoInitGet() const
   return root["ssm"]["auto_init"];
 }
 
+void ConfigurationManager::ssmAutoInitSet( bool autoInit )
+{
+  const auto& root = _cfg.getRoot();
+  root["ssm"]["auto_init"] = autoInit;
+}
+
 string ConfigurationManager::ssmDriverGet() const
 {
   const auto& root = _cfg.getRoot();

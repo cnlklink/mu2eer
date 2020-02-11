@@ -68,6 +68,13 @@ namespace Mu2eER
     bool ssmAutoInitGet() const;
 
     /**
+     * Set Spill State Machine Auto-Init Flag
+     *
+     * @param autoInit True if the ssm should be initialize automaticall on start-up
+     */
+    void ssmAutoInitSet( bool autoInit );
+
+    /**
      * Set Spill State Machine Driver
      *
      * @return "mock" or "real"

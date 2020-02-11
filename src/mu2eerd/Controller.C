@@ -11,15 +11,11 @@
 using namespace Mu2eER;
 using namespace std;
 
-Controller::Controller()
-  : _shmm( "mu2eer" ),
+Controller::Controller( ConfigurationManager& cm )
+  : _cm( cm ),
+    _shmm( "mu2eer" ),
     _ssm( _cm, _shmm.ssmBlockGet() )
 {
-}
-
-const SharedMemoryManager& Controller::shmmGet() const
-{
-  return _shmm;
 }
 
 void Controller::shutdown()

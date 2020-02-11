@@ -15,7 +15,8 @@ using namespace std;
 
 int main( int argc, char* argv[] )
 {
-  Controller ctlr;
+  ConfigurationManager cm;
+  Controller ctlr( cm );
 
   ctlr.start();
 

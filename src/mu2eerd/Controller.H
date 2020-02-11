@@ -26,14 +26,7 @@ namespace Mu2eER
     /**
      * Constructor
      */
-    Controller();
-
-    /**
-     * Get Shared Memory Manager
-     *
-     * @return Read-only shared memory manager
-     */
-    const SharedMemoryManager& shmmGet() const;
+    Controller( ConfigurationManager& _cm );
 
     /**
      * Shutdown
@@ -53,7 +46,7 @@ namespace Mu2eER
     /**
      * Manages the mu2eerd configuration
      */
-    ConfigurationManager _cm;
+    ConfigurationManager& _cm;
 
     /**
      * Manages the shared memory API
