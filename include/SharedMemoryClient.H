@@ -10,6 +10,7 @@
 #define SHAREDMEMORYCLIENT_H
 
 #include "api.H"
+#include "mu2eerd.H"
 #include "SharedMemoryInterface.H"
 
 using namespace std;
@@ -24,6 +25,13 @@ namespace Mu2eER
   class SharedMemoryClient
   {
   public:
+    /**
+     * Get Current State
+     *
+     * @return State of the mu2eerd daemon
+     */
+    mu2eerd_state_t currentStateGet() const;
+
     /**
      * Constructor
      *

@@ -34,6 +34,11 @@ api_error API_SHMC_MAPFAIL( "failed to mmap the shared memory segment" );
  */
 api_error API_SHMC_BADVERSION( "shared memory version mismatch" );
 
+mu2eerd_state_t SharedMemoryClient::currentStateGet() const
+{
+  return _shmi->currentStateGet();
+}
+
 SharedMemoryClient::SharedMemoryClient( const string& name )
   : _name( name )
 {

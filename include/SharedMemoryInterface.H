@@ -13,6 +13,7 @@
 #include <string>
 
 #include "api.H"
+#include "mu2eerd.H"
 #include "ssm.H"
 #include "SpillStateMachineSMB.H"
 
@@ -29,9 +30,32 @@ namespace Mu2eER
   class SharedMemoryInterface
   {
   public:
+    /**
+     * Constructor
+     */
     SharedMemoryInterface()
     {
       strncpy( _api_version, API_VERSION, strlen( API_VERSION ) );
+    }
+
+    /**
+     * Get Current State
+     *
+     * @return Current state of the mu2eerd daemon
+     */
+    inline mu2eerd_state_t currentStateGet() const
+    {
+      return _state;
+    }
+
+    /**
+     * Set Current State
+     *
+     * @param state New state
+     */
+    inline void currentStateSet( mu2eerd_state_t state )
+    {
+      _state = state;
     }
 
     /**
@@ -74,6 +98,11 @@ namespace Mu2eER
      * Spill State Machine Block
      */
     SpillStateMachineSMB _ssmBlock;
+
+    /**
+     * mu2eerd state
+     */
+    mu2eerd_state_t _state;
   };
 };
 

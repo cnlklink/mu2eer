@@ -58,6 +58,11 @@ api_error API_SHM_MAPFAIL( "failed to mmap the shared memory segment" );
  */
 api_error API_SHM_LOCKFAIL( "failed to lock the shared memory segment" );
 
+void SharedMemoryManager::currentStateSet( mu2eerd_state_t state )
+{
+  _shmPtr->currentStateSet( state );
+}
+
 SharedMemoryManager::SharedMemoryManager( const string& name )
   : _name( name ),
     _ptr( nullptr ),

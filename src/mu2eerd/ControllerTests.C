@@ -9,6 +9,7 @@
 #include "CppUTest/TestHarness.h"
 
 #include "Controller.H"
+#include "mu2eerd.H"
 #include "SharedMemoryClient.H"
 
 using namespace Mu2eER;
@@ -77,24 +78,19 @@ TEST( ConstructionGroup, Destruction )
   CHECK_THROWS( api_error, SharedMemoryClient( "mu2eer" ) );
 }
 
-TEST( OperationGroup, Shutdown )
+TEST( OperationGroup, StartupShutdown )
 {
   SharedMemoryClient shmc( "mu2eer" );
+
+  CHECK_EQUAL( MU2EERD_INITIALIZING, shmc.currentStateGet() );
 
   _ctlr->start();
   
-  CHECK_EQUAL( SSM_IDLE, shmc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( MU2EERD_RUNNING, shmc.currentStateGet() );
 
   _ctlr->shutdown();
-}
 
-TEST( OperationGroup, Start )
-{
-  SharedMemoryClient shmc( "mu2eer" );
-
-  _ctlr->start();
-
-  CHECK_EQUAL( SSM_IDLE, shmc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( MU2EERD_SHUTDOWN, shmc.currentStateGet() );
 }
 
 TEST( OperationGroup, StartWithSSMAutoInit )
@@ -105,5 +101,6 @@ TEST( OperationGroup, StartWithSSMAutoInit )
 
   _ctlr->start();
 
+  CHECK_EQUAL( MU2EERD_RUNNING, shmc.currentStateGet() );
   CHECK_EQUAL( SSM_BETWEEN_CYCLES, shmc.ssmBlockGet().currentStateGet() );
 }

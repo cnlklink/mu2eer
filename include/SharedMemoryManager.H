@@ -28,6 +28,13 @@ namespace Mu2eER
   {
   public:
     /**
+     * Set Current State
+     *
+     * @param state State of mu2eerd daemon
+     */
+    void currentStateSet( mu2eerd_state_t state );
+
+    /**
      * Constructor
      *
      * @param name A name for the shared memory segment
