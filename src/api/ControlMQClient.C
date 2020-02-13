@@ -50,6 +50,13 @@ void ControlMQClient::_send( control_msg_t& msg )
     }
 }
 
+void ControlMQClient::ssmInit()
+{
+  control_msg_t msg;
+  msg.command = COMMAND_SSM_INIT;
+  _send( msg );
+}
+
 void ControlMQClient::testBadCommand()
 {
   control_msg_t msg;

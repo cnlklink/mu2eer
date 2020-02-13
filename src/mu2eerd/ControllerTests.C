@@ -140,6 +140,8 @@ void _waitForController( mu2eerd_state_t waitForState )
         }
       this_thread::sleep_for( chrono::milliseconds( 50 ) );
     }
+
+  CHECK_EQUAL( waitForState, _shmc->currentStateGet() );
 }
 
 TEST( OperationGroup, StartupShutdown )
@@ -212,5 +214,38 @@ TEST( OperationGroup, BadMQMessages )
 
   // Test invalid command
   _mqc->testBadCommand();
+  t.join();
+}
+
+TEST( OperationGroup, InitializeSSM )
+{
+  // Startup the controller in another thread.
+  thread t( []() {
+      try
+        {
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << "exception: " << e.what() << endl;
+        }
+  } );
+  _waitForController( MU2EERD_RUNNING );
+
+  _mqc->ssmInit();
+
+  // Wait up to 250ms for the SSM to transition
+  for( unsigned int i = 0; i != 5; i++ )
+    {
+      if( SSM_BETWEEN_CYCLES == _shmc->ssmBlockGet().currentStateGet() )
+        {
+          break;
+        }
+      this_thread::sleep_for( chrono::milliseconds( 50 ) );
+    }
+
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _shmc->ssmBlockGet().currentStateGet() );
+
+  _mqc->shutdown();
   t.join();
 }

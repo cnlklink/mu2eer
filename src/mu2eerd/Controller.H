@@ -97,6 +97,13 @@ namespace Mu2eER
     void _handleShutdown();
 
     /**
+     * Handle SSM Init
+     *
+     * Invoked by _processMessages().  Handles a SSM initialization request.
+     */
+    void _handleSSMInit();
+
+    /**
      * Process Control Messages
      *
      * Processes messages as they arrive on the control message queue.

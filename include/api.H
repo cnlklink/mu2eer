@@ -25,6 +25,7 @@ namespace Mu2eER
   enum command_t
     {
       COMMAND_SHUTDOWN = 0,
+      COMMAND_SSM_INIT,
       COMMAND_INVALID = 255
     };
 

@@ -99,6 +99,11 @@ void Controller::_handleShutdown()
   // Shutdown tasks...
 }
 
+void Controller::_handleSSMInit()
+{
+  _ssm.initialize();
+}
+
 void Controller::_processMessages()
 {
   while( 1 )
@@ -121,7 +126,7 @@ void Controller::_processMessages()
 		  throw CONTROLLER_MQ_FAILURE;
 		}
 	    }
-	  
+
 	  // Validate message received
 	  if( msgSize != sizeof( msg ) )
 	    {
@@ -134,6 +139,10 @@ void Controller::_processMessages()
 	    case COMMAND_SHUTDOWN:
               _handleShutdown();
 	      return;
+
+            case COMMAND_SSM_INIT:
+              _handleSSMInit();
+              break;
 
 	    default:
 	      throw CONTROLLER_INVALID_COMMAND;

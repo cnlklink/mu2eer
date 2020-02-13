@@ -48,6 +48,13 @@ namespace Mu2eER
     void shutdown();
 
     /**
+     * Initialize Spill State Machine
+     *
+     * Begin slow spill regulation.
+     */
+    void ssmInit();
+
+    /**
      * Send an Invalid Command
      *
      * Sends a message with an invalid command.  Used for testing only.
