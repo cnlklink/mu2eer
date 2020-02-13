@@ -6,9 +6,14 @@
  * @author jdiamond
  */
 
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 #include "CppUTest/TestHarness.h"
 
 #include "Controller.H"
+#include "ControlMQClient.H"
 #include "mu2eerd.H"
 #include "SharedMemoryClient.H"
 
@@ -24,6 +29,16 @@ static ConfigurationManager* _cm;
  * Global Controller object
  */
 static Controller* _ctlr;
+
+/**
+ * Global shared memory client
+ */
+static SharedMemoryClient* _shmc;
+
+/**
+ * Global control message queue client
+ */
+static ControlMQClient* _mqc;
 
 /**
  * Construction Tests
@@ -51,56 +66,151 @@ TEST_GROUP( OperationGroup )
   void setup()
   {
     _cm = new ConfigurationManager();
-    _ctlr = new Controller( *_cm );
+    _ctlr = new Controller( *_cm, "/mu2eer_test", "mu2eer_test" );
+    _shmc = new SharedMemoryClient( "mu2eer_test" );
+    _mqc = new ControlMQClient( "/mu2eer_test" );
   }
 
   void teardown()
   {
+    delete _mqc;
+    delete _shmc;
     delete _ctlr;
     delete _cm;
   }
 };
 
+TEST( ConstructionGroup, InvalidMQName )
+{
+  ConfigurationManager cm;
+  CHECK_THROWS( api_error, Controller( cm, "mu2eer_test", "mu2eer_test" ) );
+}
+
+TEST( ConstructionGroup, DuplicateSHMs )
+{
+  ConfigurationManager cm;
+  Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
+  
+  CHECK_THROWS( api_error, Controller( cm, "/mu2eer_test2", "mu2eer_test" ) );
+}
+
+TEST( ConstructionGroup, DuplicateMQs )
+{
+  ConfigurationManager cm;
+  Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
+  
+  CHECK_THROWS( api_error, Controller( cm, "/mu2eer_test", "mu2eer_test2" ) );
+}
+
+TEST( ConstructionGroup, InstatiateTwo )
+{
+  ConfigurationManager cm;
+  Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
+  Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
+}
+
 TEST( ConstructionGroup, Instatiation )
 {
   ConfigurationManager cm;
-  Controller ctlr( cm );
+  Controller ctlr( cm, "/mu2eer_test", "mu2eer_test" );
+
+  SharedMemoryClient shmc( "mu2eer_test" );
+  CHECK_EQUAL( MU2EERD_INITIALIZING, shmc.currentStateGet() );
 }
 
 TEST( ConstructionGroup, Destruction )
 {
   {
     ConfigurationManager cm;
-    Controller ctlr( cm );
+    Controller ctlr( cm, "/mu2eer_test", "mu2eer_test" );
   }
 
   // Verify that the shared memory segment was de-allocated by trying to connect
-  CHECK_THROWS( api_error, SharedMemoryClient( "mu2eer" ) );
+  CHECK_THROWS( api_error, SharedMemoryClient( "mu2eer_test" ) );
+}
+
+void _waitForController( mu2eerd_state_t waitForState )
+{
+  // Wait up to 250ms for the Controller to start running
+  for( unsigned int i = 0; i != 5; i++ )
+    {
+      if( _shmc->currentStateGet() == waitForState )
+        {
+          break;
+        }
+      this_thread::sleep_for( chrono::milliseconds( 50 ) );
+    }
 }
 
 TEST( OperationGroup, StartupShutdown )
 {
-  SharedMemoryClient shmc( "mu2eer" );
+  CHECK_EQUAL( MU2EERD_INITIALIZING, _shmc->currentStateGet() );
 
-  CHECK_EQUAL( MU2EERD_INITIALIZING, shmc.currentStateGet() );
+  // Start a thread for the controller
+  thread t( []() {
+      try
+        {
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << e.what() << endl;
+        }
+  } );
+ 
+  _waitForController( MU2EERD_RUNNING );
+  CHECK_EQUAL( MU2EERD_RUNNING, _shmc->currentStateGet() );
 
-  _ctlr->start();
-  
-  CHECK_EQUAL( MU2EERD_RUNNING, shmc.currentStateGet() );
+  // Send shutdown message
+  _mqc->shutdown();
 
-  _ctlr->shutdown();
-
-  CHECK_EQUAL( MU2EERD_SHUTDOWN, shmc.currentStateGet() );
+  // Wait for the controller to exit
+  t.join();
+  CHECK_EQUAL( MU2EERD_SHUTDOWN, _shmc->currentStateGet() );
 }
 
 TEST( OperationGroup, StartWithSSMAutoInit )
 {
-  _cm->ssmAutoInitSet( true );
+  // Startup the controller in another thread.
+  thread t( []() {
+      try
+        {
+          _cm->ssmAutoInitSet( true );
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << e.what() << endl;
+        }
+  } );
 
-  SharedMemoryClient shmc( "mu2eer" );
+  _waitForController( MU2EERD_RUNNING );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _shmc->ssmBlockGet().currentStateGet() );
 
-  _ctlr->start();
+  // Shutdown
+  _mqc->shutdown();
+  t.join();
+  CHECK_EQUAL( MU2EERD_SHUTDOWN, _shmc->currentStateGet() );
+}
 
-  CHECK_EQUAL( MU2EERD_RUNNING, shmc.currentStateGet() );
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, shmc.ssmBlockGet().currentStateGet() );
+TEST( OperationGroup, BadMQMessages )
+{
+  // Startup the controller in another thread.
+  thread t( []() {
+      try
+        {
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          return;
+        }
+
+      FAIL( "expected to throw controller_error" );
+  } );
+  _waitForController( MU2EERD_RUNNING );
+
+  // Test invalid command
+  _mqc->testBadCommand();
+  t.join();
 }

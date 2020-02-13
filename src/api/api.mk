@@ -8,7 +8,7 @@ ALL_OUT         += $(API_HOST_OUT) $(API_TARGET_OUT)
 ALL_SOURCES     += $(wildcard api/*.C)
 ALL_HEADERS     += $(wildcard api/*.H)
 
-API_OBJS        = SharedMemoryManager.o SpillStateMachineSMB.o SharedMemoryClient.o
+API_OBJS        = SharedMemoryManager.o SpillStateMachineSMB.o SharedMemoryClient.o ControlMQClient.o
 API_OBJS_PREFIX = $(addprefix api/,$(API_OBJS))
 API_OBJS_HOST   = $(addprefix $(API_HOST_OUT)/,$(API_OBJS))
 API_OBJS_TARGET = $(addprefix $(API_TARGET_OUT)/,$(API_OBJS))

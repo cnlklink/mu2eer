@@ -16,7 +16,7 @@ using namespace std;
 int main( int argc, char* argv[] )
 {
   ConfigurationManager cm;
-  Controller ctlr( cm );
+  Controller ctlr( cm, "/mu2eer", "mu2eer" );
 
   ctlr.start();
 

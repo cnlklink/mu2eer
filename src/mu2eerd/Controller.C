@@ -6,20 +6,148 @@
  * @author jdiamond
  */
 
+#include <iostream>
+
 #include "Controller.H"
 
 using namespace Mu2eER;
 using namespace std;
 
-Controller::Controller( ConfigurationManager& cm )
+/**
+ * Thrown if mq_receive is interrupted
+ */
+controller_error CONTROLLER_MQ_INT( "mq_receive was interrupted" );
+
+/**
+ * Thrown if mq_recieve fails
+ */
+controller_error CONTROLLER_MQ_FAILURE( "mq_receive failed" );
+
+/**
+ * Thrown if the command is not recognized
+ */
+controller_error CONTROLLER_INVALID_COMMAND( "command not recognized" );
+
+/**
+ * Thrown if the message size is not what is expected
+ */
+controller_error CONTROLLER_INVALID_MESSAGE( "message is invalid" );
+
+/**
+ * Thrown if the control message queue already exists
+ */
+controller_error CONTROLLER_MQ_EXISTS( "control message queue already exists" );
+
+/**
+ * Thrown if there is an invalid parameter to mq_open
+ */
+controller_error CONTROLLER_MQ_INVPARAM( "invalid parameter to mq_open" );
+
+/**
+ * Thrown if there is an unkown error creating the message queue
+ */
+controller_error CONTROLLER_MQ_OPENFAILURE( "mq_open failure" );
+
+Controller::Controller( ConfigurationManager& cm, string mqName, string shmName )
   : _cm( cm ),
-    _shmm( "mu2eer" ),
+    _mqName( mqName ),
+    _shmm( shmName ),
     _ssm( _cm, _shmm.ssmBlockGet() )
 {
   _shmm.currentStateSet( MU2EERD_INITIALIZING );
+
+  _createMQ();
 }
 
-void Controller::shutdown()
+Controller::~Controller()
+{
+  if( _mqId != 0 )
+    {
+      // Close the command message queue
+      mq_unlink( _mqName.c_str() );
+      mq_close( _mqId );
+    }
+}
+
+void Controller::_createMQ()
+{
+  // Create a POSIX message queue for accepting commands from clients
+  struct mq_attr attr;
+  attr.mq_flags = 0;
+  attr.mq_maxmsg = MQ_MAX_MESSAGES;
+  attr.mq_msgsize = sizeof( control_msg_t );
+  attr.mq_curmsgs = 0;
+  if( -1 == (_mqId = mq_open( _mqName.c_str(), O_RDONLY | O_CREAT | O_EXCL, 0660, &attr )) )
+    {
+      switch( errno )
+	{
+	case EEXIST:
+	  throw CONTROLLER_MQ_EXISTS;
+
+	case EINVAL:
+	  throw CONTROLLER_MQ_INVPARAM;
+
+	default:
+	  throw CONTROLLER_MQ_OPENFAILURE;
+	}
+    }
+
+}
+
+void Controller::_handleShutdown()
+{
+  // Shutdown tasks...
+}
+
+void Controller::_processMessages()
+{
+  while( 1 )
+    {
+      control_msg_t msg;
+      ssize_t msgSize;
+
+      try
+	{
+	  // Wait for messages to arrive
+	  if( -1 == (msgSize = mq_receive( _mqId, (char*)&msg, sizeof( msg ), 0 )) )
+	    {
+	      switch( errno )
+		{
+		case EINTR:
+                  throw CONTROLLER_MQ_INT;
+		  return;
+		  
+		default:
+		  throw CONTROLLER_MQ_FAILURE;
+		}
+	    }
+	  
+	  // Validate message received
+	  if( msgSize != sizeof( msg ) )
+	    {
+              throw CONTROLLER_INVALID_MESSAGE;
+	    }
+	  
+	  // Handle according to the command
+	  switch( msg.command )
+	    {
+	    case COMMAND_SHUTDOWN:
+              _handleShutdown();
+	      return;
+
+	    default:
+	      throw CONTROLLER_INVALID_COMMAND;
+	    }
+	}
+      catch( controller_error e )
+	{
+          cerr << "exception caught in control message loop: " << e.what() << endl;
+          throw e;
+	}
+    }
+}
+
+void Controller::_shutdown()
 {
   _shmm.currentStateSet( MU2EERD_SHUTDOWN );
 }
@@ -35,4 +163,9 @@ void Controller::start()
     }
 
   _shmm.currentStateSet( MU2EERD_RUNNING );
+
+  // Message queue loop
+  _processMessages();
+
+  _shutdown();
 }

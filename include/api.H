@@ -20,6 +20,26 @@
 namespace Mu2eER
 {
   /**
+   * mu2eerd control commands
+   */
+  enum command_t
+    {
+      COMMAND_SHUTDOWN = 0,
+      COMMAND_INVALID = 255
+    };
+
+  /**
+   * mu2eerd control message
+   */
+  struct control_msg_t
+  {
+    /**
+     * Control command
+     */
+    command_t command;
+  };
+
+  /**
    * Exception from the API module
    */
   typedef std::runtime_error api_error;
