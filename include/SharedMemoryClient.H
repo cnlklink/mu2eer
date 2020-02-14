@@ -9,6 +9,9 @@
 #ifndef SHAREDMEMORYCLIENT_H
 #define SHAREDMEMORYCLIENT_H
 
+#include <chrono>
+#include <thread>
+
 #include "api.H"
 #include "mu2eerd.H"
 #include "SharedMemoryInterface.H"
@@ -57,6 +60,19 @@ namespace Mu2eER
      * @return API version string
      */
     string versionGet() const;
+
+    /**
+     * Wait For State
+     *
+     * Wait for mu2eerd to enter the given state.
+     *
+     * @param waitForState State to wait for
+     * @param interval How long to wait in ms
+     * @param tries Number of tries before giving up (0: try forever, timeout = interval * tries)
+     */
+    void waitForState( mu2eerd_state_t waitForState, 
+                       unsigned int interval = 5, 
+                       unsigned int tries = 0 ) const;
 
   private:
     /**

@@ -20,6 +20,5 @@ int main( int argc, char* argv[] )
 
   ctlr.start();
 
-  cout << "mu2eerd started." << endl;
   return 0;
 }

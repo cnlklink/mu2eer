@@ -21,6 +21,11 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
+ * ms wait between state checks
+ */
+static const unsigned int MILLIS_WAIT = 5;
+
+/**
  * Global ConfigurationManager object
  */
 static ConfigurationManager* _cm;
@@ -131,14 +136,13 @@ TEST( ConstructionGroup, Destruction )
 
 void _waitForController( mu2eerd_state_t waitForState )
 {
-  // Wait up to 250ms for the Controller to start running
   for( unsigned int i = 0; i != 5; i++ )
     {
       if( _shmc->currentStateGet() == waitForState )
         {
           break;
         }
-      this_thread::sleep_for( chrono::milliseconds( 50 ) );
+      this_thread::sleep_for( chrono::milliseconds( MILLIS_WAIT ) );
     }
 
   CHECK_EQUAL( waitForState, _shmc->currentStateGet() );
@@ -234,14 +238,14 @@ TEST( OperationGroup, InitializeSSM )
 
   _mqc->ssmInit();
 
-  // Wait up to 250ms for the SSM to transition
+  // Wait up for the SSM to transition
   for( unsigned int i = 0; i != 5; i++ )
     {
       if( SSM_BETWEEN_CYCLES == _shmc->ssmBlockGet().currentStateGet() )
         {
           break;
         }
-      this_thread::sleep_for( chrono::milliseconds( 50 ) );
+      this_thread::sleep_for( chrono::milliseconds( MILLIS_WAIT ) );
     }
 
   CHECK_EQUAL( SSM_BETWEEN_CYCLES, _shmc->ssmBlockGet().currentStateGet() );
