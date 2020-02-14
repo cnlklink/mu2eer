@@ -57,7 +57,7 @@ namespace Mu2eER
      * State Device Reading Property
      *
      * @param dest ACNET response buffer
-     * @param request Reference to ACNET request object
+     * @param reqinfo Reference to ACNET request object
      */
     void stateRead( Array<state_read_t>& dest, ReqInfo const* reqinfo );
 

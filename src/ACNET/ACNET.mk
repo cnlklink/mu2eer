@@ -34,12 +34,12 @@ acnet_clean:
 
 acnet: acnet_adc
 
-acnet_adc: $(TARGET_BIN_DIR)/adc.a $(ACNET_ADC_OBJS_PREFIX)
+acnet_adc: $(ACNET_LIBS_TARGET) $(ACNET_ADC_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_adc \
 		$(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o \
 		$(ACNET_ADC_OBJS_TARGET) \
-		$(ACNET_LIBS_TARGET)
+		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
 
 acnet_tests: $(BIN_DIR) $(ACNET_TEST_OBJS_PREFIX) $(ACNET_ADC_OBJS_PREFIX) $(ACNET_LIBS_HOST) mu2eerd/Controller.o
