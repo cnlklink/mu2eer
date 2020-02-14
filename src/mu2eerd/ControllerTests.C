@@ -134,20 +134,6 @@ TEST( ConstructionGroup, Destruction )
   CHECK_THROWS( api_error, SharedMemoryClient( "mu2eer_test" ) );
 }
 
-void _waitForController( mu2eerd_state_t waitForState )
-{
-  for( unsigned int i = 0; i != 5; i++ )
-    {
-      if( _shmc->currentStateGet() == waitForState )
-        {
-          break;
-        }
-      this_thread::sleep_for( chrono::milliseconds( MILLIS_WAIT ) );
-    }
-
-  CHECK_EQUAL( waitForState, _shmc->currentStateGet() );
-}
-
 TEST( OperationGroup, StartupShutdown )
 {
   CHECK_EQUAL( MU2EERD_INITIALIZING, _shmc->currentStateGet() );
@@ -164,7 +150,7 @@ TEST( OperationGroup, StartupShutdown )
         }
   } );
  
-  _waitForController( MU2EERD_RUNNING );
+  _shmc->waitForState( MU2EERD_RUNNING );
   CHECK_EQUAL( MU2EERD_RUNNING, _shmc->currentStateGet() );
 
   // Send shutdown message
@@ -190,7 +176,7 @@ TEST( OperationGroup, StartWithSSMAutoInit )
         }
   } );
 
-  _waitForController( MU2EERD_RUNNING );
+  _shmc->waitForState( MU2EERD_RUNNING );
   CHECK_EQUAL( SSM_BETWEEN_CYCLES, _shmc->ssmBlockGet().currentStateGet() );
 
   // Shutdown
@@ -214,7 +200,7 @@ TEST( OperationGroup, BadMQMessages )
 
       FAIL( "expected to throw controller_error" );
   } );
-  _waitForController( MU2EERD_RUNNING );
+  _shmc->waitForState( MU2EERD_RUNNING );
 
   // Test invalid command
   _mqc->testBadCommand();
@@ -234,7 +220,7 @@ TEST( OperationGroup, InitializeSSM )
           cerr << "exception: " << e.what() << endl;
         }
   } );
-  _waitForController( MU2EERD_RUNNING );
+  _shmc->waitForState( MU2EERD_RUNNING );
 
   _mqc->ssmInit();
 
