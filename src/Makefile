@@ -122,3 +122,6 @@ deploy_test:
 install_buildroot_target:
 	install -d $(EES_BIN)
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_adc
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_mu2eerd
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_ssm
+	install -D -m 0755 $(@D)/$(MU2EERD_TARGET_OUT/mu2eerd $(EES_PREFIX)/usr/local/products/bin/mu2eerd
