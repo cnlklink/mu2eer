@@ -9,6 +9,8 @@
 #ifndef MU2EERDDEVICE_H
 #define MU2EERDDEVICE_H
 
+#include <string>
+
 #include "device.h"
 
 #include "ControlMQClient.H"
@@ -63,14 +65,14 @@ namespace Mu2eER
 
   private:
     /**
-     * mu2eerd Control message queue client
+     * mu2eerd Control message queue name
      */
-    ControlMQClient _mqc;
+    string _mqName;
 
     /**
-     * mu2eerd Shared memory client
+     * mu2eerd Shared memory name
      */
-    SharedMemoryClient _shmc;
+    string _shmName;
   };
 };
 

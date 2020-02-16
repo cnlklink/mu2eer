@@ -12,8 +12,8 @@ using namespace Mu2eER;
 
 Mu2eerdDevice::Mu2eerdDevice( string mqName, string shmName )
   : Device<32>( "Mu2eerdDevice", "mu2eerd Device" ),
-    _mqc( mqName ),
-    _shmc( shmName )
+    _mqName( mqName ),
+    _shmName( shmName )
 {
   registerMethod( ATTR_STATE_READ, *this, &Mu2eerdDevice::stateRead, STATE_READ_MAX );
 }
@@ -30,5 +30,13 @@ void Mu2eerdDevice::stateRead( Array<state_read_t>& dest, ReqInfo const* reqinfo
       throw Ex_BADOFLEN;
     }
 
-  dest[0] = _shmc.ssmBlockGet().currentStateGet();
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      dest[0] = shmc.ssmBlockGet().currentStateGet();
+    }
+  catch( runtime_error e )
+    {
+      throw Ex_DEVFAILED;
+    }
 }

@@ -17,11 +17,27 @@ ACNET_ADC_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_ADC_OBJS))
 ACNET_ADC_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_ADC_OBJS))
 ACNET_ADC_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_ADC_OBJS))
 
-ACNET_TEST_OBJS        = ADCDevice.o ADCDeviceTest.o Mu2eerdDevice.o Mu2eerdDeviceTest.o AllTests.o 
+ACNET_MU2EERD_OBJS        = Mu2eerdDevice.o mu2eerd_fef_init.o
+ACNET_MU2EERD_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_MU2EERD_OBJS))
+ACNET_MU2EERD_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_MU2EERD_OBJS))
+ACNET_MU2EERD_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_MU2EERD_OBJS))
+
+ACNET_SSM_OBJS        = SSMDevice.o ssm_fef_init.o
+ACNET_SSM_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_SSM_OBJS))
+ACNET_SSM_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_SSM_OBJS))
+ACNET_SSM_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_SSM_OBJS))
+
+ACNET_TEST_OBJS        = ADCDevice.o \
+	ADCDeviceTest.o \
+	Mu2eerdDevice.o \
+	Mu2eerdDeviceTest.o \
+	SSMDevice.o \
+	SSMDeviceTests.o \
+	AllTests.o 
 ACNET_TEST_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_TEST_OBJS))
 ACNET_TEST_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_TEST_OBJS))
 
-ALL_COVERAGE += $(ACNET_ADC_OBJS_HOST)
+ALL_COVERAGE += $(ACNET_ADC_OBJS_HOST) $(ACNET_MU2EERD_OBJS_HOST) $(ACNET_SSM_OBJS_HOST)
 
 $(ACNET_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(ACNET_TARGET_OUT)
@@ -32,13 +48,29 @@ $(ACNET_HOST_OUT):
 acnet_clean:
 	$(EES_OUT) -rm -f ACNET/*.o
 
-acnet: acnet_adc
+acnet: acnet_adc acnet_mu2eerd acnet_ssm
 
 acnet_adc: $(ACNET_LIBS_TARGET) $(ACNET_ADC_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_adc \
 		$(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o \
 		$(ACNET_ADC_OBJS_TARGET) \
+		$(ACNET_LIBS_TARGET) \
+		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
+
+acnet_mu2eerd: $(ACNET_LIBS_TARGET) $(ACNET_MU2EERD_OBJS_PREFIX) 
+	@echo "-m-> Linking $@ (target)..."
+	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_mu2eerd \
+		$(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o \
+		$(ACNET_MU2EERD_OBJS_TARGET) \
+		$(ACNET_LIBS_TARGET) \
+		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
+
+acnet_ssm: $(ACNET_LIBS_TARGET) $(ACNET_SSM_OBJS_PREFIX) 
+	@echo "-m-> Linking $@ (target)..."
+	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_ssm \
+		$(EES_ERL_LIBS)/cdev-1.2/priv/fef_driver_lib.o \
+		$(ACNET_SSM_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
 
