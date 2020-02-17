@@ -1,0 +1,33 @@
+#!/bin/sh
+####
+# S78mu2eerd
+# 
+# Startup script for mu2eerd
+#
+# @author jdiamond
+####
+
+case "$1" in
+    start)
+        echo "Starting mu2eerd..."
+
+	/usr/local/products/bin/mu2eerd
+        echo "OK"
+        ;;
+
+    stop)
+        echo "Shutting down mu2eerd..."
+	/usr/local/products/bin/mu2eercli shutdown
+        echo "OK"
+        ;;
+
+    restart|reload)
+        $0 stop
+        $0 start
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|reload|restart}"
+        exit 1
+        ;;
+esac
