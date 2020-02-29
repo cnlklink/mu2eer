@@ -10,7 +10,7 @@ TEST_NODE=srsd
 IMAGE_LOCATION=/fecode-bd/linux_boot/ees/srs
 
 # Copy kernel+rootfs image and device tree to nova TFTP area...
-echo "Deploying mu2eerd_buildroot build #?? to $TEST_NODE...";
+printf "Deploying mu2eerd_buildroot build #?? to $TEST_NODE...\n";
 
 ZIMAGE_SOURCE=$STABLE_BUILD/output/images/zImage
 ZIMAGE_DEST=nova:$IMAGE_LOCATION/zImage
@@ -24,4 +24,4 @@ printf "Copy $DT_SOURCE to $DT_DEST...";
 scp $STABLE_BUILD/output/images/linuxDT.dtb nova:$IMAGE_LOCATION/linuxDT.dtb 2>/tmp/scp_stderr 1>/tmp/scp_stdout
 printf " success!\n";
 
-echo "Done!";
+printf "Done!\n";
