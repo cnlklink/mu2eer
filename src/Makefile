@@ -88,6 +88,7 @@ tests: $(ALL_TEST)
 clean: $(ALL_CLEAN)
 	@ echo "-m-> Cleaning..."
 	$(EES_OUT) -rm -rf *.gcov
+	$(EES_OUT) -rm -rf *.pkginfo
 	$(EES_OUT) -rm -rf $(BIN_DIR)
 	$(EES_OUT) -rm -rf $(DOC_DIR)
 
@@ -119,7 +120,7 @@ deploy_test:
 	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/busybox mv /tmp/acnet_adc /usr/local/products/bin"
 
 # Install target used by ees-buildroot
-install_buildroot_target:
+install_buildroot_target: install_buildroot_pkginfo
 	install -d $(EES_BIN)
 	install -D -m 0755 $(@D)/../etc/init.d/S78mu2eerd $(EES_PREFIX)/etc/init.d/
 	mkdir -p $(EES_PREFIX)/etc/mu2eer.d
