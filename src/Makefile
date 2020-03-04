@@ -15,7 +15,7 @@ EES_BR_BASE              = /usr/local/products/buildroot/achilles_mu2eer
 # Include ELSD build tools
 include /usr/local/products/elsd/include/elsd-3.0.mk
 
-EES_CPPFLAGS	= -I$(INC_DIR) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS) $(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.2/include -I$(EES_ERL_LIBS)/acnet-2.1/include
+EES_CPPFLAGS	= -I$(INC_DIR) -I$(EES_ERL_LIBS)/cdev-1.3/include -I$(EES_ERL_LIBS)/acnet-2.1/include $(EES_PREF_CPPFLAGS) $(EES_PREF_LXRT_CPPFLAGS) -fno-strict-aliasing -std=c++0x -I$(EES_INC) -I$(EES_ERL_LIBS)/cdev-1.3/include -I$(EES_ERL_LIBS)/acnet-2.1/include
 EES_LDFLAGS	= $(EES_PREF_LDFLAGS) $(EES_PREF_LXRT_LDFLAGS)
 ERLANG_INT	= erl_interface-3.10.4
 MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
@@ -125,7 +125,7 @@ install_buildroot_target: install_buildroot_pkginfo
 	install -D -m 0755 $(@D)/../etc/init.d/S78mu2eerd $(EES_PREFIX)/etc/init.d/
 	mkdir -p $(EES_PREFIX)/etc/mu2eer.d
 	install -D -m 0744 $(@D)/../etc/mu2eer.d/* $(EES_PREFIX)/etc/mu2eer.d/
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_adc
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_mu2eerd
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.2/priv/acnet_ssm
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_adc
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_mu2eerd
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_ssm
 	install -D -m 0755 $(@D)/$(MU2EERD_TARGET_OUT)/mu2eerd $(EES_PREFIX)/usr/local/products/bin/mu2eerd
