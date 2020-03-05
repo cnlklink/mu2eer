@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case "$1" in
+    start)
+        echo "Starting Acsys/FE..."
+        /usr/local/products/acsysfe/bin/startacsys
+        echo "OK"
+        ;;
+
+    stop)
+        echo "Stopping Acsys/FE..."
+        killall beam epmd
+        ;;
+
+    restart|reload)
+        $0 stop
+        $0 start
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|reload|restart}"
+        exit 1
+        ;;
+esac

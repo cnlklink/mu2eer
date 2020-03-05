@@ -122,10 +122,11 @@ deploy_test:
 # Install target used by ees-buildroot
 install_buildroot_target: install_buildroot_pkginfo
 	install -d $(EES_BIN)
-	install -D -m 0755 $(@D)/../etc/init.d/S78mu2eerd $(EES_PREFIX)/etc/init.d/
+	install -D -m 0755 $(@D)/../etc/init.d/* $(EES_PREFIX)/etc/init.d/
 	mkdir -p $(EES_PREFIX)/etc/mu2eer.d
 	install -D -m 0744 $(@D)/../etc/mu2eer.d/* $(EES_PREFIX)/etc/mu2eer.d/
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_adc
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_mu2eerd
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_PREFIX)/usr/local/products/acsysfe/lib/cdev-1.3/priv/acnet_ssm
+	install -D -m 0755 $(@D)/src/ACNET/startacsys $(EES_PREFIX)/usr/local/products/acsysfe/bin/startacsys
 	install -D -m 0755 $(@D)/$(MU2EERD_TARGET_OUT)/mu2eerd $(EES_PREFIX)/usr/local/products/bin/mu2eerd

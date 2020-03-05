@@ -1,0 +1,15 @@
+#!/bin/sh
+HOST=`hostname -s`
+ROOTDIR=/usr/local/products/acsysfe
+BINDIR=/usr/local/products/acsysfe/erts-10.1/bin
+EMU=beam
+PROGNAME=`echo $0 | sed 's/.*\///'`
+
+export EMU
+export ROOTDIR
+export BINDIR
+export PROGNAME
+export RUN_ERL_LOG_GENERATIONS=10
+export RUN_ERL_LOG_MAXSIZE=1000000
+
+$BINDIR/run_erl -daemon /tmp/ $ROOTDIR/log/ "exec $BINDIR/erlexec +A 10 -sname $HOST -boot $ROOTDIR/releases/1.21/start -config /etc/mu2eer.d/$HOST-acsys.config"
