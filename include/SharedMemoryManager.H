@@ -35,6 +35,13 @@ namespace Mu2eER
     void currentStateSet( mu2eerd_state_t state );
 
     /**
+     * Set PID
+     *
+     * @param pid PID of mu2eerd daemon
+     */
+    void pidSet( pid_t pid );
+
+    /**
      * Constructor
      *
      * @param name A name for the shared memory segment

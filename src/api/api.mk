@@ -8,7 +8,12 @@ ALL_OUT         += $(API_HOST_OUT) $(API_TARGET_OUT)
 ALL_SOURCES     += $(wildcard api/*.C)
 ALL_HEADERS     += $(wildcard api/*.H)
 
-API_OBJS        = SharedMemoryManager.o SpillStateMachineSMB.o SharedMemoryClient.o ControlMQClient.o
+API_OBJS        = Error.o \
+	SharedMemoryManager.o \
+	SpillStateMachineSMB.o \
+	SharedMemoryClient.o \
+	ControlMQClient.o \
+	errors.o
 API_OBJS_PREFIX = $(addprefix api/,$(API_OBJS))
 API_OBJS_HOST   = $(addprefix $(API_HOST_OUT)/,$(API_OBJS))
 API_OBJS_TARGET = $(addprefix $(API_TARGET_OUT)/,$(API_OBJS))
@@ -31,13 +36,13 @@ api_clean:
 # Host api library
 $(HOST_BIN_DIR)/api.a: $(API_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (host)..."
-	$(EES_OUT) $(HOST_AR) ru $@ $(API_OBJS_HOST)
+	$(EES_OUT) $(HOST_AR) rvs $@ $(API_OBJS_HOST)
 	$(EES_OUT) $(HOST_RANLIB) $@
 
 # Target api library
 $(TARGET_BIN_DIR)/api.a: $(API_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (target)..."
-	$(EES_OUT) $(AR) ru $@ $(API_OBJS_TARGET)
+	$(EES_OUT) $(AR) rvs $@ $(API_OBJS_TARGET)
 	$(EES_OUT) $(RANLIB) $@
 
 # Unit test suite

@@ -63,6 +63,11 @@ void SharedMemoryManager::currentStateSet( mu2eerd_state_t state )
   _shmPtr->currentStateSet( state );
 }
 
+void SharedMemoryManager::pidSet( pid_t pid )
+{
+  _shmPtr->pidSet( pid );
+}
+
 SharedMemoryManager::SharedMemoryManager( const string& name )
   : _name( name ),
     _ptr( nullptr ),

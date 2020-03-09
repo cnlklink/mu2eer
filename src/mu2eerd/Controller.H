@@ -10,10 +10,13 @@
 #define CONTROLLER_H
 
 #include <mqueue.h>
+#include <thread>
 
 #include "ConfigurationManager.H"
 #include "SharedMemoryManager.H"
 #include "SpillStateMachine.H"
+
+using namespace std;
 
 namespace Mu2eER
 {
@@ -30,6 +33,16 @@ namespace Mu2eER
   class Controller
   {
   public:
+    /**
+     * Test Daemon's Message Queue Name
+     */
+    static const string TEST_DAEMON_CMQ_NAME;
+
+    /**
+     * Test Daemon's Shared Memory Name
+     */
+    static const string TEST_DAEMON_SHM_NAME;
+
     /**
      * Constructor
      *
@@ -50,6 +63,20 @@ namespace Mu2eER
      * Start-up mu2eerd controller.
      */
     void start();
+
+    /**
+     * Start Test Daemon
+     *
+     * Instantiates a test version of mu2eerd.
+     */
+    static void testDaemonStart();
+
+    /**
+     * Test Daemon Cleanup
+     *
+     * Waits for the test daemon to finish and then releases it's resources.
+     */
+    static void testDaemonCleanup();
 
   private:
     /**
@@ -81,6 +108,21 @@ namespace Mu2eER
      * Interface to the spill state machine
      */
     SpillStateMachine _ssm;
+
+    /**
+     * Test Daemon Configuration
+     */
+    static ConfigurationManager* _testdCM;
+
+    /**
+     * Test Daemon Controller
+     */
+    static Controller* _testdCtlr;
+
+    /**
+     * Test Daemon Thread
+     */
+    static thread* _testdThread;
 
     /**
      * Create Message Queue

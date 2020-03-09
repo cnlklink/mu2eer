@@ -19,44 +19,21 @@ using namespace Mu2eER;
 using namespace FFF;
 using namespace std;
 
-static ConfigurationManager* _cm;
-
-static Controller* _controller;
-
-static thread* _t;
-
 TEST_GROUP( StateGroup )
 {
   void setup()
   {
-    _cm = new ConfigurationManager();
-    _controller = new Controller( *_cm, "/mu2eer_test", "mu2eer_test" );
+    Controller::testDaemonStart(); 
 
-    _t = new thread( []() {
-        try
-          {
-            _controller->start();
-          }
-        catch( controller_error e )
-          {
-            cerr << "exception: " << e.what() << endl;
-          }
-    } );
-
-    SharedMemoryClient shmc( "mu2eer_test" );
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
     shmc.waitForState( MU2EERD_RUNNING );
   }
 
   void teardown()
   {
-    ControlMQClient mqc( "/mu2eer_test" );
-
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
     mqc.shutdown();
-    _t->join();
-
-    delete _t;
-    delete _controller;
-    delete _cm;
+    Controller::testDaemonCleanup();
   }
 };
 

@@ -39,6 +39,11 @@ mu2eerd_state_t SharedMemoryClient::currentStateGet() const
   return _shmi->currentStateGet();
 }
 
+pid_t SharedMemoryClient::pidGet() const
+{
+  return _shmi->pidGet();
+}
+
 SharedMemoryClient::SharedMemoryClient( const string& name )
   : _name( name )
 {

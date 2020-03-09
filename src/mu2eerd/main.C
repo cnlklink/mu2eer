@@ -31,7 +31,7 @@ using namespace std;
  */
 static void _handle_sigterm( int signal )
 {
-  ControlMQClient mqc( "/mu2eer" );
+  ControlMQClient mqc( MU2EERD_CMQ_NAME );
   mqc.shutdown();
 }
 
@@ -68,7 +68,7 @@ int main( int argc, char* argv[] )
 
       // Instantiate a Controller object
       ConfigurationManager cm;
-      Controller ctlr( cm, "/mu2eer", "mu2eer" );
+      Controller ctlr( cm, MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME );
 
       // Enter command processing loop
       ctlr.start();

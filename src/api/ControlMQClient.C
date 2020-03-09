@@ -7,19 +7,10 @@
  */
 
 #include "ControlMQClient.H"
+#include "errors.H"
 
 using namespace Mu2eER;
 using namespace std;
-
-/**
- * Message queue open failure
- */
-api_error API_CMQ_OPENFAIL( "Client mq_open failure" );
-
-/**
- * Message queue send failure
- */
-api_error API_CMQ_SENDFAIL( "Client mq_send failure" );
 
 ControlMQClient::ControlMQClient( string mqName )
   : _mqName( mqName )

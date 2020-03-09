@@ -59,6 +59,7 @@ include ACNET/ACNET.mk
 include adc/adc.mk
 include api/api.mk
 include config/config.mk
+include mu2eercli/mu2eercli.mk
 include mu2eerd/mu2eerd.mk
 include ssm/ssm.mk
 include tclk/tclk.mk

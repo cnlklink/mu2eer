@@ -59,6 +59,26 @@ namespace Mu2eER
     }
 
     /**
+     * Get PID
+     *
+     * @return PID for mu2eerd daemon
+     */
+    inline pid_t pidGet() const
+    {
+      return _pid;
+    }
+
+    /**
+     * Set PID
+     *
+     * @param pid new PID
+     */
+    inline void pidSet( pid_t pid )
+    {
+      _pid = pid;
+    }
+
+    /**
      * Get Spill State Machine Block
      *
      * @return Reference to the SSM Block
@@ -93,6 +113,11 @@ namespace Mu2eER
      * API version
      */
     char _api_version[32];
+
+    /**
+     * mu2eerd pid
+     */
+    pid_t _pid;
 
     /**
      * Spill State Machine Block

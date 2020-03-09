@@ -17,6 +17,16 @@
  */
 #define API_VERSION "1.0"
 
+/**
+ * Name of the mu2eerd control message queue
+ */
+#define MU2EERD_CMQ_NAME "/mu2eer"
+
+/**
+ * Name of the mu2eerd shared memory region
+ */
+#define MU2EERD_SHM_NAME "mu2eer"
+
 namespace Mu2eER
 {
   /**
@@ -41,7 +51,22 @@ namespace Mu2eER
   };
 
   /**
-   * Exception from the API module
+   * mu2eer modules
+   */
+  enum module_t
+    {
+      ACNET,
+      ADC,
+      API,
+      CONFIG,
+      MU2EERCLI,
+      MU2EERD,
+      SSM,
+      TCLK
+    };
+
+  /**
+   * Deprecated api_error type
    */
   typedef std::runtime_error api_error;
 };

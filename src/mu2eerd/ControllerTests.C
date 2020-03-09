@@ -161,6 +161,29 @@ TEST( OperationGroup, StartupShutdown )
   CHECK_EQUAL( MU2EERD_SHUTDOWN, _shmc->currentStateGet() );
 }
 
+TEST( OperationGroup, VerifyPID )
+{
+  // Startup the controller in another thread.
+  thread t( []() {
+      try
+        {
+          _cm->ssmAutoInitSet( true );
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << e.what() << endl;
+        }
+  } );
+
+  _shmc->waitForState( MU2EERD_RUNNING );
+  CHECK( _shmc->pidGet() > 1 );
+
+  // Shutdown
+  _mqc->shutdown();
+  t.join();
+}
+
 TEST( OperationGroup, StartWithSSMAutoInit )
 {
   // Startup the controller in another thread.

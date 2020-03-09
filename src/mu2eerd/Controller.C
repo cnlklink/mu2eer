@@ -7,6 +7,8 @@
  */
 
 #include <iostream>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "Controller.H"
 
@@ -47,6 +49,16 @@ controller_error CONTROLLER_MQ_INVPARAM( "invalid parameter to mq_open" );
  * Thrown if there is an unkown error creating the message queue
  */
 controller_error CONTROLLER_MQ_OPENFAILURE( "mq_open failure" );
+
+const string Controller::TEST_DAEMON_CMQ_NAME = "/mu2eer_test";
+
+const string Controller::TEST_DAEMON_SHM_NAME = "mu2eer_test";
+
+ConfigurationManager* Controller::_testdCM = nullptr;
+
+Controller* Controller::_testdCtlr = nullptr;
+
+thread* Controller::_testdThread = nullptr;
 
 Controller::Controller( ConfigurationManager& cm, string mqName, string shmName )
   : _cm( cm ),
@@ -165,6 +177,8 @@ void Controller::start()
 {
   _shmm.currentStateSet( MU2EERD_STARTUP );
 
+  _shmm.pidSet( getpid() );
+  
   if( _cm.ssmAutoInitGet() )
     {
       // Initialize the spill state machine
@@ -177,4 +191,30 @@ void Controller::start()
   _processMessages();
 
   _shutdown();
+}
+
+void Controller::testDaemonStart()
+{
+  _testdCM = new ConfigurationManager();
+  _testdCtlr = new Controller( *_testdCM, TEST_DAEMON_CMQ_NAME, TEST_DAEMON_SHM_NAME );
+
+  _testdThread = new thread( []() {
+      try
+        {
+          _testdCtlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << "test daemon exception: " << e.what() << endl;
+        }
+  } );
+}
+
+void Controller::testDaemonCleanup()
+{
+  _testdThread->join();
+  
+  delete _testdThread;
+  delete _testdCtlr;
+  delete _testdCM;
 }

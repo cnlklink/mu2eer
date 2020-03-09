@@ -36,6 +36,13 @@ namespace Mu2eER
     mu2eerd_state_t currentStateGet() const;
 
     /**
+     * Get PID
+     *
+     * @return PID of the mu2eerd daemon
+     */
+    pid_t pidGet() const;
+
+    /**
      * Constructor
      *
      * @param name Name of the shared memory segment to attach to
