@@ -4,12 +4,12 @@ Feature: mu2ecli pid command
 
   Scenario: mu2eerd process is running
     Given mu2eerd is running
-    When I pass the pid command to mu2eercli
+    When I pass the "pid" command to mu2eercli
     Then the PID for mu2eerd should be displayed
     And an exit code of 0 is returned
 
   Scenario: mu2eerd process is not running
     Given mu2eerd is not running
-    When I pass the pid command to mu2eercli
+    When I pass the "pid" command to mu2eercli
     Then an error message is displayed
     And an exit code of 1 is returned

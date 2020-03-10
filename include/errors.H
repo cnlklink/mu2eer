@@ -33,6 +33,11 @@ namespace Mu2eER
    * Insufficient arguments provided to mu2eercli
    */
   extern const Error MU2EERCLI_ARGUMENT_MISSING;
+
+  /**
+   * Shutdown command did not complete within the timeout period
+   */
+  extern const Error MU2EERCLI_SHUTDOWN_ABORTED;
 };
 
 #endif

@@ -28,8 +28,8 @@ Given(/mu2eerd (is|is not) running/) do |running|
   end
 end
 
-When("I pass the pid command to mu2eercli") do
-  @result = `./bin/host/mu2eercli/mu2eercli pid`
+When("I pass the {string} command to mu2eercli") do |command|
+  @result = `./bin/host/mu2eercli/mu2eercli #{command}`
   @rc = $?.exitstatus
 end
 
@@ -41,6 +41,10 @@ Then("an exit code of {int} is returned") do |returnCode|
   expect( @rc ).to eq returnCode
 end
 
-Then("an error message is displayed") do 
+Then(/(a confirmation|an error) message is displayed/) do |phrase|
   expect( @result != "" )
 end
+
+Then("within {int} seconds the mu2eerd process terminates") do |timeout|
+  expect( `pidof mu2eerd` ).to eq ""
+end 
