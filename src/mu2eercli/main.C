@@ -53,7 +53,7 @@ int main( int argc, const char* argv[] )
     {
       if( e == API_CMQ_OPENFAIL )
         {
-          cout << "mu2eerd is not running." << endl;
+          cout << "Could not open command message queue.  Maybe mu2eerd is not running." << endl;
         }
       else
         {

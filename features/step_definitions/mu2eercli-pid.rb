@@ -30,7 +30,7 @@ end
 
 When("I pass the pid command to mu2eercli") do
   @result = `./bin/host/mu2eercli/mu2eercli pid`
-  @rc = $?
+  @rc = $?.exitstatus
 end
 
 Then("the PID for mu2eerd should be displayed") do
@@ -41,6 +41,6 @@ Then("an exit code of {int} is returned") do |returnCode|
   expect( @rc ).to eq returnCode
 end
 
-Then("{string} is displayed") do |err|
-  expect( @result ).to eq err
+Then("an error message is displayed") do 
+  expect( @result != "" )
 end

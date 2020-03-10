@@ -11,5 +11,5 @@ Feature: mu2ecli pid command
   Scenario: mu2eerd process is not running
     Given mu2eerd is not running
     When I pass the pid command to mu2eercli
-    Then "mu2eerd is not running." is displayed
+    Then an error message is displayed
     And an exit code of 1 is returned
