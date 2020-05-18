@@ -13,7 +13,7 @@ EES_TARGET_OS_VERSION    = 4.1.22-ltsi
 EES_BR_BASE              = /usr/local/products/buildroot/achilles_mu2eer
 
 # Include ELSD build tools
-include /usr/local/products/elsd/include/elsd-3.0.mk
+include /usr/local/products/elsd/include/elsd-latest.mk
 
 EES_CPPFLAGS	= -I$(INC_DIR) \
 	-I$(EES_CDEV_INC) \
