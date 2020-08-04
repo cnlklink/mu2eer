@@ -55,6 +55,13 @@ namespace Mu2eER
     virtual ~ISSMDeviceDriver();
 
     /**
+     * Read Spill Counter
+     *
+     * @return The number of spills observed since the device was initialized
+     */
+    virtual unsigned int spillCounterGet() const = 0;
+
+    /**
      * Read State
      *
      * Returns the current state of Spill State Machine.

@@ -46,6 +46,15 @@ namespace Mu2eER
     void initialize();
 
     /**
+     * Get Spill Counter
+     *
+     * Returns the number of spills observed by the state machine.
+     *
+     * @return Spill counter
+     */
+    unsigned int spillCounterGet() const;
+
+    /**
      * Get State
      *
      * @return Current state

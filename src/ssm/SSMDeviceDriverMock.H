@@ -28,6 +28,16 @@ namespace Mu2eER
     virtual void initialize();
 
     /**
+     * Load Spill Sequence
+     *
+     * Create a state sequence for the given number of spills.
+     *
+     * @param spills Number of spills
+     * @return Sequence
+     */
+    void loadSpillSequence( unsigned int spills );
+
+    /**
      * Default Constructor
      */
     SSMDeviceDriverMock();
@@ -45,6 +55,9 @@ namespace Mu2eER
      * Destructor
      */
     virtual ~SSMDeviceDriverMock();
+
+    // Override
+    virtual unsigned int spillCounterGet() const;
 
     // Override
     virtual ssm_state_t stateGet() const;
@@ -66,6 +79,11 @@ namespace Mu2eER
      * Initial state sequence.  _stateSequence can be reset to this by calling initialize().
      */
     vector<ssm_state_t> _initialSequence;
+
+    /**
+     * Spill Counter
+     */
+    unsigned int _spillCount;
 
     /**
      * Current state

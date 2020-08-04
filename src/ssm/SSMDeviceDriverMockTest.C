@@ -201,3 +201,53 @@ TEST( CoreGroup, WaitForMultipleStateChanges )
   CHECK_EQUAL( SSM_RAMP, _gDriver->waitForStateChange() );
   CHECK_EQUAL( SSM_FAULT, _gDriver->waitForStateChange() );
 }
+
+/**
+ * Test loadSpillSequence Method
+ *
+ * Verifies that the loadSpillSequenceMethod creates n number of expected spills.
+ */
+TEST( CoreGroup, LoadSpillSequence )
+{
+  // No spills
+  _gDriver->loadSpillSequence( 0 );
+  _gDriver->initialize();
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+  CHECK_EQUAL( SSM_INIT, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_FAULT, _gDriver->waitForStateChange() );
+
+  // 1 spills
+  _gDriver->loadSpillSequence( 1 );
+  _gDriver->initialize();
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+  CHECK_EQUAL( SSM_INIT, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_READ_IBEAM, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_RAMP, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_SPILL, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_AFTER_SPILL, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_END_CYCLE, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_LEARNING, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_FAULT, _gDriver->waitForStateChange() );
+}
+
+/**
+* Test Spill Counter
+*
+* Verifies that the spill counter increments each time we enter the SSM_SPILL state.
+*/
+TEST( CoreGroup, SpillCounter )
+{
+  // Make a sequence with 2 spills
+  _gDriver->loadSpillSequence( 2 );
+
+  _gDriver->initialize();
+  CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
+
+  // Step through the entire sequence
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+
+  CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
+}

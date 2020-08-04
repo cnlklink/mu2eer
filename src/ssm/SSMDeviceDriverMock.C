@@ -13,9 +13,30 @@ using namespace std;
 
 void SSMDeviceDriverMock::initialize()
 {
+  _spillCount = 0;
+
   _resetSequence();
 
   _stateNext();
+}
+
+void SSMDeviceDriverMock::loadSpillSequence( unsigned int spills )
+{
+  vector<ssm_state_t> sequence( { SSM_IDLE, SSM_INIT, SSM_BETWEEN_CYCLES } );
+
+  // Load spills
+  for( unsigned int i = 0; i != spills; i++ )
+    {
+      sequence.push_back( SSM_READ_IBEAM );
+      sequence.push_back( SSM_RAMP );
+      sequence.push_back( SSM_SPILL );
+      sequence.push_back( SSM_AFTER_SPILL );
+      sequence.push_back( SSM_END_CYCLE );
+      sequence.push_back( SSM_LEARNING );
+      sequence.push_back( SSM_BETWEEN_CYCLES );
+    }
+
+  stateSequenceSet( sequence );
 }
 
 void SSMDeviceDriverMock::_resetSequence()
@@ -28,7 +49,8 @@ void SSMDeviceDriverMock::_resetSequence()
 }
 
 SSMDeviceDriverMock::SSMDeviceDriverMock()
-  : _state( SSM_IDLE )
+  : _spillCount( 0 ),
+    _state( SSM_IDLE )
 {
 }
 
@@ -40,6 +62,11 @@ SSMDeviceDriverMock::SSMDeviceDriverMock( const vector<ssm_state_t>& sequence )
 
 SSMDeviceDriverMock::~SSMDeviceDriverMock()
 {
+}
+
+unsigned int SSMDeviceDriverMock::spillCounterGet() const
+{
+  return _spillCount;
 }
 
 ssm_state_t SSMDeviceDriverMock::stateGet() const
@@ -70,5 +97,13 @@ void SSMDeviceDriverMock::stateSequenceSet( const vector<ssm_state_t>& sequence 
 
 ssm_state_t SSMDeviceDriverMock::waitForStateChange()
 {
-  return _stateNext();
+  auto ret = _stateNext();
+  
+  // Increment spill counter whenever the SSM_SPILL state is returned
+  if( SSM_SPILL == ret )
+    {
+      ++_spillCount;
+    }
+
+  return ret;
 }

@@ -39,6 +39,11 @@ void SpillStateMachine::initialize()
   cout << " done." << endl;
 }
 
+unsigned int SpillStateMachine::spillCounterGet() const
+{
+  return _ssmDev->spillCounterGet();
+}
+
 ssm_state_t SpillStateMachine::stateGet() const
 {
   return _ssmDev->stateGet();
