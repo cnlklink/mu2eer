@@ -45,8 +45,8 @@ TEST( CoreGroup, DefaultConfig )
 {
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
-  STRCMP_EQUAL( "mock", _cm->ssmDriverGet().c_str() );
-  CHECK_EQUAL( false, _cm->ssmAutoInitGet() );
+  STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
+  CHECK_EQUAL( false, _cm->ssmGet().autoInitGet() );
 }
 
 /**
@@ -72,8 +72,8 @@ TEST( CoreGroup, LoadReferenceConfig )
   
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
-  STRCMP_EQUAL( "mock", _cm->ssmDriverGet().c_str() );
-  CHECK_EQUAL( true, _cm->ssmAutoInitGet() );
+  STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
+  CHECK_EQUAL( true, _cm->ssmGet().autoInitGet() );
 }
 
 /**

@@ -179,7 +179,7 @@ void Controller::start()
 
   _shmm.pidSet( getpid() );
   
-  if( _cm.ssmAutoInitGet() )
+  if( _cm.ssmGet().autoInitGet() )
     {
       // Initialize the spill state machine
       _ssm.initialize();

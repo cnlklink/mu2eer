@@ -11,6 +11,10 @@
 using namespace Mu2eER;
 using namespace std;
 
+void SSMDeviceDriverMock::configure( const SSMConfig& config )
+{
+}
+
 void SSMDeviceDriverMock::initialize()
 {
   _spillCount = 0;

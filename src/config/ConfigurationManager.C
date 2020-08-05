@@ -54,7 +54,10 @@ void ConfigurationManager::_defaultInit()
   ssm["driver"] = "mock";
 
   ssm.add( "auto_init", libconfig::Setting::TypeBoolean );
-  ssm["auto_init"] = false;
+  ssm["auto_init"] = false;  
+
+  ssm.add( "mock_spills", libconfig::Setting::TypeInt );
+  ssm["mock_spills"] = 0;
 
   // TCLK defaults
   root.add( "tclk", libconfig::Setting::TypeGroup );
@@ -101,22 +104,9 @@ void ConfigurationManager::reload()
     }
 }
 
-bool ConfigurationManager::ssmAutoInitGet() const
+SSMConfig ConfigurationManager::ssmGet() const
 {
-  const auto& root = _cfg.getRoot();
-  return root["ssm"]["auto_init"];
-}
-
-void ConfigurationManager::ssmAutoInitSet( bool autoInit )
-{
-  const auto& root = _cfg.getRoot();
-  root["ssm"]["auto_init"] = autoInit;
-}
-
-string ConfigurationManager::ssmDriverGet() const
-{
-  const auto& root = _cfg.getRoot();
-  return root["ssm"]["driver"];
+  return SSMConfig( _cfg.getRoot()["ssm"] );
 }
 
 string ConfigurationManager::tclkDriverGet() const

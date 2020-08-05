@@ -23,8 +23,11 @@ ssm_error SSM_NOT_READY( "SSM Not Ready" );
 SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm, SpillStateMachineSMB& smb )
   : _cm( cm ),
     _smb( smb ),
-    _ssmDev( ISSMDeviceDriver::factory( _cm.ssmDriverGet() ) )
+    _ssmDev( ISSMDeviceDriver::factory( _cm.ssmGet().driverGet() ) )
 {
+  // Configure SSM Device
+  _ssmDev->configure( _cm.ssmGet() );
+
   _smb.currentStateSet( _ssmDev->stateGet() );
 }
 

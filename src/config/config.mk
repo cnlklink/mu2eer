@@ -8,7 +8,7 @@ ALL_OUT         += $(CONFIG_HOST_OUT) $(CONFIG_TARGET_OUT)
 ALL_SOURCES     += $(wildcard config/*.C)
 ALL_HEADERS     += $(wildcard config/*.H)
 
-CONFIG_OBJS        = ConfigurationManager.o
+CONFIG_OBJS        = ConfigurationManager.o SSMConfig.o
 CONFIG_OBJS_PREFIX = $(addprefix config/,$(CONFIG_OBJS))
 CONFIG_OBJS_HOST   = $(addprefix $(CONFIG_HOST_OUT)/,$(CONFIG_OBJS))
 CONFIG_OBJS_TARGET = $(addprefix $(CONFIG_TARGET_OUT)/,$(CONFIG_OBJS))

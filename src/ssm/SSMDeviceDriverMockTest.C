@@ -8,6 +8,7 @@
 
 #include "CppUTest/TestHarness.h"
 
+#include "ConfigurationManager.H"
 #include "SSMDeviceDriverMock.H"
 
 using namespace Mu2eER;
@@ -42,6 +43,25 @@ TEST_GROUP( ConstructorGroup )
  * Tests related to receiving state transition notifications and receiving status from the device.
  */
 TEST_GROUP( CoreGroup )
+{
+  void setup()
+  {
+    // Create a new SSMDeviceDriverMock for each test
+    _gDriver = new SSMDeviceDriverMock();
+  }
+
+  void teardown()
+  {
+    delete _gDriver;
+  }
+};
+
+/**
+ * ConfigGroup
+ *
+ * Tests related to configuring the device.
+ */
+TEST_GROUP( ConfigGroup )
 {
   void setup()
   {
@@ -250,4 +270,24 @@ TEST( CoreGroup, SpillCounter )
   while( SSM_FAULT != _gDriver->waitForStateChange() );
 
   CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
+}
+
+/**
+ * Test Default Config Load
+ *
+ * Verifies that we load a default configuration without error.
+ */
+TEST( ConfigGroup, LoadDefaultConfig )
+{
+  // Make a default configuration
+  ConfigurationManager defaultConf;
+  auto ssmconf = defaultConf.ssmGet();
+
+  // Load
+  _gDriver->configure( ssmconf );
+
+  // Verify
+  CHECK_EQUAL( false, ssmconf.autoInitGet() );
+  STRCMP_NOCASE_EQUAL( "mock", ssmconf.driverGet().c_str() );
+  CHECK_EQUAL( 0, ssmconf.mockSpillsGet() );
 }

@@ -25,6 +25,9 @@ namespace Mu2eER
   {
   public:
     // Override
+    virtual void configure( const SSMConfig& config );
+
+    // Override
     virtual void initialize();
 
     /**

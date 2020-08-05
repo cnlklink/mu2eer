@@ -9,6 +9,8 @@
 #ifndef SSM_H
 #define SSM_H
 
+#include "SSMConfig.H"
+
 #include <stdexcept>
 
 /**

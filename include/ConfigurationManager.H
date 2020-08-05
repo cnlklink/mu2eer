@@ -10,6 +10,7 @@
 #define CONFIGURATIONMANAGER_H
 
 #include "config.H"
+#include "SSMConfig.H"
 
 #include <libconfig.h++>
 #include <string>
@@ -61,25 +62,11 @@ namespace Mu2eER
     void reload();
 
     /**
-     * Get Spill State Machine Auto-Init Flag
+     * Get Spill State Machine Configuration
      *
-     * @return True if the ssm should be initialized automatically on start-up
+     * @return Spill state machine configuration object
      */
-    bool ssmAutoInitGet() const;
-
-    /**
-     * Set Spill State Machine Auto-Init Flag
-     *
-     * @param autoInit True if the ssm should be initialize automaticall on start-up
-     */
-    void ssmAutoInitSet( bool autoInit );
-
-    /**
-     * Set Spill State Machine Driver
-     *
-     * @return "mock" or "real"
-     */
-    string ssmDriverGet() const;
+    SSMConfig ssmGet() const;
 
     /**
      * Get TCLK Driver

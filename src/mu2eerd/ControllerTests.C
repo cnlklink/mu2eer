@@ -167,7 +167,7 @@ TEST( OperationGroup, VerifyPID )
   thread t( []() {
       try
         {
-          _cm->ssmAutoInitSet( true );
+          _cm->ssmGet().autoInitSet( true );
           _ctlr->start();
         }
       catch( controller_error e )
@@ -190,7 +190,7 @@ TEST( OperationGroup, StartWithSSMAutoInit )
   thread t( []() {
       try
         {
-          _cm->ssmAutoInitSet( true );
+          _cm->ssmGet().autoInitSet( true );
           _ctlr->start();
         }
       catch( controller_error e )

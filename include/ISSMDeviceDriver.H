@@ -30,6 +30,15 @@ namespace Mu2eER
   {
   public:
     /**
+     * Configure
+     *
+     * Load the SSM configuration into the device.
+     *
+     * @param config SSM configuration settings
+     */
+    virtual void configure( const SSMConfig& config ) = 0;
+
+    /**
      * ISSMDeviceDriver Factory
      *
      * @param driverId Identifier for the type of device driver to create
