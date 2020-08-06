@@ -20,3 +20,11 @@ To run the Acceptance Test suite, move into the root directory and run `cucumber
 A defconfig for Mu2eER is in the ees-buildroot project (2015.08.x branch).  A Jenkins task called Mu2eER Buildroot builds this defconfig whenever the Mu2eER has a successful build or the Achilles Baseline has a successful build.
 
 Two scripts handle the deployment of the target images that are produced by Mu2eER Buildroot.  The first script, `src/deploy.sh` will copy the target images to the `/fecode-bd` NFS share on `chablis` into a directory named for the Jenkins build number.  The second script, `src/build_select.sh` will enable the build for the given environment (test or production).
+
+### Test Stand
+The test-stand node is srsd.fnal.gov and is located in the TGC-100 Instrumentation lab area.  The board is connected to adinst130707.fnal.gov via USB-serial on COM7 at 115200 baud.  
+
+A remote power switch is attached to COM1 at 9600 baud.  This can be used to remotely power-cycle the test stand.  Connect to the power switch with PuTTY and execute `pshow` to display power port status.  Use `pset 1 0` to turn power off and `pset 1 1` to turn power on.
+
+### Production
+The production node is to be determined.
