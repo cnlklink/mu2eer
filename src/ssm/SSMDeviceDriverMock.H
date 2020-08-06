@@ -75,6 +75,9 @@ namespace Mu2eER
     virtual void stateSequenceSet( const vector<ssm_state_t>& sequence );
 
     // Override
+    virtual unsigned int timeInSpillGet() const;
+
+    // Override
     virtual ssm_state_t waitForStateChange();
 
   private:
@@ -97,6 +100,11 @@ namespace Mu2eER
      * A sequence of state changes to be played back by calls to waitForStateChange(..).
      */
     deque<ssm_state_t> _stateSequence;
+
+    /**
+     * Time in spill register
+     */
+    unsigned int _timeInSpill;
 
     /**
      * Reset Sequence

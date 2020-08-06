@@ -13,24 +13,35 @@ using namespace std;
 
 void SSMDeviceDriverMock::configure( const SSMConfig& config )
 {
+  if( config.mockSpillsGet() > 0 )
+    {
+      loadSpillSequence( config.mockSpillsGet() );
+    }
 }
 
 void SSMDeviceDriverMock::initialize()
 {
+  // Reset spill counter
   _spillCount = 0;
 
+  // Reset the time-in-spill register
+  _timeInSpill = 0;
+
+  // Reset the state sequence
   _resetSequence();
 
+  // Prime with the first state in the sequence
   _stateNext();
 }
 
 void SSMDeviceDriverMock::loadSpillSequence( unsigned int spills )
 {
-  vector<ssm_state_t> sequence( { SSM_IDLE, SSM_INIT, SSM_BETWEEN_CYCLES } );
+  vector<ssm_state_t> sequence;
 
   // Load spills
   for( unsigned int i = 0; i != spills; i++ )
     {
+      sequence.push_back( SSM_BETWEEN_CYCLES );
       sequence.push_back( SSM_READ_IBEAM );
       sequence.push_back( SSM_RAMP );
       sequence.push_back( SSM_SPILL );
@@ -54,7 +65,8 @@ void SSMDeviceDriverMock::_resetSequence()
 
 SSMDeviceDriverMock::SSMDeviceDriverMock()
   : _spillCount( 0 ),
-    _state( SSM_IDLE )
+    _state( SSM_IDLE ),
+    _timeInSpill( 0 )
 {
 }
 
@@ -99,6 +111,11 @@ void SSMDeviceDriverMock::stateSequenceSet( const vector<ssm_state_t>& sequence 
   _resetSequence();
 }
 
+unsigned int SSMDeviceDriverMock::timeInSpillGet() const
+{
+  return _timeInSpill;
+}
+
 ssm_state_t SSMDeviceDriverMock::waitForStateChange()
 {
   auto ret = _stateNext();
@@ -107,6 +124,12 @@ ssm_state_t SSMDeviceDriverMock::waitForStateChange()
   if( SSM_SPILL == ret )
     {
       ++_spillCount;
+    }
+
+  // Set the time-in-spill to 107ms whenever the SSM_AFTER_SPILL state is returned
+  if( SSM_AFTER_SPILL == ret )
+    {
+      _timeInSpill = 107;
     }
 
   return ret;

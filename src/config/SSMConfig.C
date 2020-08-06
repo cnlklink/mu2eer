@@ -35,6 +35,11 @@ string SSMConfig::driverGet() const
   return _cfg["driver"];
 }
 
+void SSMConfig::mockSpillsSet( unsigned int spills )
+{
+  _cfg["mock_spills"] = static_cast<int>( spills );
+}
+
 unsigned int SSMConfig::mockSpillsGet() const
 {
   return _cfg["mock_spills"];

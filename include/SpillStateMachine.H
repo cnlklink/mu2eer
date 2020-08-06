@@ -60,6 +60,15 @@ namespace Mu2eER
      * @return Current state
      */
     ssm_state_t stateGet() const;
+
+    /**
+     * Wait for State Change
+     *
+     * Wait for the spill state machine to change state.
+     *
+     * @return New state
+     */
+    ssm_state_t waitForStateChange() const;
     
   private:
     /**

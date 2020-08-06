@@ -80,6 +80,15 @@ namespace Mu2eER
     virtual ssm_state_t stateGet() const = 0;
 
     /**
+     * Read Time-in-Spill
+     *
+     * Returns the time spent in the most recent spill cycle.
+     *
+     * @return Time in spill (ms)
+     */
+    virtual unsigned int timeInSpillGet() const = 0;
+
+    /**
      * Wait for State Change
      *
      * Blocks until a state change occurs and notification is received from the hardware.

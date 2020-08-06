@@ -51,3 +51,8 @@ ssm_state_t SpillStateMachine::stateGet() const
 {
   return _ssmDev->stateGet();
 }
+
+ssm_state_t SpillStateMachine::waitForStateChange() const
+{
+  return _ssmDev->waitForStateChange();
+}

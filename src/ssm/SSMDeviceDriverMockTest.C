@@ -229,20 +229,17 @@ TEST( CoreGroup, WaitForMultipleStateChanges )
  */
 TEST( CoreGroup, LoadSpillSequence )
 {
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+
   // No spills
   _gDriver->loadSpillSequence( 0 );
   _gDriver->initialize();
-  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
-  CHECK_EQUAL( SSM_INIT, _gDriver->waitForStateChange() );
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
   CHECK_EQUAL( SSM_FAULT, _gDriver->waitForStateChange() );
 
   // 1 spills
   _gDriver->loadSpillSequence( 1 );
   _gDriver->initialize();
-  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
-  CHECK_EQUAL( SSM_INIT, _gDriver->waitForStateChange() );
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _gDriver->stateGet() );
   CHECK_EQUAL( SSM_READ_IBEAM, _gDriver->waitForStateChange() );
   CHECK_EQUAL( SSM_RAMP, _gDriver->waitForStateChange() );
   CHECK_EQUAL( SSM_SPILL, _gDriver->waitForStateChange() );
@@ -270,6 +267,30 @@ TEST( CoreGroup, SpillCounter )
   while( SSM_FAULT != _gDriver->waitForStateChange() );
 
   CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
+}
+
+/**
+ * Test Time-in-Spill Register
+ *
+ * Verifies that the time-in-spill register returns 0 after initialization and 107 after 
+ * a spill sequence.
+ */
+TEST( CoreGroup, TimeInSpill )
+{
+  // Make a sequence with 1 spill
+  _gDriver->loadSpillSequence( 1 );
+
+  // Verify that timeInSpill is initialized to 0
+  _gDriver->initialize();
+  CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+
+  // Verify that timeInSpill is 107 after a spill sequence
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+  CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
+
+  // Verify that timeInSpill returns to 0 after re-initializing
+  _gDriver->initialize();
+  CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
 }
 
 /**

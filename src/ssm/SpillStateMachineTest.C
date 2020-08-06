@@ -72,12 +72,14 @@ TEST_GROUP( SpillCounterGroup )
 {
   void setup()
   {
+    _cm.ssmGet().mockSpillsSet( 5 );
     _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    _cm.ssmGet().mockSpillsSet( 0 );
   }
 };
 
@@ -99,11 +101,15 @@ TEST( SpillCounterGroup, InitialValueIsZero )
  */
 TEST( SpillCounterGroup, ResetToZero )
 {
+  // Ask for 5 fake spills
   _ssm->initialize();
   CHECK_EQUAL( 0, _ssm->spillCounterGet() );
 
-  FAIL( "TODO: cause some spills" );
+  // Run through the fake spills
+  while( SSM_FAULT != _ssm->waitForStateChange() );
+  CHECK_EQUAL( 5, _ssm->spillCounterGet() );
 
+  // Re-initialize
   _ssm->initialize();
   CHECK_EQUAL( 0, _ssm->spillCounterGet() );
 }

@@ -52,9 +52,16 @@ namespace Mu2eER
     string driverGet() const;
 
     /**
+     * Set Mock Spills
+     *
+     * @param spills The number of spills to fake ("mock" driver only)
+     */
+    void mockSpillsSet( unsigned int spills );
+
+    /**
      * Get Mock Spills
      *
-     * @return The number of spills to fake ("mock" driver)
+     * @return The number of spills to fake ("mock" driver only)
      */
     unsigned int mockSpillsGet() const;
 
