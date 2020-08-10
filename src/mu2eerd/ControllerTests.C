@@ -46,6 +46,11 @@ static SharedMemoryClient* _shmc;
 static ControlMQClient* _mqc;
 
 /**
+ * Global thread for the controller to run in
+ */
+static thread* _t;
+
+/**
  * Construction Tests
  *
  * Tests related to constructing/destructing the Controller.
@@ -67,6 +72,50 @@ TEST_GROUP( ConstructionGroup )
  * Tests related to the operation of the Controller.
  */
 TEST_GROUP( OperationGroup )
+{
+  void setup()
+  {
+    _cm = new ConfigurationManager();
+    _ctlr = new Controller( *_cm, "/mu2eer_test", "mu2eer_test" );
+    _shmc = new SharedMemoryClient( "mu2eer_test" );
+    _mqc = new ControlMQClient( "/mu2eer_test" );
+
+    // Startup the controller in another thread.
+    _t = new thread( []() {
+        try
+          {
+            _cm->ssmGet().autoInitSet( true );
+            _ctlr->start();
+          }
+        catch( controller_error e )
+          {
+            cerr << e.what() << endl;
+          }
+      } );
+
+    _shmc->waitForState( MU2EERD_RUNNING );
+  }
+
+  void teardown()
+  {
+    // Shutdown
+    _mqc->shutdown();
+    _t->join();
+    
+    delete _mqc;
+    delete _shmc;
+    delete _ctlr;
+    delete _cm;
+    delete _t;
+  }
+};
+
+/**
+ * Startup Tests
+ *
+ * Tests related to starting and stopping the Controller.
+ */
+TEST_GROUP( StartupGroup )
 {
   void setup()
   {
@@ -134,7 +183,7 @@ TEST( ConstructionGroup, Destruction )
   CHECK_THROWS( api_error, SharedMemoryClient( "mu2eer_test" ) );
 }
 
-TEST( OperationGroup, StartupShutdown )
+TEST( StartupGroup, StartupShutdown )
 {
   CHECK_EQUAL( MU2EERD_INITIALIZING, _shmc->currentStateGet() );
 
@@ -161,57 +210,7 @@ TEST( OperationGroup, StartupShutdown )
   CHECK_EQUAL( MU2EERD_SHUTDOWN, _shmc->currentStateGet() );
 }
 
-TEST( OperationGroup, VerifyPID )
-{
-  // Startup the controller in another thread.
-  thread t( []() {
-      try
-        {
-          _cm->ssmGet().autoInitSet( true );
-          _ctlr->start();
-        }
-      catch( controller_error e )
-        {
-          cerr << e.what() << endl;
-        }
-  } );
-
-  _shmc->waitForState( MU2EERD_RUNNING );
-  CHECK( _shmc->pidGet() > 1 );
-
-  // Shutdown
-  _mqc->shutdown();
-  t.join();
-}
-
-TEST( OperationGroup, VerifyStartTime )
-{
-  // Startup the controller in another thread.
-  thread t( []() {
-      try
-        {
-          _cm->ssmGet().autoInitSet( true );
-          _ctlr->start();
-        }
-      catch( controller_error e )
-        {
-          cerr << e.what() << endl;
-        }
-  } );
-
-  _shmc->waitForState( MU2EERD_RUNNING );
-
-  // Make sure mu2eerd was started in the last 2 seconds
-  time_t now;
-  time( &now );
-  CHECK( _shmc->startTimeGet() > (now - 2) && now <= _shmc->startTimeGet()  );
-
-  // Shutdown
-  _mqc->shutdown();
-  t.join();
-}
-
-TEST( OperationGroup, StartWithSSMAutoInit )
+TEST( StartupGroup, StartWithSSMAutoInit )
 {
   // Startup the controller in another thread.
   thread t( []() {
@@ -235,7 +234,7 @@ TEST( OperationGroup, StartWithSSMAutoInit )
   CHECK_EQUAL( MU2EERD_SHUTDOWN, _shmc->currentStateGet() );
 }
 
-TEST( OperationGroup, BadMQMessages )
+TEST( StartupGroup, BadMQMessages )
 {
   // Startup the controller in another thread.
   thread t( []() {
@@ -257,7 +256,7 @@ TEST( OperationGroup, BadMQMessages )
   t.join();
 }
 
-TEST( OperationGroup, InitializeSSM )
+TEST( StartupGroup, InitializeSSM )
 {
   // Startup the controller in another thread.
   thread t( []() {
@@ -289,3 +288,17 @@ TEST( OperationGroup, InitializeSSM )
   _mqc->shutdown();
   t.join();
 }
+
+TEST( OperationGroup, VerifyPID )
+{
+  CHECK( _shmc->pidGet() > 1 );
+}
+
+TEST( OperationGroup, VerifyStartTime )
+{
+  // Make sure mu2eerd was started in the last 2 seconds
+  time_t now;
+  time( &now );
+  CHECK( _shmc->startTimeGet() > (now - 2) && now <= _shmc->startTimeGet()  );
+}
+
