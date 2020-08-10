@@ -175,10 +175,12 @@ void Controller::_shutdown()
 
 void Controller::start()
 {
+  _shmm.startTimeSetToNow();
+  
   _shmm.currentStateSet( MU2EERD_STARTUP );
 
   _shmm.pidSet( getpid() );
-  
+
   if( _cm.ssmGet().autoInitGet() )
     {
       // Initialize the spill state machine

@@ -48,3 +48,36 @@ end
 Then("within {int} seconds the mu2eerd process terminates") do |timeout|
   expect( `pidof mu2eerd` ).to eq ""
 end 
+
+Then("{string} is in the output") do |needle|
+  expect( @result ).to match needle
+end
+
+Then("the uptime for mu2eerd is displayed") do
+  # Expect the uptime to be present in the output
+  expect( @result ).to match /uptime: \d+/
+
+  # Extract uptime
+  uptime = @result[/uptime: \d+/][/\d+/].strip.to_i
+
+  # Get the runtime with `ps` and compare to what mu2ercli gives
+  # allow the two to be within +/- 2 seconds
+  pid=`pidof mu2eerd`.strip.to_i
+  expect( uptime ).to be_within( 2 ).of( `ps -p #{pid} -o etimes | tail -1`.strip.to_i )
+end
+
+Then("the start time for mu2eerd is displayed") do
+  # Expect the start time to be present in the output
+  expect( @result ).to match /mu2eerd running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
+
+  # Extract date and time
+  dAndT = @result.match(/mu2eerd running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
+
+  # Get the start time with `ps` and compare to what mu2eercli gives
+  pid=`pidof mu2eerd`.strip.to_i
+  expectedDAndT = `ps -p #{pid} -o lstart | tail -1`.match(/(\d{2}):(\d{2}):(\d{2}) (\d{4})/)
+  expect( dAndT[1] ).to eq expectedDAndT[4]
+  expect( dAndT[4] ).to eq expectedDAndT[1]
+  expect( dAndT[5] ).to eq expectedDAndT[2]
+  expect( dAndT[6].to_i ).to be_within( 2 ).of( expectedDAndT[3].to_i )
+end

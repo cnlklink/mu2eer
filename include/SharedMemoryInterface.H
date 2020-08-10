@@ -99,6 +99,26 @@ namespace Mu2eER
     }
 
     /**
+     * Get mu2eerd Start Time
+     *
+     * @return Start time of the mu2eerd process
+     */
+    inline time_t startTimeGet() const
+    {
+      return _startTime;
+    }
+
+    /**
+     * Set mu2eerd Start Time
+     *
+     * @param time Start time
+     */
+    inline void startTimeSet( time_t time )
+    {
+      _startTime = time;
+    }
+
+    /**
      * Get Version
      *
      * @return API version string
@@ -123,6 +143,11 @@ namespace Mu2eER
      * Spill State Machine Block
      */
     SpillStateMachineSMB _ssmBlock;
+
+    /**
+     * mu2eerd start time
+     */
+    time_t _startTime;
 
     /**
      * mu2eerd state

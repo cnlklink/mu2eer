@@ -184,6 +184,33 @@ TEST( OperationGroup, VerifyPID )
   t.join();
 }
 
+TEST( OperationGroup, VerifyStartTime )
+{
+  // Startup the controller in another thread.
+  thread t( []() {
+      try
+        {
+          _cm->ssmGet().autoInitSet( true );
+          _ctlr->start();
+        }
+      catch( controller_error e )
+        {
+          cerr << e.what() << endl;
+        }
+  } );
+
+  _shmc->waitForState( MU2EERD_RUNNING );
+
+  // Make sure mu2eerd was started in the last 2 seconds
+  time_t now;
+  time( &now );
+  CHECK( _shmc->startTimeGet() > (now - 2) && now <= _shmc->startTimeGet()  );
+
+  // Shutdown
+  _mqc->shutdown();
+  t.join();
+}
+
 TEST( OperationGroup, StartWithSSMAutoInit )
 {
   // Startup the controller in another thread.

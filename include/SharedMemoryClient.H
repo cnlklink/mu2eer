@@ -62,6 +62,13 @@ namespace Mu2eER
     const SpillStateMachineSMB& ssmBlockGet() const;
 
     /**
+     * Get Start Time for mu2eerd
+     *
+     * @return Start time for the mu2eerd process
+     */
+    time_t startTimeGet() const;
+
+    /**
      * Get API Version
      *
      * @return API version string

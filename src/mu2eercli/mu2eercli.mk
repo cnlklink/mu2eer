@@ -5,12 +5,18 @@ MU2EERCLI_LIBS        = api.a adc.a ssm.a config.a
 MU2EERCLI_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(MU2EERCLI_LIBS))
 MU2EERCLI_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(MU2EERCLI_LIBS))
 
-MU2EERCLI_OBJS        = main.o CLI.o Command.o PIDCommand.o ShutdownCommand.o
+MU2EERCLI_OBJS        = main.o CLI.o Command.o PIDCommand.o ShutdownCommand.o ShowCommand.o
 MU2EERCLI_OBJS_PREFIX = $(addprefix mu2eercli/,$(MU2EERCLI_OBJS))
 MU2EERCLI_OBJS_HOST   = $(addprefix $(MU2EERCLI_HOST_OUT)/,$(MU2EERCLI_OBJS))
 MU2EERCLI_OBJS_TARGET = $(addprefix $(MU2EERCLI_TARGET_OUT)/,$(MU2EERCLI_OBJS))
 
-MU2EERCLI_TEST_OBJS        = AllTests.o CLITests.o CLI.o Command.o PIDCommand.o ShutdownCommand.o
+MU2EERCLI_TEST_OBJS        = \
+	AllTests.o \
+	CLITests.o CLI.o \
+	Command.o \
+	PIDCommand.o \
+	ShutdownCommand.o \
+	ShowCommand.o
 MU2EERCLI_TEST_OBJS_PREFIX = $(addprefix mu2eercli/,$(MU2EERCLI_TEST_OBJS))
 MU2EERCLI_TEST_OBJS_HOST   = $(addprefix $(MU2EERCLI_HOST_OUT)/,$(MU2EERCLI_TEST_OBJS))
 

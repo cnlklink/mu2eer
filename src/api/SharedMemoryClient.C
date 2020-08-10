@@ -81,6 +81,11 @@ const SpillStateMachineSMB& SharedMemoryClient::ssmBlockGet() const
   return _shmi->ssmBlockGet();
 }
 
+time_t SharedMemoryClient::startTimeGet() const
+{
+  return _shmi->startTimeGet();
+}
+
 string SharedMemoryClient::versionGet() const
 {
   return _shmi->versionGet();

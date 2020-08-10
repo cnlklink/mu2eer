@@ -61,6 +61,13 @@ namespace Mu2eER
     SpillStateMachineSMB& ssmBlockGet();
 
     /**
+     * Set Start Time
+     *
+     * Sets the start time to right now.
+     */
+    void startTimeSetToNow();
+
+    /**
      * Get Version
      *
      * @return Shared memory API version

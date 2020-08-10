@@ -140,6 +140,13 @@ SpillStateMachineSMB& SharedMemoryManager::ssmBlockGet()
   return _shmPtr->ssmBlockGet();
 }
 
+void SharedMemoryManager::startTimeSetToNow()
+{
+  time_t now;
+  time( &now );
+  _shmPtr->startTimeSet( now );
+}
+
 string SharedMemoryManager::versionGet() const
 {
   return _shmPtr->versionGet();

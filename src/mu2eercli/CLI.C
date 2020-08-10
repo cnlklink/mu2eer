@@ -8,6 +8,7 @@
 
 #include "CLI.H"
 #include "PIDCommand.H"
+#include "ShowCommand.H"
 #include "ShutdownCommand.H"
 
 using namespace Mu2eER;
@@ -18,6 +19,7 @@ CLI::CLI( const string cmqName, const string shmcName )
     _shmc( shmcName )
 {
   _commands["pid"] = unique_ptr<Command>( new PIDCommand( _mqc, _shmc ) );
+  _commands["show"] = unique_ptr<Command>( new ShowCommand( _mqc, _shmc ) );
   _commands["shutdown"] = unique_ptr<Command>( new ShutdownCommand( _mqc, _shmc ) );
 }
 
