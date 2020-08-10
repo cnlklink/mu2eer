@@ -28,3 +28,31 @@ A remote power switch is attached to COM1 at 9600 baud.  This can be used to rem
 
 ### Production
 The production node is to be determined.
+
+## Operation
+
+### Daemon: mu2eerd
+To start mu2eerd:
+`/etc/init.d/S78mu2eerd start`
+
+To stop mu2eerd:
+`/etc/init.d/S78mu2eerd stop`
+
+### Command-line interface: mu2eercli
+
+#### pid Command
+Displays the PID for the mu2eerd daemon process.
+Usage:
+`$ mu2eerd pid`
+
+#### show Command
+Displays diagnostic information for mu2eerd.
+Usage:
+`$ mu2eerd show`
+
+#### shutdown Command
+Requests that the mu2eerd daemon shut down.
+Usage:
+`$ mu2eerd shutdown`
+
+### ACNET interfaces
