@@ -99,18 +99,6 @@ namespace Mu2eER
 
   private:
   };
-
-  /**
-   * Stream Insertion Operator
-   *
-   * Converts state to a string and insert it into the given stream.
-   *
-   * @param os Output stream
-   * @param state State to convert
-   * @return Output stream
-   */
-  ostream& operator<<( ostream& os, const ssm_state_t state );
 };
-
 
 #endif

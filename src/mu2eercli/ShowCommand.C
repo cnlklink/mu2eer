@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "ShowCommand.H"
+#include "ssm.H"
 
 using namespace Mu2eER;
 using namespace std;
@@ -17,6 +18,15 @@ using namespace std;
 ShowCommand::ShowCommand( ControlMQClient& mqc, SharedMemoryClient& shmc )
   : Command( mqc, shmc )
 {
+}
+
+void ShowCommand::_outputSSMSection() const
+{
+  auto ssm = _shmc.ssmBlockGet();
+
+  cout << "Spill State Machine (SSM)" << endl
+       << "=========================" << endl
+       << "  SSM state: " << ssm.currentStateGet() << endl;
 }
 
 void ShowCommand::run( unsigned int argc, const char* argv[] )
@@ -34,8 +44,11 @@ void ShowCommand::run( unsigned int argc, const char* argv[] )
   // Calculate uptime
   time_t uptime = (now - startTime);
 
-  // Output uptime and start time
-  cout << "mu2eerd running since " << startTimeStr
-       << ", uptime: " << uptime << " seconds" 
+  // Output PID, uptime and start time
+  cout << "mu2eerd (pid: " << _shmc.pidGet() << ")"
+       << " running since " << startTimeStr
+       << ", uptime: " << uptime << " seconds" << endl
        << endl;
+
+  _outputSSMSection();
 }

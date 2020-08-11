@@ -11,6 +11,6 @@ Feature: mu2eercli show command
   Scenario: mu2eerd process is running
     Given mu2eerd is running
     When I pass the "show" command to mu2eercli
-    Then "mu2eerd running since" is in the output
+    Then "running since" is in the output
     And "uptime:" is in the output
     And an exit code of 0 is returned

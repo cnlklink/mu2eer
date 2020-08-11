@@ -68,10 +68,10 @@ end
 
 Then("the start time for mu2eerd is displayed") do
   # Expect the start time to be present in the output
-  expect( @result ).to match /mu2eerd running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
+  expect( @result ).to match /running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
 
   # Extract date and time
-  dAndT = @result.match(/mu2eerd running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
+  dAndT = @result.match(/running since (\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
 
   # Get the start time with `ps` and compare to what mu2eercli gives
   pid=`pidof mu2eerd`.strip.to_i
@@ -80,4 +80,26 @@ Then("the start time for mu2eerd is displayed") do
   expect( dAndT[4] ).to eq expectedDAndT[1]
   expect( dAndT[5] ).to eq expectedDAndT[2]
   expect( dAndT[6].to_i ).to be_within( 2 ).of( expectedDAndT[3].to_i )
+end
+
+Then("the PID for mu2eerd is displayed") do
+  # Expect the PID to be present in the output
+  expect( @result ).to match /pid: \d+/
+
+  # Extract the PID
+  pid = @result.match /pid: (\d+)/
+  
+  # Use `pidof` to verify
+  expect( pid[1].to_i ).to eq `pidof mu2eerd`.strip.to_i
+end
+
+Then("the SSM state displayed is {string}") do |expected_state_string| 
+  # Expect the SSM state to be present in the output
+  expect( @result ).to match /SSM state: /
+
+  # Extract the SSM state
+  state = @result.match /SSM state: (.*)/
+
+  # Expect the state to match
+  expect( state[1] ).to eq expected_state_string
 end

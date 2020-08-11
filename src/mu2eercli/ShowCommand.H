@@ -10,6 +10,7 @@
 #define SHOWCOMMAND_H
 
 #include "Command.H"
+#include "ssm.H"
 
 namespace Mu2eER
 {
@@ -31,6 +32,12 @@ namespace Mu2eER
 
     // Override
     virtual void run( unsigned int argc, const char* argv[] );
+
+  private:
+    /**
+     * Output the Spill State Machine Section
+     */
+    void _outputSSMSection() const;
   };
 };
 
