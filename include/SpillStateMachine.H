@@ -62,6 +62,13 @@ namespace Mu2eER
     ssm_state_t stateGet() const;
 
     /**
+     * Get State Machine Shared Memory Block
+     *
+     * @return Current shared memory block
+     */
+    SpillStateMachineSMB& sharedMemoryGet() const;
+
+    /**
      * Wait for State Change
      *
      * Wait for the spill state machine to change state.

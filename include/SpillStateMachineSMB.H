@@ -8,7 +8,7 @@
 
 #ifndef SPILLSTATEMACHINESMB_H
 #define SPILLSTATEMACHINESMB_H
-
+#include <vector>
 #include "ssm.H"
 
 namespace Mu2eER
@@ -40,11 +40,24 @@ namespace Mu2eER
      */
     ssm_state_t currentStateGet() const;
 
+    /**
+     * Get Sample Data Vector
+     *
+     * @return Sample data vector of the spill state machine
+     */
+    std::vector<unsigned int> currentStateDataGet() const;
+
+
   private:
     /**
      * Current state
      */
     ssm_state_t _currentState;
+
+    /**
+     * Data vector
+     */
+    std::vector<unsigned int> dataVector;
   };
 };
 
