@@ -80,7 +80,6 @@ ssm_state_t SpillStateMachine::stateGet() const
   return _ssmDev->stateGet();
 }
 
-
 SpillStateMachineSMB& sharedMemoryGet() const
 {
   return _ssmDev->sharedMemoryGet();
