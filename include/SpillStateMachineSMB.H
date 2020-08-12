@@ -57,7 +57,7 @@ namespace Mu2eER
     /**
      * Data vector
      */
-    std::vector<unsigned int> dataVector;
+    std::vector<unsigned int> _dataVector;
   };
 };
 
