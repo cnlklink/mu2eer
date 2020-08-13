@@ -82,7 +82,7 @@ ssm_state_t SpillStateMachine::stateGet() const
 
 SpillStateMachineSMB& SpillStateMachine::sharedMemoryGet()
 {
-  return _ssmDev->sharedMemoryGet();
+  return _smb;
 }
 
 ssm_state_t SpillStateMachine::waitForStateChange() const
