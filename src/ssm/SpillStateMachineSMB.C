@@ -26,7 +26,7 @@
    cout << " done." << endl;
  }
 
- ssm_state_t SpillStateMachineSMB::stateGet() const
+ ssm_state_t SpillStateMachineSMB::currentStateGet() const
  {
    return _currentState;
  }
