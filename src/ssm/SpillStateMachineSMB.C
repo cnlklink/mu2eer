@@ -1,10 +1,10 @@
 /**
- * SpillStateMachineSMB.C
- *
- * This file contains the definition of the SpillStateMachineSMB class.
- *
- * @author rtadkins
- */
+* SpillStateMachineSMB.C
+*
+* This file contains the definition of the SpillStateMachineSMB class.
+*
+* @author rtadkins
+*/
 
  #include <iostream>
 

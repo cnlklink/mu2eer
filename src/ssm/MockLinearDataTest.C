@@ -1,12 +1,12 @@
 /**
- * MockLinearDataTest.C
- *
- * This file contains unit tests (CppUTest) for the MockLinearData class.
- *
- * @author rtadkins
- */
- 
- #include <iostream>
+* MockLinearDataTest.C
+*
+* This file contains unit tests (CppUTest) for the MockLinearData class.
+*
+* @author rtadkins
+*/
+
+#include <iostream>
 
 #include "CppUTest/TestHarness.h"
 
