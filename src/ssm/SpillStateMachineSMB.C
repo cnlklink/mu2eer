@@ -11,6 +11,7 @@
  #include "SpillStateMachineSMB.H"
 
  using namespace Mu2eER;
+ using namespace std;
 
  SpillStateMachineSMB::SpillStateMachineSMB()
  {
