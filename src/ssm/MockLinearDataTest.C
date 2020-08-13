@@ -11,6 +11,7 @@
 #include "CppUTest/TestHarness.h"
 
 #include "SharedMemoryManager.H"
+#include "SpillStateMachine.H"
 
 using namespace Mu2eER;
 using namespace std;
