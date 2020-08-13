@@ -27,6 +27,13 @@ namespace Mu2eER
     SpillStateMachineSMB();
 
     /**
+     * Initialize
+     *
+     * Initializes the shared memory.
+     */
+    void initialize();
+
+    /**
      * Set Current State
      *
      * @param state Current spill state machine state
