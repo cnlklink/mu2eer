@@ -37,6 +37,7 @@ TEST_GROUP( InitGroup )
 {
   void setup()
   {
+    cout << "Setting up mock linear test" << endl;
     _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
   }
 
@@ -54,6 +55,9 @@ TEST_GROUP( InitGroup )
  */
 TEST( InitGroup, Initialize )
 {
+  cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
   _ssm->initialize();
   _ssm->sharedMemoryGet()->initialize();
+  cout << "Mock linear test done" << endl;
+
 }
