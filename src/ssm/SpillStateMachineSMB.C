@@ -14,6 +14,8 @@
  using namespace std;
 
  SpillStateMachineSMB::SpillStateMachineSMB()
+  : _currentState( SSM_IDLE ),
+    _dataVector( 16000, 0 )
  {
  }
 
