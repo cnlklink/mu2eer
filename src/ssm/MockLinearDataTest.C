@@ -5,6 +5,8 @@
  *
  * @author rtadkins
  */
+ 
+ #include <iostream>
 
 #include "CppUTest/TestHarness.h"
 

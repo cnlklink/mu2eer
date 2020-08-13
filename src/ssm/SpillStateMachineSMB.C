@@ -6,8 +6,7 @@
  * @author rtadkins
  */
 
- #ifndef SPILLSTATEMACHINE_H
- #define SPILLSTATEMACHINE_H
+ #include <iostream>
 
  #include "SpillStateMachineSMB.H"
 
