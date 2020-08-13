@@ -6,9 +6,10 @@
  * @author jdiamond
  */
 
+#include <vector>
+
 #ifndef SPILLSTATEMACHINESMB_H
 #define SPILLSTATEMACHINESMB_H
-#include <vector>
 #include "ssm.H"
 
 namespace Mu2eER
