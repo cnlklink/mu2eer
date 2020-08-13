@@ -6,8 +6,8 @@
  * @author jdiamond
  */
 
-#ifndef SPILLSTATEMACHINESMB_H
-#define SPILLSTATEMACHINESMB_H
+#ifndef SPILLSTATEMACHINEMB_H
+#define SPILLSTATEMACHINEMB_H
 #include <vector>
 #include "ssm.H"
 
