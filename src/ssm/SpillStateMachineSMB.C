@@ -25,12 +25,12 @@
    cout << " done." << endl;
  }
 
- ssm_state_t SpillStateMachineSMB::stateGet()
+ ssm_state_t SpillStateMachineSMB::stateGet() const
  {
    return _currentState;
  }
 
- std::vector<unsigned int> SpillStateMachineSMB::currentStateDataGet()
+ std::vector<unsigned int> SpillStateMachineSMB::currentStateDataGet() const
  {
     return _dataVector;
  }
