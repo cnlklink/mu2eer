@@ -10,7 +10,9 @@
 
 #ifndef SPILLSTATEMACHINESMB_H
 #define SPILLSTATEMACHINESMB_H
-#include "ssm.H"
+//#include "ssm.H"
+
+using namespace std;
 
 namespace Mu2eER
 {
