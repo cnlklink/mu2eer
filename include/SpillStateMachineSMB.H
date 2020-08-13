@@ -40,11 +40,49 @@ namespace Mu2eER
      */
     ssm_state_t currentStateGet() const;
 
+    /**
+     * Get Spill Counter
+     *
+     * @return Spill counter
+     */
+    unsigned int spillCounterGet() const;
+
+    /**
+     * Set Spill Counter
+     *
+     * @param sc New spill counter value
+     */
+    void spillCounterSet( unsigned int sc );
+
+    /**
+     * Get Time-in-Spill
+     *
+     * @return Time spent in the last spill cycle (ms)
+     */
+    float timeInSpillGet() const;
+
+    /**
+     * Set Time-in-Spill
+     *
+     * @param tis New time-in-spill value
+     */
+    void timeInSpillSet( float tis );
+
   private:
     /**
      * Current state
      */
     ssm_state_t _currentState;
+
+    /**
+     * Number of spills since the SSM was initialized
+     */
+    unsigned int _spillCounter;
+
+    /**
+     * Time spent in the last spill cycle (ms)
+     */
+    float _timeInSpill;
   };
 };
 

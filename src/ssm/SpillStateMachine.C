@@ -66,6 +66,8 @@ void SpillStateMachine::initialize()
   // Initialize firmware
   _ssmDev->initialize();
   _smb.currentStateSet( _ssmDev->stateGet() );
+  _smb.spillCounterSet( _ssmDev->spillCounterGet() );
+  _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
 
   cout << " done." << endl;
 }
