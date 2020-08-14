@@ -13,7 +13,7 @@
  using namespace Mu2eER;
  using namespace std;
 
- SpillStateMachineSMB::SpillStateMachineSMB()
+ SpillStateMachineSMB::SpillStateMachineSMB( ssm_state_t _currentState, std::vector<unsigned int> _dataVector )
   : _currentState( SSM_IDLE ),
     _dataVector( 16000, 0 )
  {
