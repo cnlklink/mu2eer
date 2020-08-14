@@ -52,25 +52,6 @@ namespace Mu2eER
      */
     void run();
 
-<<<<<<< HEAD
-    /**
-     * Get State Machine Shared Memory Block
-     *
-     * @return Current shared memory block
-     */
-    SpillStateMachineSMB& sharedMemoryGet() const;
-
-    /**
-     * Wait for State Change
-     *
-     * Wait for the spill state machine to change state.
-     *
-     * @return New state
-     */
-    ssm_state_t waitForStateChange() const;
-    
-=======
->>>>>>> master
   private:
     /**
      * Configuration manager
@@ -101,7 +82,7 @@ namespace Mu2eER
      *
      * @return New state
      */
-    ssm_state_t _waitForStateChange() const;    
+    ssm_state_t _waitForStateChange() const;
   };
 };
 

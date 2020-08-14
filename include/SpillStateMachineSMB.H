@@ -6,13 +6,10 @@
  * @author jdiamond
  */
 
-#include <vector>
-
 #ifndef SPILLSTATEMACHINESMB_H
 #define SPILLSTATEMACHINESMB_H
-#include "ssm.H"
 
-using namespace std;
+#include "ssm.H"
 
 namespace Mu2eER
 {
@@ -26,16 +23,8 @@ namespace Mu2eER
   public:
     /**
      * Constructor
-     *
      */
-    SpillStateMachineSMB( ssm_state_t _currentState, std::vector<unsigned int> _dataVector );
-
-    /**
-     * Initialize
-     *
-     * Initializes the shared memory.
-     */
-    void initialize();
+    SpillStateMachineSMB();
 
     /**
      * Set Current State
@@ -52,13 +41,6 @@ namespace Mu2eER
     ssm_state_t currentStateGet() const;
 
     /**
-<<<<<<< HEAD
-     * Get Sample Data Vector
-     *
-     * @return Sample data vector of the spill state machine
-     */
-    std::vector<unsigned int> currentStateDataGet() const;
-=======
      * Get Spill Counter
      *
      * @return Spill counter
@@ -85,7 +67,6 @@ namespace Mu2eER
      * @param tis New time-in-spill value
      */
     void timeInSpillSet( float tis );
->>>>>>> master
 
   private:
     /**
@@ -94,11 +75,6 @@ namespace Mu2eER
     ssm_state_t _currentState;
 
     /**
-<<<<<<< HEAD
-     * Data vector
-     */
-    std::vector<unsigned int> _dataVector;
-=======
      * Number of spills since the SSM was initialized
      */
     unsigned int _spillCounter;
@@ -107,7 +83,6 @@ namespace Mu2eER
      * Time spent in the last spill cycle (ms)
      */
     float _timeInSpill;
->>>>>>> master
   };
 };
 
