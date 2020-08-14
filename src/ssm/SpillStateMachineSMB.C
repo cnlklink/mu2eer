@@ -28,7 +28,7 @@
    cout << " done." << endl;
  }
 
- void currentStateSet( ssm_state_t state )
+ void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
  {
    _currentState = state;
  }
