@@ -80,23 +80,14 @@ void SpillStateMachine::run()
     }
 }
 
-void SpillStateMachine::_smbUpdate() 
+void SpillStateMachine::_smbUpdate()
 {
   _smb.currentStateSet( _ssmDev->stateGet() );
   _smb.spillCounterSet( _ssmDev->spillCounterGet() );
   _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
 }
 
-<<<<<<< HEAD
-SpillStateMachineSMB& SpillStateMachine::sharedMemoryGet() const
-{
-  return _smb;
-}
-
-ssm_state_t SpillStateMachine::waitForStateChange() const
-=======
 ssm_state_t SpillStateMachine::_waitForStateChange() const
->>>>>>> master
 {
   return _ssmDev->waitForStateChange();
 }
