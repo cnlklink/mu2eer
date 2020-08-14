@@ -56,7 +56,7 @@ SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm, SpillState
   // Configure SSM Device
   _ssmDev->configure( _cm.ssmGet() );
 
-  _smb.currentStateSet( _ssmDev->stateGet() );
+  _smbUpdate();
 }
 
 void SpillStateMachine::initialize()
@@ -65,27 +65,38 @@ void SpillStateMachine::initialize()
 
   // Initialize firmware
   _ssmDev->initialize();
-  _smb.currentStateSet( _ssmDev->stateGet() );
+  _smbUpdate();
 
   cout << " done." << endl;
 }
 
-unsigned int SpillStateMachine::spillCounterGet() const
+void SpillStateMachine::run()
 {
-  return _ssmDev->spillCounterGet();
+  while( SSM_FAULT != _ssmDev->stateGet() )
+    {
+      _waitForStateChange();
+
+      _smbUpdate();
+    }
 }
 
-ssm_state_t SpillStateMachine::stateGet() const
+void SpillStateMachine::_smbUpdate() 
 {
-  return _ssmDev->stateGet();
+  _smb.currentStateSet( _ssmDev->stateGet() );
+  _smb.spillCounterSet( _ssmDev->spillCounterGet() );
+  _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
 }
 
+<<<<<<< HEAD
 SpillStateMachineSMB& SpillStateMachine::sharedMemoryGet() const
 {
   return _smb;
 }
 
 ssm_state_t SpillStateMachine::waitForStateChange() const
+=======
+ssm_state_t SpillStateMachine::_waitForStateChange() const
+>>>>>>> master
 {
   return _ssmDev->waitForStateChange();
 }

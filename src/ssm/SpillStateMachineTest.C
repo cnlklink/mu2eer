@@ -54,13 +54,17 @@ TEST_GROUP( InitGroup )
  */
 TEST( InitGroup, Initialize )
 {
-  CHECK_EQUAL( SSM_IDLE, _ssm->stateGet() );
+  auto& smb = _shmm.ssmBlockGet();
+
+  CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
 
   _ssm->initialize();
 
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _ssm->stateGet() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smb.currentStateGet() );
 
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, _shmm.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
+
+  CHECK_EQUAL( 0, smb.timeInSpillGet() );
 }
 
 /**
@@ -91,7 +95,7 @@ TEST_GROUP( SpillCounterGroup )
 TEST( SpillCounterGroup, InitialValueIsZero )
 {
   _ssm->initialize();
-  CHECK_EQUAL( 0, _ssm->spillCounterGet() );
+  CHECK_EQUAL( 0, _shmm.ssmBlockGet().spillCounterGet() );
 }
 
 /**
@@ -101,15 +105,18 @@ TEST( SpillCounterGroup, InitialValueIsZero )
  */
 TEST( SpillCounterGroup, ResetToZero )
 {
+  auto& smb = _shmm.ssmBlockGet();
+
   // Ask for 5 fake spills
   _ssm->initialize();
-  CHECK_EQUAL( 0, _ssm->spillCounterGet() );
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
 
   // Run through the fake spills
-  while( SSM_FAULT != _ssm->waitForStateChange() );
-  CHECK_EQUAL( 5, _ssm->spillCounterGet() );
+  _ssm->run();
+  CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
+  CHECK_EQUAL( 5, smb.spillCounterGet() );
 
   // Re-initialize
   _ssm->initialize();
-  CHECK_EQUAL( 0, _ssm->spillCounterGet() );
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
 }

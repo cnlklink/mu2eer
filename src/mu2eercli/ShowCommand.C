@@ -26,7 +26,9 @@ void ShowCommand::_outputSSMSection() const
 
   cout << "Spill State Machine (SSM)" << endl
        << "=========================" << endl
-       << "  SSM state: " << ssm.currentStateGet() << endl;
+       << "  SSM state: " << ssm.currentStateGet() << endl
+       << "  Spill counter: " << ssm.spillCounterGet() << endl
+       << "  Time-in-spill (from last cycle): " << ssm.timeInSpillGet() << " ms" << endl;
 }
 
 void ShowCommand::run( unsigned int argc, const char* argv[] )

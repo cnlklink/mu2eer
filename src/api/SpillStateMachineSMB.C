@@ -25,3 +25,23 @@ ssm_state_t SpillStateMachineSMB::currentStateGet() const
 {
   return _currentState;
 }
+
+unsigned int SpillStateMachineSMB::spillCounterGet() const
+{
+  return _spillCounter;
+}
+
+void SpillStateMachineSMB::spillCounterSet( unsigned int sc )
+{
+  _spillCounter = sc;
+}
+
+float SpillStateMachineSMB::timeInSpillGet() const
+{
+  return _timeInSpill;
+}
+
+void SpillStateMachineSMB::timeInSpillSet( float tis )
+{
+  _timeInSpill = tis;
+}

@@ -103,3 +103,19 @@ Then("the SSM state displayed is {string}") do |expected_state_string|
   # Expect the state to match
   expect( state[1] ).to eq expected_state_string
 end
+
+Then("the spill counter displayed is {int}") do |expected_spills|
+  # Expect the spill counter to be present in the output
+  expect( @result ).to match /Spill counter: /
+
+  # Extract the spill count
+  spills = @result.match /Spill counter: (\d+)/
+
+  # Expect the spills to be equal
+  expect( spills[1].to_i ).to eq expected_spills
+end
+
+Then("the time-in-spill displayed is {int}") do |expected_tis|
+  # Expect the time-in-spill to be present in the output
+  expect( @result ).to match /Time-in-spill \(from last cycle\): /
+end
