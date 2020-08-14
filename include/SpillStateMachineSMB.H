@@ -28,7 +28,7 @@ namespace Mu2eER
      * Constructor
      *
      */
-    SpillStateMachineSMB();
+    SpillStateMachineSMB( ssm_state_t _currentState, std::vector<unsigned int> _dataVector );
 
     /**
      * Initialize
