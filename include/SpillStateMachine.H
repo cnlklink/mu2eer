@@ -46,30 +46,12 @@ namespace Mu2eER
     void initialize();
 
     /**
-     * Get Spill Counter
+     * Run
      *
-     * Returns the number of spills observed by the state machine.
-     *
-     * @return Spill counter
+     * Enter the SSM event loop.
      */
-    unsigned int spillCounterGet() const;
+    void run();
 
-    /**
-     * Get State
-     *
-     * @return Current state
-     */
-    ssm_state_t stateGet() const;
-
-    /**
-     * Wait for State Change
-     *
-     * Wait for the spill state machine to change state.
-     *
-     * @return New state
-     */
-    ssm_state_t waitForStateChange() const;
-    
   private:
     /**
      * Configuration manager
@@ -85,6 +67,22 @@ namespace Mu2eER
      * Spill state machine device driver object
      */
     unique_ptr<ISSMDeviceDriver> _ssmDev;
+
+    /**
+     * Update the Shared Memory Block
+     *
+     * Publish the state of the SSM to shared memory.
+     */
+    void _smbUpdate();
+
+    /**
+     * Wait for State Change
+     *
+     * Wait for the spill state machine to change state.
+     *
+     * @return New state
+     */
+    ssm_state_t _waitForStateChange() const;    
   };
 };
 
