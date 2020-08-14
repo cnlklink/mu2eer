@@ -119,15 +119,6 @@ $(BIN_DIR): $(ALL_OUT)
 	$(EES_OUT) mkdir -p $(TARGET_BIN_DIR)
 	$(EES_OUT) mkdir -p $(HOST_BIN_DIR)
 
-# Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
-deploy_test: 
-	@ echo "-m-> Deploying to $(TARGET_TEST_HOSTNAME)..."
-	@ echo "-m-> (please make sure $(TARGET_TEST_HOSTNAME) is in your ~/.ssh/config file)"
-	$(EES_OUT) $(SCP) $(ACNET_TARGET_OUT)/acnet_adc $(TARGET_TEST_HOSTNAME):/tmp
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/mkdir -p /usr/local/products/bin"
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/chmod 755 /usr/local/products/bin"
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/busybox mv /tmp/acnet_adc /usr/local/products/bin"
-
 # Install target used by ees-buildroot
 install_buildroot_target: install_buildroot_pkginfo
 	install -d $(EES_BIN)
