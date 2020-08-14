@@ -21,44 +21,42 @@ namespace Mu2eER
    *
    * Shared memory block for the spill state machine.
    */
+  class SpillStateMachineSMB
+  {
+  public:
+    /**
+     * Constructor
+     *
+     */
+    SpillStateMachineSMB();
 
-   class SpillStateMachineSMB
-   {
-   public:
-     /**
-      * Constructor
-      *
-      */
-     SpillStateMachineSMB();
+    /**
+     * Initialize
+     *
+     * Initializes the shared memory.
+     */
+    void initialize();
 
-     /**
-      * Initialize
-      *
-      * Initializes the shared memory.
-      */
-     void initialize();
+    /**
+     * Set Current State
+     *
+     * @param state Current spill state machine state
+     */
+    void currentStateSet( ssm_state_t state );
 
-     /**
-      * Set Current State
-      *
-      * @param state Current spill state machine state
-      */
-     void currentStateSet( ssm_state_t state );
+    /**
+     * Get Current State
+     *
+     * @return Current state of the spill state machine
+     */
+    ssm_state_t currentStateGet() const;
 
-     /**
-      * Get Current State
-      *
-      * @return Current state of the spill state machine
-      */
-     ssm_state_t currentStateGet() const;
-
-     /**
-      * Get Sample Data Vector
-      *
-      * @return Sample data vector of the spill state machine
-      */
-     std::vector<unsigned int> currentStateDataGet() const;
-
+    /**
+     * Get Sample Data Vector
+     *
+     * @return Sample data vector of the spill state machine
+     */
+    std::vector<unsigned int> currentStateDataGet() const;
 
   private:
     /**
