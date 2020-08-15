@@ -55,6 +55,20 @@ namespace Mu2eER
     void spillCounterSet( unsigned int sc );
 
     /**
+     * Set Thread Running Flag
+     *
+     * @param running Set to true when the SSM thread is running, false when it's not
+     */
+    void threadRunningSet( bool running );
+
+    /**
+     * Is SSM Thread Running
+     *
+     * @return True if the SSM thread is running
+     */
+    bool threadRunningGet() const;
+
+    /**
      * Get Time-in-Spill
      *
      * @return Time spent in the last spill cycle (ms)
@@ -78,6 +92,11 @@ namespace Mu2eER
      * Number of spills since the SSM was initialized
      */
     unsigned int _spillCounter;
+
+    /**
+     * True if the spill state machine thread is running
+     */
+    bool _threadRunning;
 
     /**
      * Time spent in the last spill cycle (ms)

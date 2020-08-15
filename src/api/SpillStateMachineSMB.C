@@ -36,6 +36,16 @@ void SpillStateMachineSMB::spillCounterSet( unsigned int sc )
   _spillCounter = sc;
 }
 
+void SpillStateMachineSMB::threadRunningSet( bool running )
+{
+  _threadRunning = running;
+}
+
+bool SpillStateMachineSMB::threadRunningGet() const
+{
+  return _threadRunning;
+}
+
 float SpillStateMachineSMB::timeInSpillGet() const
 {
   return _timeInSpill;

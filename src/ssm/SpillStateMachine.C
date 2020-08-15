@@ -59,6 +59,12 @@ SpillStateMachine::SpillStateMachine( const ConfigurationManager& cm, SpillState
   _smbUpdate();
 }
 
+SpillStateMachine::~SpillStateMachine()
+{
+  // Make sure the thread exits
+  stop();
+}
+
 void SpillStateMachine::initialize()
 {
   cout << "Initializing Spill Statate Machine...";
@@ -72,12 +78,34 @@ void SpillStateMachine::initialize()
 
 void SpillStateMachine::run()
 {
-  while( SSM_FAULT != _ssmDev->stateGet() )
-    {
-      _waitForStateChange();
+  // Start thread
+  _thread = unique_ptr<thread>( new thread( [this]() {
+        while( SSM_FAULT != _ssmDev->stateGet() )
+          {
+            _waitForStateChange();
+            
+            _smbUpdate();
+          }
+      } ) );
 
-      _smbUpdate();
+  // Update the SMB to show that the thread is running
+  _smbUpdate();
+}
+
+void SpillStateMachine::stop()
+{
+  if( _thread.get() == nullptr )
+    {
+      // Thread is not running
+      return;
     }
+
+  // Wait for thread to stop
+  _thread->join();
+
+  // Update the SMB to show that the thread is not running
+  _thread.reset( nullptr );
+  _smbUpdate();
 }
 
 void SpillStateMachine::_smbUpdate() 
@@ -85,6 +113,7 @@ void SpillStateMachine::_smbUpdate()
   _smb.currentStateSet( _ssmDev->stateGet() );
   _smb.spillCounterSet( _ssmDev->spillCounterGet() );
   _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
+  _smb.threadRunningSet( _thread.get() != nullptr );
 }
 
 ssm_state_t SpillStateMachine::_waitForStateChange() const

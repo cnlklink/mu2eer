@@ -22,10 +22,11 @@ ShowCommand::ShowCommand( ControlMQClient& mqc, SharedMemoryClient& shmc )
 
 void ShowCommand::_outputSSMSection() const
 {
-  auto ssm = _shmc.ssmBlockGet();
+  auto& ssm = _shmc.ssmBlockGet();
 
   cout << "Spill State Machine (SSM)" << endl
        << "=========================" << endl
+       << "  SSM thread is " << (ssm.threadRunningGet() ? "running" : "not running") << endl
        << "  SSM state: " << ssm.currentStateGet() << endl
        << "  Spill counter: " << ssm.spillCounterGet() << endl
        << "  Time-in-spill (from last cycle): " << ssm.timeInSpillGet() << " ms" << endl;

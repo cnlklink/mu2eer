@@ -6,6 +6,9 @@
  * @author jdiamond
  */
 
+#include <chrono>
+#include <thread>
+
 #include "CppUTest/TestHarness.h"
 
 #include "SharedMemoryManager.H"
@@ -28,6 +31,33 @@ static SharedMemoryManager _shmm( "mu2eer_test" );
  * A global SpillStateMachine object used for all tests
  */
 static SpillStateMachine* _ssm;
+
+/**
+ * Poll for Spill Cycles
+ *
+ * Poll the spill counter until it reachs n.
+ *
+ * @param n Poll until spill counter reaches n
+ * @param wait Amount of time (in ms) to wait between polls (default: 5ms)
+ * @param timeout Throws a runtime_error if timeout (in ms) is exceeded (default: 1000ms)
+ */
+void pollForCycles( unsigned int n, unsigned int wait = 5, unsigned int timeout = 1000 )
+{
+  unsigned int totalWait = 0;
+
+  auto& smb = _shmm.ssmBlockGet();
+
+  while( smb.spillCounterGet() < n )
+    {
+      this_thread::sleep_for( chrono::milliseconds( wait ) );
+      totalWait += wait;
+
+      if( totalWait > timeout )
+        {
+          throw runtime_error( "pollForCycles timeout" );
+        }
+    }
+}
 
 /**
  * Initialization Group
@@ -113,10 +143,64 @@ TEST( SpillCounterGroup, ResetToZero )
 
   // Run through the fake spills
   _ssm->run();
+  pollForCycles( 5 );
   CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
   CHECK_EQUAL( 5, smb.spillCounterGet() );
 
   // Re-initialize
   _ssm->initialize();
   CHECK_EQUAL( 0, smb.spillCounterGet() );
+}
+
+/**
+ * Thread Group
+ *
+ * Tests related to the operation of the SSM thread.
+ */
+TEST_GROUP( ThreadGroup )
+{
+  void setup()
+  {
+    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+  }
+
+  void teardown()
+  {
+    delete _ssm;
+  }
+};
+
+/**
+ * Test Initial Thread State
+ *
+ * Verify that the SSM thread is not running when the SSM is constructed.
+ */
+TEST( ThreadGroup, TestInitialState )
+{
+  CHECK_EQUAL( false, _shmm.ssmBlockGet().threadRunningGet() );
+}
+
+/**
+ * Test Thread Start
+ *
+ * Verify that the thread is running after calling run().
+ */
+TEST( ThreadGroup, TestRunning )
+{
+  auto& smb = _shmm.ssmBlockGet();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
+
+  // Start the SSM thread
+  _ssm->run();
+
+  // Verify that the thread is running
+  CHECK_EQUAL( true, smb.threadRunningGet() );
+
+  // Wait for the SSM thread to stop
+  _ssm->stop();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
 }

@@ -10,6 +10,7 @@
 #define SPILLSTATEMACHINE_H
 
 #include <memory>
+#include <thread>
 
 #include "ConfigurationManager.H"
 #include "ISSMDeviceDriver.H"
@@ -39,6 +40,11 @@ namespace Mu2eER
     SpillStateMachine( const ConfigurationManager& cm, SpillStateMachineSMB& smb );
 
     /**
+     * Deconstructor
+     */
+    ~SpillStateMachine();
+
+    /**
      * Initialize
      *
      * Initializes the spill state machine.
@@ -51,6 +57,13 @@ namespace Mu2eER
      * Enter the SSM event loop.
      */
     void run();
+
+    /**
+     * Stop
+     *
+     * Interrupt and wait for the SSM thread to stop.
+     */
+    void stop();
 
   private:
     /**
@@ -67,6 +80,11 @@ namespace Mu2eER
      * Spill state machine device driver object
      */
     unique_ptr<ISSMDeviceDriver> _ssmDev;
+
+    /**
+     * SSM thread
+     */
+    unique_ptr<thread> _thread;
 
     /**
      * Update the Shared Memory Block
