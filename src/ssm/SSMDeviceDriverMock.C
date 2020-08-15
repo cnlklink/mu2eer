@@ -6,6 +6,9 @@
  * @author jdiamond
  */
 
+#include <chrono>
+#include <thread>
+
 #include "SSMDeviceDriverMock.H"
 
 using namespace Mu2eER;
@@ -17,6 +20,13 @@ void SSMDeviceDriverMock::configure( const SSMConfig& config )
     {
       loadSpillSequence( config.mockSpillsGet() );
     }
+
+  delaySet( config.mockDelayGet() );
+}
+
+void SSMDeviceDriverMock::delaySet( unsigned int delay )
+{
+  _delay = delay;
 }
 
 void SSMDeviceDriverMock::initialize()
@@ -64,7 +74,8 @@ void SSMDeviceDriverMock::_resetSequence()
 }
 
 SSMDeviceDriverMock::SSMDeviceDriverMock()
-  : _spillCount( 0 ),
+  : _delay( 0 ),
+    _spillCount( 0 ),
     _state( SSM_IDLE ),
     _timeInSpill( 0 )
 {
@@ -118,6 +129,8 @@ unsigned int SSMDeviceDriverMock::timeInSpillGet() const
 
 ssm_state_t SSMDeviceDriverMock::waitForStateChange()
 {
+  this_thread::sleep_for( chrono::milliseconds( _delay ) );
+
   auto ret = _stateNext();
   
   // Increment spill counter whenever the SSM_SPILL state is returned

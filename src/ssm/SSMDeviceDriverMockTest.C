@@ -6,6 +6,8 @@
  * @author jdiamond
  */
 
+#include <chrono>
+
 #include "CppUTest/TestHarness.h"
 
 #include "ConfigurationManager.H"
@@ -294,6 +296,25 @@ TEST( CoreGroup, TimeInSpill )
 }
 
 /**
+ * Test Mock Delay
+ *
+ * Verifies that the mock_delay is honored.
+ */
+TEST( CoreGroup, Delay )
+{
+  // Make a sequence with 25 spills and a delay of 5ms for each state transition
+  _gDriver->loadSpillSequence( 25 );
+  _gDriver->delaySet( 5 );
+
+  // This should take > 1 second with a delay of 5ms
+  auto startTime = chrono::high_resolution_clock::now();
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+  auto endTime = chrono::high_resolution_clock::now();
+  auto runTime = chrono::duration_cast<chrono::milliseconds>( endTime - startTime );
+  CHECK( runTime > chrono::milliseconds( 1000 ) );
+}
+
+/**
  * Test Default Config Load
  *
  * Verifies that we load a default configuration without error.
@@ -311,4 +332,5 @@ TEST( ConfigGroup, LoadDefaultConfig )
   CHECK_EQUAL( false, ssmconf.autoInitGet() );
   STRCMP_NOCASE_EQUAL( "mock", ssmconf.driverGet().c_str() );
   CHECK_EQUAL( 0, ssmconf.mockSpillsGet() );
+  CHECK_EQUAL( 0, ssmconf.mockDelayGet() );
 }

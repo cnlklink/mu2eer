@@ -27,6 +27,13 @@ namespace Mu2eER
     // Override
     virtual void configure( const SSMConfig& config );
 
+    /**
+     * Set Delay
+     *
+     * @param delay Delay between state transitions (ms)
+     */
+    void delaySet( unsigned int delay );
+
     // Override
     virtual void initialize();
 
@@ -81,6 +88,11 @@ namespace Mu2eER
     virtual ssm_state_t waitForStateChange();
 
   private:
+    /**
+     * Delay between state transitions (ms)
+     */
+    unsigned int _delay;
+
     /**
      * Initial state sequence.  _stateSequence can be reset to this by calling initialize().
      */
