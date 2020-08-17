@@ -101,7 +101,7 @@ namespace Mu2eER
     /**
      * Size of array
      */
-    const int _dataSize;
+    const int _dataSize = 16000;
 
     /**
      * Data array
