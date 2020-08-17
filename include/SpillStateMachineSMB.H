@@ -82,6 +82,13 @@ namespace Mu2eER
      */
     int dataSizeGet() const;
 
+    /**
+     * Get Data Array
+     *
+     * @return Array holding data
+     */
+     void addLinearData();
+
   private:
     /**
      * Current state
