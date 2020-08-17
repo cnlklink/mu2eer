@@ -75,6 +75,13 @@ namespace Mu2eER
      */
     int* dataGet() const;
 
+    /**
+     * Get Data Array
+     *
+     * @return Array holding data
+     */
+    int dataSizeGet() const;
+
   private:
     /**
      * Current state
@@ -99,7 +106,7 @@ namespace Mu2eER
     /**
      * Data array
      */
-    int _data[_dataSize];
+    int _data[16000];
   };
 };
 

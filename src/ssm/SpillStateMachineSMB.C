@@ -27,11 +27,9 @@
    return _dataSize;
  }
 
-
  void SpillStateMachineSMB::initialize()
  {
    cout << "Initializing Spilll State Machine Shared Memory...";
-   _dataSize = 16000;
    cout << " done." << endl;
  }
 
