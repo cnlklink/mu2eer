@@ -13,11 +13,20 @@
  using namespace Mu2eER;
  using namespace std;
 
- SpillStateMachineSMB::SpillStateMachineSMB( ssm_state_t _currentState, std::vector<unsigned int> _dataVector )
-  : _currentState( SSM_IDLE ),
-    _dataVector( 16000, 0 )
+ SpillStateMachineSMB::SpillStateMachineSMB()
  {
  }
+
+ int* SpillStateMachineSMB::dataGet() const
+ {
+    return _data;
+ }
+
+ int SpillStateMachineSMB::dataSizeGet() const
+ {
+   return _dataSize;
+ }
+
 
  void SpillStateMachineSMB::initialize()
  {
@@ -25,17 +34,11 @@
    cout << " done." << endl;
  }
 
- void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
+ void SpillStateMachineSMB::addLinearData()
  {
-   _currentState = state;
- }
-
- ssm_state_t SpillStateMachineSMB::currentStateGet() const
- {
-   return _currentState;
- }
-
- std::vector<unsigned int> SpillStateMachineSMB::currentStateDataGet() const
- {
-    return _dataVector;
+   int i = 0, j = 0;
+   for (i = 15999; i >= 0; i--)
+   {
+     _data[j++] = i;
+   }
  }
