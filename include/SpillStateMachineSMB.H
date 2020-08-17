@@ -68,6 +68,13 @@ namespace Mu2eER
      */
     void timeInSpillSet( float tis );
 
+    /**
+     * Get Data Array
+     *
+     * @return Array holding data
+     */
+    int* dataGet() const;
+
   private:
     /**
      * Current state
@@ -83,6 +90,16 @@ namespace Mu2eER
      * Time spent in the last spill cycle (ms)
      */
     float _timeInSpill;
+
+    /**
+     * Size of array
+     */
+    const int _dataSize = 16000;
+
+    /**
+     * Data array
+     */
+    int _data[_dataSize];
   };
 };
 
