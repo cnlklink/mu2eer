@@ -36,6 +36,7 @@ namespace Mu2eER
     {
       COMMAND_SHUTDOWN = 0,
       COMMAND_SSM_INIT,
+      COMMAND_START,
       COMMAND_INVALID = 255
     };
 

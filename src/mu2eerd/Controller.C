@@ -116,6 +116,11 @@ void Controller::_handleSSMInit()
   _ssm.initialize();
 }
 
+void Controller::_handleStart()
+{
+  _ssm.run();
+}
+
 void Controller::_processMessages()
 {
   while( 1 )
@@ -154,6 +159,10 @@ void Controller::_processMessages()
 
             case COMMAND_SSM_INIT:
               _handleSSMInit();
+              break;
+
+            case COMMAND_START:
+              _handleStart();
               break;
 
 	    default:

@@ -56,7 +56,7 @@ namespace Mu2eER
      *
      * @param delay Delay between mock state transitions (ms)
      */
-    void mockDelaySet( unsigned int spills );
+    void mockDelaySet( unsigned int delay );
 
     /**
      * Get Mock Delay

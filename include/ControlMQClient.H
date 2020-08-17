@@ -50,9 +50,16 @@ namespace Mu2eER
     /**
      * Initialize Spill State Machine
      *
-     * Begin slow spill regulation.
+     * Prepare for slow spill regulation.
      */
     void ssmInit();
+
+    /**
+     * Start the Spill State Machine
+     *
+     * Start the slow spill regulation.
+     */
+    void start();
 
     /**
      * Send an Invalid Command
