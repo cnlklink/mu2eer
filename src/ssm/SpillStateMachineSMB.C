@@ -17,7 +17,7 @@
  {
  }
 
- int* SpillStateMachineSMB::dataGet() const
+ int& SpillStateMachineSMB::dataGet() const
  {
     return _data;
  }
