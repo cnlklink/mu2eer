@@ -58,6 +58,7 @@ TEST_GROUP( MockLinearInitGroup )
  */
 TEST( MockLinearInitGroup, Initialize )
 {
+  /*
   int i = 0;
   int size = 0;
   int j = 15999;
