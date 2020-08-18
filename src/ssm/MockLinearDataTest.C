@@ -73,7 +73,8 @@ TEST( MockLinearInitGroup, Initialize )
   smb.initialize();
   smb.addLinearData();
   for ( i = size - 1; i >= 0; i-- ) {
-    CHECK_EQUAL( j-- , arr[i] );
+    CHECK_EQUAL( j , arr[i] );
+    j--;
   }
 
   cout << "Mock linear test done" << endl;
