@@ -32,11 +32,6 @@ static SharedMemoryManager _shmm( "mu2eer_test" );
 static SpillStateMachine* _ssm;
 
 /**
- * A global SpillStateMachine object used for all tests
- */
-static SpillStateMachineSMB* _ssmb;
-
-/**
  * Initialization Group
  *
  * Tests related to initializing and tearing-down the SSM module.
