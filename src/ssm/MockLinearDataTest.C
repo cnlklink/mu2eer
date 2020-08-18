@@ -58,7 +58,9 @@ TEST_GROUP( MockLinearInitGroup )
  */
 TEST( MockLinearInitGroup, Initialize )
 {
-  int i = 0, size = 0, j = 15999;
+  int i = 0;
+  int size = 0
+  int j = 15999;
   int const *arr;
 
   auto& smb = _shmm.ssmBlockGet();
