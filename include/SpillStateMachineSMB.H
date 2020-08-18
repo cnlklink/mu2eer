@@ -78,7 +78,7 @@ namespace Mu2eER
      *
      * @return Array holding data
      */
-    const int& dataGet() const;
+    const int* dataGet() const;
 
     /**
      * Get Data Array
