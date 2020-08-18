@@ -63,18 +63,19 @@ TEST_GROUP( MockLinearInitGroup )
  */
 TEST( MockLinearInitGroup, Initialize )
 {
-  int i = 0, *arr, size = 0;
+  int i = 0, *arr, size = 0, j = 15999;
 
-  _ssmb = _shmm.ssmBlockGet();
-  size = _ssmb->dataSizeGet();
-  arr = _ssmb->dataGet();
+  auto& smb = _shmm.ssmBlockGet();
+
+  size = smb.dataSizeGet();
+  arr = smb.dataGet();
 
   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
   _ssm->initialize();
-  _ssmb->initialize();
-  _ssmb->addLinearData();
+  smb.initialize();
+  smb.addLinearData();
   for ( i = size - 1; i >= 0; i-- ) {
-    CHECK_EQUAL( i, arr++ );
+    CHECK_EQUAL( j-- , arr[i] );
   }
 
   cout << "Mock linear test done" << endl;
