@@ -66,7 +66,7 @@ TEST( MockLinearInitGroup, Initialize )
 
   auto& smb = _shmm.ssmBlockGet();
   _ssm->initialize();
-/*
+  
   size = smb.dataSizeGet();
 
   cout << "Mock linear is starting" << endl;
