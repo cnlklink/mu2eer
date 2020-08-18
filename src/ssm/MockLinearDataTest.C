@@ -61,17 +61,17 @@ TEST( MockLinearInitGroup, Initialize )
   int i = 0;
   int size = 0;
   int j = 15999;
-  const int *arr[16000] = {0};
+  //const int *arr[16000] = {0};
 
   auto& smb = _shmm.ssmBlockGet();
   _ssm->initialize();
-
-  //size = smb.dataSizeGet();
+/*
+  size = smb.dataSizeGet();
 
   cout << "Mock linear is starting" << endl;
-  //cout << "Data size is " << smb.dataSizeGet() << endl;
+  cout << "Data size is " << smb.dataSizeGet() << endl;
 
-  /*
+
   arr = smb.dataGet();
 
   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
