@@ -27,6 +27,11 @@ namespace Mu2eER
     SpillStateMachineSMB();
 
     /**
+     * Initialize
+     */
+    void initialize();
+
+    /**
      * Set Current State
      *
      * @param state Current spill state machine state
@@ -108,7 +113,7 @@ namespace Mu2eER
     /**
      * Size of array
      */
-    const int _dataSize = 16000;
+    int _dataSize = 16000;
 
     /**
      * Data array
