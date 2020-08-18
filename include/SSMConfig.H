@@ -52,6 +52,20 @@ namespace Mu2eER
     string driverGet() const;
 
     /**
+     * Set Mock Delay
+     *
+     * @param delay Delay between mock state transitions (ms)
+     */
+    void mockDelaySet( unsigned int delay );
+
+    /**
+     * Get Mock Delay
+     *
+     * @return Delay between mock state transitions (ms)
+     */
+    unsigned int mockDelayGet() const;
+
+    /**
      * Set Mock Spills
      *
      * @param spills The number of spills to fake ("mock" driver only)

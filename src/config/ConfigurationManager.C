@@ -59,6 +59,9 @@ void ConfigurationManager::_defaultInit()
   ssm.add( "mock_spills", libconfig::Setting::TypeInt );
   ssm["mock_spills"] = 0;
 
+  ssm.add( "mock_delay", libconfig::Setting::TypeInt );
+  ssm["mock_delay"] = 0;
+
   // TCLK defaults
   root.add( "tclk", libconfig::Setting::TypeGroup );
   auto& tclk = root["tclk"];

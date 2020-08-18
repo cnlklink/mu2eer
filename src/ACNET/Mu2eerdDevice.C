@@ -6,6 +6,8 @@
  * @author jdiamond
  */
 
+#include <syslog.h>
+
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
@@ -37,6 +39,7 @@ void Mu2eerdDevice::stateRead( Array<state_read_t>& dest, ReqInfo const* reqinfo
     }
   catch( runtime_error e )
     {
+      syslog( LOG_ERR, "runtime_error caught in Mu2eerdDevice::stateRead - %s", e.what() );
       throw Ex_DEVFAILED;
     }
 }

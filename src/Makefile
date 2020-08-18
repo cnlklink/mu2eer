@@ -119,23 +119,15 @@ $(BIN_DIR): $(ALL_OUT)
 	$(EES_OUT) mkdir -p $(TARGET_BIN_DIR)
 	$(EES_OUT) mkdir -p $(HOST_BIN_DIR)
 
-# Deploys directly to TARGET_TEST_HOSTNAME via scp/ssh
-deploy_test: 
-	@ echo "-m-> Deploying to $(TARGET_TEST_HOSTNAME)..."
-	@ echo "-m-> (please make sure $(TARGET_TEST_HOSTNAME) is in your ~/.ssh/config file)"
-	$(EES_OUT) $(SCP) $(ACNET_TARGET_OUT)/acnet_adc $(TARGET_TEST_HOSTNAME):/tmp
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/mkdir -p /usr/local/products/bin"
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/chmod 755 /usr/local/products/bin"
-	$(EES_OUT) $(SSH) -t $(TARGET_TEST_HOSTNAME) "ksu -e /bin/busybox mv /tmp/acnet_adc /usr/local/products/bin"
-
 # Install target used by ees-buildroot
 install_buildroot_target: install_buildroot_pkginfo
 	install -d $(EES_BIN)
 	install -D -m 0755 $(@D)/../etc/init.d/* $(EES_PREFIX)/etc/init.d/
 	mkdir -p $(EES_PREFIX)/etc/mu2eer.d
 	install -D -m 0744 $(@D)/../etc/mu2eer.d/* $(EES_PREFIX)/etc/mu2eer.d/
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_CDEV_PRIV)/acnet_adc
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_CDEV_PRIV)/acnet_mu2eerd
-	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_CDEV_PRIV)/acnet_ssm
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_CDEV_PRIV)/
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_CDEV_PRIV)/
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_CDEV_PRIV)/
 	install -D -m 0755 $(@D)/ACNET/startacsys $(EES_PREFIX)/usr/local/products/acsysfe/bin/startacsys
 	install -D -m 0755 $(@D)/$(MU2EERD_TARGET_OUT)/mu2eerd $(EES_PREFIX)/usr/local/products/bin/mu2eerd
+	install -D -m 0755 $(@D)/$(MU2EERCLI_TARGET_OUT)/mu2eercli $(EES_PREFIX)/usr/local/products/bin/mu2eercli

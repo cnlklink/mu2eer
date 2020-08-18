@@ -302,3 +302,19 @@ TEST( OperationGroup, VerifyStartTime )
   CHECK( _shmc->startTimeGet() > (now - 2) && now <= _shmc->startTimeGet()  );
 }
 
+TEST( OperationGroup, StartSSM )
+{
+  _mqc->start();
+
+  // Wait for thread to start
+  for( unsigned int i = 0; i != 2; i++ )
+    {
+      if( _shmc->ssmBlockGet().threadRunningGet() )
+        {
+          break;
+        }
+      this_thread::sleep_for( chrono::milliseconds( 500 ) );
+    }
+
+  CHECK( _shmc->ssmBlockGet().threadRunningGet() );
+}

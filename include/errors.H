@@ -38,6 +38,11 @@ namespace Mu2eER
    * Shutdown command did not complete within the timeout period
    */
   extern const Error MU2EERCLI_SHUTDOWN_ABORTED;
+
+  /**
+   * Start command did not complete within the timeout period
+   */
+  extern const Error MU2EERCLI_START_ABORTED;
 };
 
 #endif

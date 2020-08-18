@@ -33,6 +33,13 @@ void ControlMQClient::shutdown()
   _send( msg );
 }
 
+void ControlMQClient::start()
+{
+  control_msg_t msg;
+  msg.command = COMMAND_START;
+  _send( msg );
+}
+
 void ControlMQClient::_send( control_msg_t& msg )
 {
   if( -1 == mq_send( _mq, (char*)&msg, sizeof( msg ), 0 ) )

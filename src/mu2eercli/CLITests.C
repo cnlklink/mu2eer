@@ -156,3 +156,38 @@ TEST( ShowGroup, Run )
   _cli->run( argc, argv );
 }
 
+/**
+ * Start Command Tests
+ *
+ * Tests related to executing the "start" command.
+ */
+TEST_GROUP( StartGroup )
+{
+  void setup()
+  {
+    Controller::testDaemonStart();
+
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
+
+    _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+  }
+
+  void teardown()
+  {
+    delete _cli;
+
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    mqc.shutdown();
+    Controller::testDaemonCleanup();
+  }
+};
+
+TEST( StartGroup, Run )
+{
+  unsigned int argc = 2;
+  const char *argv[] = { "mu2eercli", "start" };
+  
+  _cli->run( argc, argv );
+}
+

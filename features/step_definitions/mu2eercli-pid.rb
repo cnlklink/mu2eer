@@ -28,6 +28,10 @@ Given(/mu2eerd (is|is not) running/) do |running|
   end
 end
 
+Given("the spill state machine has been started") do
+   `./bin/host/mu2eercli/mu2eercli start`
+end
+
 When("I pass the {string} command to mu2eercli") do |command|
   @result = `./bin/host/mu2eercli/mu2eercli #{command}`
   @rc = $?.exitstatus
@@ -119,3 +123,20 @@ Then("the time-in-spill displayed is {int}") do |expected_tis|
   # Expect the time-in-spill to be present in the output
   expect( @result ).to match /Time-in-spill \(from last cycle\): /
 end
+
+Then("the SSM thread state displayed is {string}") do |expected_thread_state|
+  # Expect the thread state to be present in the output
+  expect( @result ).to match /SSM thread is/
+
+  # Extract the thread state
+  thread_state = @result.match /SSM thread is (.*)/
+
+  # Expect the thread state to match
+  expect( thread_state[1] ).to eq expected_thread_state
+end
+
+Then("{string} is displayed") do |message|
+  # Expect the message to be present in the output
+  expect( @result ).to match message
+end
+

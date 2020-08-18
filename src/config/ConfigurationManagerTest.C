@@ -47,6 +47,8 @@ TEST( CoreGroup, DefaultConfig )
 
   STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
   CHECK_EQUAL( false, _cm->ssmGet().autoInitGet() );
+  CHECK_EQUAL( 0, _cm->ssmGet().mockSpillsGet() );
+  CHECK_EQUAL( 0, _cm->ssmGet().mockDelayGet() );
 }
 
 /**
@@ -74,6 +76,8 @@ TEST( CoreGroup, LoadReferenceConfig )
 
   STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
   CHECK_EQUAL( true, _cm->ssmGet().autoInitGet() );
+  CHECK_EQUAL( 5, _cm->ssmGet().mockSpillsGet() );
+  CHECK_EQUAL( 5, _cm->ssmGet().mockDelayGet() );
 }
 
 /**

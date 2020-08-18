@@ -146,6 +146,13 @@ namespace Mu2eER
     void _handleSSMInit();
 
     /**
+     * Handle Start
+     *
+     * Invoked by _processMessages().  Handles a start request.
+     */
+    void _handleStart();
+
+    /**
      * Process Control Messages
      *
      * Processes messages as they arrive on the control message queue.
