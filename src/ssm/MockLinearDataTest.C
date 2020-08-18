@@ -65,16 +65,16 @@ TEST( MockLinearInitGroup, Initialize )
 {
   int i = 0, *arr, size = 0;
 
-  size = _ssmb.dataSizeGet();
   _ssmb = _shmm.ssmBlockGet();
-  arr = _shmm.dataGet();
+  size = _ssmb->dataSizeGet();
+  arr = _ssmb->dataGet();
 
   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
   _ssm->initialize();
   _ssmb->initialize();
   _ssmb->addLinearData();
   for ( i = size - 1; i >= 0; i-- ) {
-    CHECK_EQUAL( i, arr++) );
+    CHECK_EQUAL( i, arr++ );
   }
 
   cout << "Mock linear test done" << endl;
