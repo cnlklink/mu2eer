@@ -13,10 +13,6 @@
  using namespace Mu2eER;
  using namespace std;
 
- SpillStateMachineSMB::SpillStateMachineSMB()
- {
- }
-
  const int* SpillStateMachineSMB::dataGet() const
  {
     return _data;
