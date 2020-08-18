@@ -61,14 +61,14 @@ TEST( MockLinearInitGroup, Initialize )
   int i = 0;
   int size = 0;
   int j = 15999;
-  int const *arr;
+  int const *arr[16000] = {0};
 
   auto& smb = _shmm.ssmBlockGet();
 
   //size = smb.dataSizeGet();
 
   cout << "Mock linear is starting" << endl;
-  cout << "Data size is " << smb.dataSizeGet() << endl;
+  //cout << "Data size is " << smb.dataSizeGet() << endl;
 
   /*
   arr = smb.dataGet();
