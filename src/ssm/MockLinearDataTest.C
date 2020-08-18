@@ -47,7 +47,6 @@ TEST_GROUP( MockLinearInitGroup )
   void teardown()
   {
     delete _ssm;
-    delete
   }
 };
 
