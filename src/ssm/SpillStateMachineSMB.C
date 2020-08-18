@@ -25,7 +25,7 @@
 
  void SpillStateMachineSMB::initialize()
  {
-   cout << "Initializing Spilll State Machine Shared Memory...";
+   cout << "Initializing Spill State Machine Shared Memory...";
    cout << " done." << endl;
  }
 
