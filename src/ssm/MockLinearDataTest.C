@@ -47,6 +47,7 @@ TEST_GROUP( MockLinearInitGroup )
   void teardown()
   {
     delete _ssm;
+    delete
   }
 };
 
@@ -64,6 +65,7 @@ TEST( MockLinearInitGroup, Initialize )
   const int *arr[16000] = {0};
 
   auto& smb = _shmm.ssmBlockGet();
+  _ssm->initialize();
 
   //size = smb.dataSizeGet();
 
@@ -74,7 +76,6 @@ TEST( MockLinearInitGroup, Initialize )
   arr = smb.dataGet();
 
   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
-  _ssm->initialize();
   smb.initialize();
   smb.addLinearData();
   for ( i = size - 1; i >= 0; i-- ) {
