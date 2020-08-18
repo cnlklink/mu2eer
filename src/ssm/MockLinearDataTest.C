@@ -65,10 +65,10 @@ TEST( MockLinearInitGroup, Initialize )
 
   auto& smb = _shmm.ssmBlockGet();
 
-  size = smb.dataSizeGet();
+  //size = smb.dataSizeGet();
 
   cout << "Mock linear is starting" << endl;
-  cout << "Data size is " << size << endl;
+  cout << "Data size is " << smb.dataSizeGet() << endl;
 
   /*
   arr = smb.dataGet();
