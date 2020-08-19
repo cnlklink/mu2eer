@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <limits.h>
 #include <signal.h>
 #include <stdexcept>
 #include <stdint.h>
@@ -66,8 +67,18 @@ int main( int argc, char* argv[] )
       sigfillset( &sa.sa_mask );
       sigaction( SIGTERM, &sa, NULL );
 
-      // Instantiate a Controller object
+      // Load configuration file
       ConfigurationManager cm;
+      auto filename = ConfigurationManager::hostConfigFileGet();
+      fstream fs;
+      fs.open( filename );
+      if( !fs.fail() )
+        {
+          cm.load( filename );
+          syslog( LOG_INFO, "Configuration loaded from %s", filename.c_str() );
+        }
+      
+      // Instantiate a Controller object
       Controller ctlr( cm, MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME );
 
       // Enter command processing loop

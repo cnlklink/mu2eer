@@ -51,6 +51,7 @@ void ShowCommand::run( unsigned int argc, const char* argv[] )
   cout << "mu2eerd (pid: " << _shmc.pidGet() << ")"
        << " running since " << startTimeStr
        << ", uptime: " << uptime << " seconds" << endl
+       << "  with configuration: " << _shmc.configFileGet() << endl
        << endl;
 
   _outputSSMSection();

@@ -35,7 +35,13 @@ config_error CONFIG_TCLK_MISSING( "Missing tclk configuration" );
  */
 config_error CONFIG_TCLK_DRIVER_MISSING( "Missing tclk.driver parameter" );
 
+string ConfigurationManager::configFileGet() const
+{
+  return _path;
+}
+
 ConfigurationManager::ConfigurationManager()
+  : _path( DEFAULT_CONFIG_FILE_PATH )
 {
   _defaultInit();
 }
@@ -70,7 +76,7 @@ void ConfigurationManager::_defaultInit()
   tclk["driver"] = "mock";
 }
 
-string ConfigurationManager::hostnameGet() const
+string ConfigurationManager::hostConfigFileGet()
 {
   // Retrieve the hostname
   char cstr[255];
@@ -82,7 +88,9 @@ string ConfigurationManager::hostnameGet() const
   // Remove the domain name if necessary
   string fqdn( cstr );
   auto dotpos = fqdn.find_first_of( "." );
-  return dotpos == string::npos ? fqdn : fqdn.substr( 0, dotpos );
+  string hostname( dotpos == string::npos ? fqdn : fqdn.substr( 0, dotpos ) );
+
+  return "/etc/mu2eer.d/" + hostname + "-mu2eerd.conf";
 }
 
 void ConfigurationManager::load( string path )

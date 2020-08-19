@@ -9,10 +9,22 @@
 require 'rspec/expectations'
 
 After do
+  # mu2eerd should not be left running!
   pid = `pidof mu2eerd`
   if pid != ""
     `kill #{pid}`
   end
+
+  # And the /etc/mu2eer.d directory should be cleared
+  if File.directory? "/etc/mu2eer.d"
+    FileUtils.rm Dir.glob "/etc/mu2eer.d/*"
+  end
+end
+
+Given("the hostname of this machine is <hostname>") do
+  # Save the hostname for use by other step definitions (-s cuts off at the first dot)
+  @hostname = `hostname -s`
+  @hostname.strip!
 end
 
 Given(/mu2eerd (is|is not) running/) do |running|
@@ -32,9 +44,33 @@ Given("the spill state machine has been started") do
    `./bin/host/mu2eercli/mu2eercli start`
 end
 
+Given(/(.*) (does|does not) exist/) do |file_name, does_or_doesnt|
+  # replace <hostname> with this node's hostname
+  expect( @hostname ).not_to be_nil
+  file_name.sub! /<hostname>/, @hostname
+
+  if does_or_doesnt == "does"
+    # First, expect that the file does not already exist on the system
+    expect( File.file? file_name ).not_to be_truthy
+
+    # Second, expect the file to exist in our source tree
+    source_file = "." + file_name
+    expect( File.file? source_file ).to be_truthy
+
+    # And copy it to the system location
+    FileUtils.cp source_file, file_name
+  else
+    expect( File.file? file_name ).not_to be_truthy
+  end
+end
+
 When("I pass the {string} command to mu2eercli") do |command|
   @result = `./bin/host/mu2eercli/mu2eercli #{command}`
   @rc = $?.exitstatus
+end
+
+When("I start mu2eerd with no flags") do
+  `./bin/host/mu2eerd/mu2eerd`
 end
 
 Then("the PID for mu2eerd should be displayed") do
@@ -140,3 +176,16 @@ Then("{string} is displayed") do |message|
   expect( @result ).to match message
 end
 
+Then("the configuration file displayed is {string}") do |expected_config_file_name|
+  # Expect the config file to be present in the output
+  expect( @result ).to match /with configuration: /
+
+  # Extract the configuration file name
+  config_file_name = @result.match /with configuration: (.*)/
+
+  # Replace <hostname> in the expected file name
+  expected_config_file_name.sub! /<hostname>/, @hostname
+
+  # Expect the configuration file to match
+  expect( config_file_name[1] ).to eq expected_config_file_name
+end

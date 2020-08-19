@@ -15,6 +15,8 @@
 #include <libconfig.h++>
 #include <string>
 
+#define DEFAULT_CONFIG_FILE_PATH "none (default configuration loaded)"
+
 using namespace std;
 
 namespace Mu2eER
@@ -34,16 +36,26 @@ namespace Mu2eER
   {
   public:
     /**
+     * Get Configuration File
+     *
+     * @return Full path to configuration file or DEFAULT_CONFIG_FILE_PATH if none was loaded
+     */
+    string configFileGet() const;
+
+    /**
      * Default constructor
      */
     ConfigurationManager();
 
     /**
-     * Get Hostname
+     * Get Host Configuration File
      *
-     * @return Hostname
+     * Returns a path to the configuration file for this node.  The path is in the form:
+     * /etc/mu2eer.d/hostname-mu2eerd.conf
+     *
+     * @return Path to the configuration file for this node
      */
-    string hostnameGet() const;
+    static string hostConfigFileGet();
 
     /**
      * Load

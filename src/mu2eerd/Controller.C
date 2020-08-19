@@ -66,6 +66,8 @@ Controller::Controller( ConfigurationManager& cm, string mqName, string shmName 
     _shmm( shmName ),
     _ssm( _cm, _shmm.ssmBlockGet() )
 {
+  _shmm.configFileSet( _cm.configFileGet() );
+
   _shmm.currentStateSet( MU2EERD_INITIALIZING );
 
   _createMQ();
