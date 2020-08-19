@@ -21,6 +21,7 @@ CLI::CLI( const string cmqName, const string shmcName )
   _commands["pid"] = unique_ptr<Command>( new PIDCommand( _mqc, _shmc ) );
   _commands["show"] = unique_ptr<Command>( new ShowCommand( _mqc, _shmc ) );
   _commands["shutdown"] = unique_ptr<Command>( new ShutdownCommand( _mqc, _shmc ) );
+  _commands["dump"] = unique_ptr<Command>( new DumpCommand( _mqc, _shmc ) );
 }
 
 void CLI::run( unsigned int argc, const char* argv[] )
