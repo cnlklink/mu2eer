@@ -42,6 +42,12 @@ int main( int argc, char* argv[] )
 {
   bool loadConfigFlag = false;
   ConfigurationManager cm;
+
+  // The rules for configuration are -
+  //   -c flag takes precedent, but the file must exist or mu2eerd aborts
+  //   If there's no -c flag then /etc/mu2eer.d/<hostname>-mu2eerd.conf is loaded by default
+  //   And if that file does not exist then the default configuration is used
+  // tldr; Only -c will cause mu2eerd to fail
   string cfgfile = ConfigurationManager::hostConfigFileGet();
   fstream fs;
   fs.open( cfgfile );

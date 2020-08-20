@@ -27,7 +27,7 @@ Given("the hostname of this machine is <hostname>") do
   @hostname.strip!
 end
 
-Given(/mu2eerd (is|is not) running/) do |running|
+Given(/^mu2eerd (is|is not) running$/) do |running|
   if running == "is"
     if !system( "./bin/host/mu2eerd/mu2eerd" )
       puts "Failed to start mu2eerd!"
@@ -38,6 +38,12 @@ Given(/mu2eerd (is|is not) running/) do |running|
     # Do not start mu2eerd...
     expect( `pidof mu2eerd` ).to eq ""
   end
+end
+
+Given(/mu2eerd is running with the "(.*)" flags/) do |flags|
+  @result = `./bin/host/mu2eerd/mu2eerd #{flags}`
+  @expectedPID = `pidof mu2eerd`
+  expect( `pidof mu2eerd` ).not_to eq ""
 end
 
 Given("the spill state machine has been started") do
