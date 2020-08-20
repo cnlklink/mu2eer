@@ -19,8 +19,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "config.H"
 #include "Controller.H"
 #include "ControlMQClient.H"
+#include "errors.H"
 
 using namespace Mu2eER;
 using namespace std;
@@ -38,59 +40,101 @@ static void _handle_sigterm( int signal )
 
 int main( int argc, char* argv[] )
 {
+  bool loadConfigFlag = false;
+  ConfigurationManager cm;
+  string cfgfile = ConfigurationManager::hostConfigFileGet();
+  fstream fs;
+  fs.open( cfgfile );
+  if( !fs.fail() )
+    {
+      loadConfigFlag = true;
+    }
+
+  try
+    {
+      // Parse command-line options
+      int c;
+      while( (c = getopt( argc, argv, "c:" )) != -1 )
+        {
+          switch( c )
+            {
+            case 'c':
+              cfgfile = optarg;
+              loadConfigFlag = true;
+              break;
+              
+            case '?':
+              cerr << "invalid argument!" << endl;
+              return 1;
+              break;
+              
+            default:
+              cerr << "unknown argument!" << endl;
+              return 1;
+            }
+        }
+      
+      // Load configuration file
+      if( loadConfigFlag )
+        {
+          cm.load( cfgfile );
+        }
+    }
+  catch( Error e )
+    {
+      cerr << e.what() << endl;
+      return 2;
+    }
+      
   // Become a daemon
   pid_t pid;
-
+      
   // Fork off the parent process and exit
   if( 0 > (pid = fork()) )
     return EXIT_FAILURE;
   else if( pid > 0 )
     return EXIT_SUCCESS;
-
+  
   // Set umask
   umask( 0 );
-
+  
   // Close the standard file descriptors
   close( STDIN_FILENO );
   close( STDOUT_FILENO );
   close( STDERR_FILENO );
-
+  
   // Start logging
   openlog( "mu2eerd", 0, LOG_USER );
-
+  
+  // Install handler for SIGINT
+  struct sigaction sa;
+  memset( &sa, 0, sizeof( sa ) );
+  sa.sa_handler = _handle_sigterm;
+  sigfillset( &sa.sa_mask );
+  sigaction( SIGTERM, &sa, NULL );
+  
   try
     {
-      // Install handler for SIGINT
-      struct sigaction sa;
-      memset( &sa, 0, sizeof( sa ) );
-      sa.sa_handler = _handle_sigterm;
-      sigfillset( &sa.sa_mask );
-      sigaction( SIGTERM, &sa, NULL );
-
-      // Load configuration file
-      ConfigurationManager cm;
-      auto filename = ConfigurationManager::hostConfigFileGet();
-      fstream fs;
-      fs.open( filename );
-      if( !fs.fail() )
-        {
-          cm.load( filename );
-          syslog( LOG_INFO, "Configuration loaded from %s", filename.c_str() );
-        }
-      
       // Instantiate a Controller object
       Controller ctlr( cm, MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME );
-
+      
       // Enter command processing loop
       ctlr.start();
+    }
+  catch( Error e )
+    {
+      syslog( LOG_ERR, "Error caught by main: %s", e.what() );
+      return 3;
     }
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught by main: %s", e.what() );
+      return 3;
     }
   catch( exception e )
     {
       syslog( LOG_ERR, "generic exception caught by main: %s", e.what() );
+      return 3;
     }
 
   syslog( LOG_INFO, "mu2eerd shut down." );

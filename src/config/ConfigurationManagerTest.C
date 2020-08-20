@@ -76,7 +76,7 @@ TEST( CoreGroup, HostConfigFile )
  */
 TEST( CoreGroup, LoadBadConfig )
 {
-  CHECK_THROWS( config_error, _cm->load( "../etc/mu2eer.d/parse-error.conf" ) );
+  CHECK_THROWS( Error, _cm->load( "../etc/mu2eer.d/parse-error.conf" ) );
 }
 
 /**
@@ -86,7 +86,7 @@ TEST( CoreGroup, LoadBadConfig )
  */
 TEST( CoreGroup, LoadReferenceConfig )
 {
-  CHECK_THROWS( config_error, _cm->load( "file_does_not_exist" ) );
+  CHECK_THROWS( Error, _cm->load( "file_does_not_exist" ) );
 
   _cm->load( "../etc/mu2eer.d/reference.conf" );
   

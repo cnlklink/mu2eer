@@ -9,7 +9,7 @@
 #ifndef CONFIGURATIONMANAGER_H
 #define CONFIGURATIONMANAGER_H
 
-#include "config.H"
+#include "Error.H"
 #include "SSMConfig.H"
 
 #include <libconfig.h++>

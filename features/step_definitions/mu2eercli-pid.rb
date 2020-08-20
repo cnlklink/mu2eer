@@ -64,13 +64,34 @@ Given(/(.*) (does|does not) exist/) do |file_name, does_or_doesnt|
   end
 end
 
+Given(/there is a copy of (.*) at (.*)/) do |src_file_name, dest_file_name|
+  # Expect src_file_name to exist
+  expect( File.file? src_file_name ).to be_truthy
+
+  # And the dest_file_name does not exist
+  expect( File.file? dest_file_name ).not_to be_truthy
+
+  # Then copy it there
+  FileUtils.cp src_file_name, dest_file_name
+  expect( File.file? dest_file_name ).to be_truthy
+end
+
 When("I pass the {string} command to mu2eercli") do |command|
-  @result = `./bin/host/mu2eercli/mu2eercli #{command}`
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eercli/mu2eercli #{command} 2>&1`
   @rc = $?.exitstatus
 end
 
 When("I start mu2eerd with no flags") do
-  `./bin/host/mu2eerd/mu2eerd`
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eerd/mu2eerd 2>&1`
+  @rc = $?.exitstatus
+end
+
+When("I start mu2eerd with the {string} flags") do |flags|
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eerd/mu2eerd #{flags} 2>&1`
+  @rc = $?.exitstatus
 end
 
 Then("the PID for mu2eerd should be displayed") do
@@ -184,7 +205,9 @@ Then("the configuration file displayed is {string}") do |expected_config_file_na
   config_file_name = @result.match /with configuration: (.*)/
 
   # Replace <hostname> in the expected file name
-  expected_config_file_name.sub! /<hostname>/, @hostname
+  if expected_config_file_name.match /<hostname>/ then
+    expected_config_file_name.sub! /<hostname>/, @hostname
+  end
 
   # Expect the configuration file to match
   expect( config_file_name[1] ).to eq expected_config_file_name

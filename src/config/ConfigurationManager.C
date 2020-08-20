@@ -8,6 +8,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <syslog.h>
 #include <unistd.h>
 
 #include "ConfigurationManager.H"
@@ -15,25 +16,14 @@
 using namespace Mu2eER;
 using namespace std;
 
-/**
- * Thrown if the configuration file is not accessible
- */
-config_error CONFIG_FILE_ERR( "Failed to open configuration file" );
+// Configuration module
+const Error CONFIG_FILE_ERROR( CONFIG, -1, "The configuration file specified with -c option was not found or could not be accessed." );
 
-/**
- * Thrown if the configuration file can not be parsed
- */
-config_error CONFIG_PARSE_ERR( "Failed to parse configuration file" );
+const Error CONFIG_FILE_PARSE_ERROR( CONFIG, -2, "Failed to parse configuration file." );
 
-/**
- * Missing tclk section
- */
-config_error CONFIG_TCLK_MISSING( "Missing tclk configuration" );
+const Error CONFIG_TCLK_MISSING( CONFIG, -3, "Missing tclk configuration section." );
 
-/**
- * Missing tclk.driver parameter
- */
-config_error CONFIG_TCLK_DRIVER_MISSING( "Missing tclk.driver parameter" );
+const Error CONFIG_TCLK_DRIVER_MISSING( CONFIG, -4, "Missing tclk.driver parameter." );
 
 string ConfigurationManager::configFileGet() const
 {
@@ -107,12 +97,14 @@ void ConfigurationManager::reload()
     }
   catch( libconfig::FileIOException e )
     {
-      throw CONFIG_FILE_ERR;
+      throw CONFIG_FILE_ERROR;
     }
   catch( libconfig::ParseException e )
     {
-      throw CONFIG_PARSE_ERR;
+      throw CONFIG_FILE_PARSE_ERROR;
     }
+
+  syslog( LOG_INFO, "Configuration loaded from %s", _path.c_str() );
 }
 
 SSMConfig ConfigurationManager::ssmGet() const
