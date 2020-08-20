@@ -58,6 +58,13 @@ namespace Mu2eER
     static string hostConfigFileGet();
 
     /**
+     * Get Hostname
+     *
+     * @return Hostname (short version) that we're running on
+     */
+    static string hostnameGet();
+
+    /**
      * Load
      *
      * Load the given configuration file.

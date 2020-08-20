@@ -68,6 +68,11 @@ void ConfigurationManager::_defaultInit()
 
 string ConfigurationManager::hostConfigFileGet()
 {
+  return "/etc/mu2eer.d/" + hostnameGet() + "-mu2eerd.conf";
+}
+
+string ConfigurationManager::hostnameGet()
+{
   // Retrieve the hostname
   char cstr[255];
   if( gethostname( cstr, sizeof( cstr ) ) )
@@ -80,7 +85,7 @@ string ConfigurationManager::hostConfigFileGet()
   auto dotpos = fqdn.find_first_of( "." );
   string hostname( dotpos == string::npos ? fqdn : fqdn.substr( 0, dotpos ) );
 
-  return "/etc/mu2eer.d/" + hostname + "-mu2eerd.conf";
+  return hostname;
 }
 
 void ConfigurationManager::load( string path )

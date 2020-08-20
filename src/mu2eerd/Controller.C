@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sys/types.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #include "Controller.H"
 
@@ -125,6 +126,8 @@ void Controller::_handleStart()
 
 void Controller::_processMessages()
 {
+  syslog( LOG_INFO, "mu2eerd running on %s.", ConfigurationManager::hostnameGet().c_str() );
+
   while( 1 )
     {
       control_msg_t msg;
@@ -173,7 +176,7 @@ void Controller::_processMessages()
 	}
       catch( controller_error e )
 	{
-          cerr << "exception caught in control message loop: " << e.what() << endl;
+          syslog( LOG_ERR, "exception caught in control message loop: %s", e.what() );
           throw e;
 	}
     }

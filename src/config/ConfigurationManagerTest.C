@@ -54,6 +54,20 @@ TEST( CoreGroup, DefaultConfig )
 }
 
 /**
+ * Test hostnameGet
+ *
+ * Verify that the hostname is returned in the expected form.
+ *
+ * Note: this test will fail if the host it's running on is not added to the test conditional.
+ */
+TEST( CoreGroup, HostnameGet )
+{
+  auto hostname = ConfigurationManager::hostnameGet();
+
+  CHECK( hostname == "adlinux" || hostname == "srsd" );
+}
+
+/**
  * Test Get Host Config File
  *
  * Verify that the static hostConfigFileGet() method returns a file name in the form
