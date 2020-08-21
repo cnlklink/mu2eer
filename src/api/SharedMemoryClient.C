@@ -79,6 +79,9 @@ SharedMemoryClient::~SharedMemoryClient()
   // Unmap shared memory
   if( _ptr != MAP_FAILED )
     munmap( _ptr, _size );
+
+  // Close shared memory file
+  close( _fd );
 }
 
 const SpillStateMachineSMB& SharedMemoryClient::ssmBlockGet() const
