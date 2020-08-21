@@ -11,6 +11,7 @@
 #include "ShowCommand.H"
 #include "ShutdownCommand.H"
 #include "StartCommand.H"
+#include "DumpCommand.H"
 
 using namespace Mu2eER;
 using namespace std;
