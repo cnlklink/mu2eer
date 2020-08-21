@@ -64,3 +64,18 @@ TEST( StateGroup, Read )
                                             Count( Mu2eerdDevice::STATE_READ_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.stateRead( destC, &request ) );
 }
+
+TEST( StateGroup, LotsOfReads )
+{
+  ReqInfo request;
+  Mu2eerdDevice::state_read_t buf;
+
+  // Test that we can handle a lot of quick reads
+  Array<Mu2eerdDevice::state_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
+  Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
+  for( unsigned int i = 0; i != 65000; i++ )
+    {
+      device.stateRead( dest, &request );
+      CHECK_EQUAL( MU2EERD_INITIALIZING, buf );
+    }
+}

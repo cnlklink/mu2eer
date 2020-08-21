@@ -58,6 +58,11 @@ api_error API_SHM_MAPFAIL( "failed to mmap the shared memory segment" );
  */
 api_error API_SHM_LOCKFAIL( "failed to lock the shared memory segment" );
 
+void SharedMemoryManager::configFileSet( string cfgFilePath )
+{
+  _shmPtr->configFileSet( cfgFilePath );
+}
+
 void SharedMemoryManager::currentStateSet( mu2eerd_state_t state )
 {
   _shmPtr->currentStateSet( state );

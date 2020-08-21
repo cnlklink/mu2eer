@@ -8,6 +8,10 @@ ALL_OUT         += $(CONFIG_HOST_OUT) $(CONFIG_TARGET_OUT)
 ALL_SOURCES     += $(wildcard config/*.C)
 ALL_HEADERS     += $(wildcard config/*.H)
 
+CONFIG_LIBS        = api.a
+CONFIG_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(CONFIG_LIBS))
+CONFIG_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(CONFIG_LIBS))
+
 CONFIG_OBJS        = ConfigurationManager.o SSMConfig.o
 CONFIG_OBJS_PREFIX = $(addprefix config/,$(CONFIG_OBJS))
 CONFIG_OBJS_HOST   = $(addprefix $(CONFIG_HOST_OUT)/,$(CONFIG_OBJS))
@@ -46,6 +50,7 @@ config_tests: $(HOST_BIN_DIR)/config.a $(CONFIG_TEST_OBJS_PREFIX)
 	$(EES_OUT) $(HOST_CXX) -o $(CONFIG_HOST_OUT)/config_tests \
 		$(CONFIG_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/config.a \
+		$(CONFIG_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(CONFIG_HOST_OUT)/config_tests

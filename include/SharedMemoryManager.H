@@ -28,6 +28,13 @@ namespace Mu2eER
   {
   public:
     /**
+     * Set Config File Path
+     *
+     * @param cfgFilePath Path to the active configuration file
+     */
+    void configFileSet( string cfgFilePath );
+
+    /**
      * Set Current State
      *
      * @param state State of mu2eerd daemon
