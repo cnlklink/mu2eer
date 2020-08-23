@@ -28,6 +28,11 @@ namespace Mu2eER
   {
   public:
     /**
+     * Spill counter device / reading property type
+     */
+    typedef uint32_t spill_counter_read_t;
+    
+    /**
      * State device / reading property type
      */
     typedef uint16_t state_read_t;
@@ -37,8 +42,14 @@ namespace Mu2eER
      */
     enum
       {
-        ATTR_STATE_READING = 0x00
+        ATTR_STATE_READING = 0x00,
+        ATTR_SPILL_COUNTER_READING = 0x01
       };
+
+    /**
+     * Size of the spill counter device / reading property return buffer
+     */
+    static const unsigned int SPILL_COUNTER_READING_MAX = 1;
 
     /**
      * Size of the state device / reading property return buffer
@@ -52,6 +63,14 @@ namespace Mu2eER
      * @param shmName mu2eerd shared memory region name
      */
     SSMDevice( string mqName, string shmName );
+
+    /**
+     * Spill Counter / Reading Property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void spillCounterRead( Array<spill_counter_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
      * State Device / Reading Property

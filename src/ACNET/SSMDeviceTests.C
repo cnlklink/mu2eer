@@ -21,63 +21,26 @@ using namespace FFF;
 using namespace std;
 
 /**
- * Global configuration manager used by _controller
- */
-static ConfigurationManager* _cm;
-
-/**
- * Global Controller object that setups up shared memory to be queried by tests
- */
-static Controller* _controller;
-
-/**
- * Global SharedMemoryClient for use by each test
- */
-static SharedMemoryClient* _shmc;
-
-/**
- * Global thread for _controller to run in
- */
-static thread* _t;
-
-/**
-* State Group
+* Core Group
 *
-* Tests related to the SSM state device properties.
+* Tests related to the SSM ACNET devices.
 */
-TEST_GROUP( SSMStateGroup )
+TEST_GROUP( CoreGroup )
 {
   void setup()
   {
-    _cm = new ConfigurationManager();
-    _controller = new Controller( *_cm, "/mu2eer_test", "mu2eer_test" );
-    
-    _t = new thread( []() {
-        try
-          {
-            _controller->start();
-          }
-        catch( controller_error e )
-          {
-            cerr << "exception: " << e.what() << endl;
-          }
-      } );
+    Controller::testDaemonStart();
 
-    _shmc = new SharedMemoryClient( "mu2eer_test" );
-    _shmc->waitForState( MU2EERD_RUNNING );
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
   }
 
   void teardown()
   {
-    ControlMQClient mqc( "/mu2eer_test" );
-
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
-    _t->join();
 
-    delete _shmc;
-    delete _t;
-    delete _controller;
-    delete _cm;
+    Controller::testDaemonCleanup();
   }
 };
 
@@ -86,7 +49,7 @@ TEST_GROUP( SSMStateGroup )
  *
  * Test the SSM State device reading property.
  */
-TEST( SSMStateGroup, SSMStateRead )
+TEST( CoreGroup, SSMStateRead )
 {
   // Construct an ACNET request and response buffer
   ReqInfo request;
@@ -109,4 +72,38 @@ TEST( SSMStateGroup, SSMStateRead )
   // Handle bad length
   Array<SSMDevice::state_read_t> destC( &buf, Index( 0 ), Count( SSMDevice::STATE_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.stateRead( destC, &request ) );
+}
+
+/**
+ * Spill Count Read Test
+ *
+ * Test the Spill Count device reading property
+ */
+TEST( CoreGroup, SpillCountReadInitial )
+{
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::spill_counter_read_t buf;
+  Array<SSMDevice::spill_counter_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
+
+  // Read spill counter, should return 0 in buf
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  device.spillCounterRead( dest, &request );
+  CHECK_EQUAL( 0, buf );
+
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS( AcnetError, deviceB.spillCounterRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::spill_counter_read_t> destB( &buf, 
+                                                Index( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ), 
+                                                Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.spillCounterRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::spill_counter_read_t> destC( &buf, 
+                                                Index( 0 ), 
+                                                Count( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.spillCounterRead( destC, &request ) );
 }
