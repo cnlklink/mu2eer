@@ -17,7 +17,7 @@ SSM_OBJS_PREFIX = $(addprefix ssm/,$(SSM_OBJS))
 SSM_OBJS_HOST   = $(addprefix $(SSM_HOST_OUT)/,$(SSM_OBJS))
 SSM_OBJS_TARGET = $(addprefix $(SSM_TARGET_OUT)/,$(SSM_OBJS))
 
-SSM_TEST_OBJS   = AllTests.o SSMDeviceDriverMockTest.o SpillStateMachineTest.o ISSMDeviceDriverTest.o
+SSM_TEST_OBJS   = AllTests.o SSMDeviceDriverMockTest.o SpillStateMachineTest.o ISSMDeviceDriverTest.o MockLinearDataTest.o
 SSM_TEST_OBJS_PREFIX = $(addprefix ssm/,$(SSM_TEST_OBJS))
 SSM_TEST_OBJS_HOST = $(addprefix $(SSM_HOST_OUT)/,$(SSM_TEST_OBJS))
 
