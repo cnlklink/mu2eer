@@ -31,11 +31,45 @@ static SharedMemoryManager _shmm( "mu2eer_test" );
  */
 static SpillStateMachine* _ssm;
 
+TEST_GROUP( InitGroup )
+{
+  void setup()
+  {
+    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+  }
+
+  void teardown()
+  {
+    delete _ssm;
+  }
+};
+
+/**
+ * Test Initialization
+ *
+ * Verify that we can initializae the SSM module with a basic configuration
+ */
+TEST( InitGroup, Initialize )
+{
+  auto& smb = _shmm.ssmBlockGet();
+
+  CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
+
+  _ssm->initialize();
+
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smb.currentStateGet() );
+
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
+
+  CHECK_EQUAL( 0, smb.timeInSpillGet() );
+}
+
 /**
  * Initialization Group
  *
  * Tests related to initializing and tearing-down the SSM module.
  */
+ /*
 TEST_GROUP( MockLinearInitGroup )
 {
   void setup()
@@ -48,7 +82,7 @@ TEST_GROUP( MockLinearInitGroup )
   {
     delete _ssm;
   }
-};
+};*/
 
 /**
  * Test Initialization
@@ -83,7 +117,7 @@ TEST( MockLinearInitGroup, Initialize )
     CHECK_EQUAL( j , arr[i] );
     j--;
   }
-  
+
   cout << "Mock linear test done" << endl;
 }
 */
