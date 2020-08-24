@@ -9,14 +9,31 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "Error.H"
+
 #include <stdexcept>
 
 namespace Mu2eER
 {
   /**
-   * Exception from the Config module
+   * Configuration file I/O error
    */
-  typedef std::runtime_error config_error;
+  extern const Error CONFIG_FILE_ERROR;
+
+  /**
+   * Configuration file parse error
+   */
+  extern const Error CONFIG_FILE_PARSE_ERROR;
+
+  /**
+   * Missing TCLK configuration error
+   */
+  extern const Error CONFIG_TCLK_MISSING;
+
+  /**
+   * Missing tclk.driver error
+   */
+  extern const Error CONFIG_TCLK_DRIVER_MISSING;
 };
 
 #endif

@@ -34,6 +34,11 @@ api_error API_SHMC_MAPFAIL( "failed to mmap the shared memory segment" );
  */
 api_error API_SHMC_BADVERSION( "shared memory version mismatch" );
 
+string SharedMemoryClient::configFileGet() const
+{
+  return _shmi->configFileGet();
+}
+
 mu2eerd_state_t SharedMemoryClient::currentStateGet() const
 {
   return _shmi->currentStateGet();
@@ -74,6 +79,9 @@ SharedMemoryClient::~SharedMemoryClient()
   // Unmap shared memory
   if( _ptr != MAP_FAILED )
     munmap( _ptr, _size );
+
+  // Close shared memory file
+  close( _fd );
 }
 
 const SpillStateMachineSMB& SharedMemoryClient::ssmBlockGet() const

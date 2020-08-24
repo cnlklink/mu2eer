@@ -9,11 +9,13 @@
 #ifndef CONFIGURATIONMANAGER_H
 #define CONFIGURATIONMANAGER_H
 
-#include "config.H"
+#include "Error.H"
 #include "SSMConfig.H"
 
 #include <libconfig.h++>
 #include <string>
+
+#define DEFAULT_CONFIG_FILE_PATH "none (default configuration loaded)"
 
 using namespace std;
 
@@ -34,16 +36,33 @@ namespace Mu2eER
   {
   public:
     /**
+     * Get Configuration File
+     *
+     * @return Full path to configuration file or DEFAULT_CONFIG_FILE_PATH if none was loaded
+     */
+    string configFileGet() const;
+
+    /**
      * Default constructor
      */
     ConfigurationManager();
 
     /**
+     * Get Host Configuration File
+     *
+     * Returns a path to the configuration file for this node.  The path is in the form:
+     * /etc/mu2eer.d/hostname-mu2eerd.conf
+     *
+     * @return Path to the configuration file for this node
+     */
+    static string hostConfigFileGet();
+
+    /**
      * Get Hostname
      *
-     * @return Hostname
+     * @return Hostname (short version) that we're running on
      */
-    string hostnameGet() const;
+    static string hostnameGet();
 
     /**
      * Load

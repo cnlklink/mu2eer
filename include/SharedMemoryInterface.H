@@ -39,6 +39,27 @@ namespace Mu2eER
     }
 
     /**
+     * Get Config File
+     *
+     * @return Path to the active configuration file
+     */
+    inline string configFileGet() const
+    {
+      return string( _configFilePath );
+    }
+
+    /**
+     * Set Config File
+     *
+     * @param path Path to the active configuration file
+     */
+    inline void configFileSet( string path )
+    {
+      path.copy( _configFilePath, path.size() + 1 );
+      _configFilePath[path.size()] = '\0';
+    }
+
+    /**
      * Get Current State
      *
      * @return Current state of the mu2eerd daemon
@@ -133,6 +154,11 @@ namespace Mu2eER
      * API version
      */
     char _api_version[32];
+
+    /**
+     * Configuration file path
+     */
+    char _configFilePath[256];
 
     /**
      * mu2eerd pid

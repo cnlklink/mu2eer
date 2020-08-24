@@ -9,13 +9,25 @@
 require 'rspec/expectations'
 
 After do
+  # mu2eerd should not be left running!
   pid = `pidof mu2eerd`
   if pid != ""
     `kill #{pid}`
   end
+
+  # And the /etc/mu2eer.d directory should be cleared
+  if File.directory? "/etc/mu2eer.d"
+    FileUtils.rm Dir.glob "/etc/mu2eer.d/*"
+  end
 end
 
-Given(/mu2eerd (is|is not) running/) do |running|
+Given("the hostname of this machine is <hostname>") do
+  # Save the hostname for use by other step definitions (-s cuts off at the first dot)
+  @hostname = `hostname -s`
+  @hostname.strip!
+end
+
+Given(/^mu2eerd (is|is not) running$/) do |running|
   if running == "is"
     if !system( "./bin/host/mu2eerd/mu2eerd" )
       puts "Failed to start mu2eerd!"
@@ -28,12 +40,63 @@ Given(/mu2eerd (is|is not) running/) do |running|
   end
 end
 
+Given(/mu2eerd is running with the "(.*)" flags/) do |flags|
+  @result = `./bin/host/mu2eerd/mu2eerd #{flags}`
+  @expectedPID = `pidof mu2eerd`
+  expect( `pidof mu2eerd` ).not_to eq ""
+end
+
 Given("the spill state machine has been started") do
    `./bin/host/mu2eercli/mu2eercli start`
 end
 
+Given(/(.*) (does|does not) exist/) do |file_name, does_or_doesnt|
+  # replace <hostname> with this node's hostname
+  expect( @hostname ).not_to be_nil
+  file_name.sub! /<hostname>/, @hostname
+
+  if does_or_doesnt == "does"
+    # First, expect that the file does not already exist on the system
+    expect( File.file? file_name ).not_to be_truthy
+
+    # Second, expect the file to exist in our source tree
+    source_file = "." + file_name
+    expect( File.file? source_file ).to be_truthy
+
+    # And copy it to the system location
+    FileUtils.cp source_file, file_name
+  else
+    expect( File.file? file_name ).not_to be_truthy
+  end
+end
+
+Given(/there is a copy of (.*) at (.*)/) do |src_file_name, dest_file_name|
+  # Expect src_file_name to exist
+  expect( File.file? src_file_name ).to be_truthy
+
+  # And the dest_file_name does not exist
+  expect( File.file? dest_file_name ).not_to be_truthy
+
+  # Then copy it there
+  FileUtils.cp src_file_name, dest_file_name
+  expect( File.file? dest_file_name ).to be_truthy
+end
+
 When("I pass the {string} command to mu2eercli") do |command|
-  @result = `./bin/host/mu2eercli/mu2eercli #{command}`
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eercli/mu2eercli #{command} 2>&1`
+  @rc = $?.exitstatus
+end
+
+When("I start mu2eerd with no flags") do
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eerd/mu2eerd 2>&1`
+  @rc = $?.exitstatus
+end
+
+When("I start mu2eerd with the {string} flags") do |flags|
+  # redirect stderr to stdout so error messages are captured in @result
+  @result = `./bin/host/mu2eerd/mu2eerd #{flags} 2>&1`
   @rc = $?.exitstatus
 end
 
@@ -140,3 +203,18 @@ Then("{string} is displayed") do |message|
   expect( @result ).to match message
 end
 
+Then("the configuration file displayed is {string}") do |expected_config_file_name|
+  # Expect the config file to be present in the output
+  expect( @result ).to match /with configuration: /
+
+  # Extract the configuration file name
+  config_file_name = @result.match /with configuration: (.*)/
+
+  # Replace <hostname> in the expected file name
+  if expected_config_file_name.match /<hostname>/ then
+    expected_config_file_name.sub! /<hostname>/, @hostname
+  end
+
+  # Expect the configuration file to match
+  expect( config_file_name[1] ).to eq expected_config_file_name
+end

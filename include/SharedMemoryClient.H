@@ -29,6 +29,13 @@ namespace Mu2eER
   {
   public:
     /**
+     * Get Config File
+     *
+     * @return Path to the active configuration file
+     */
+    string configFileGet() const;
+
+    /**
      * Get Current State
      *
      * @return State of the mu2eerd daemon

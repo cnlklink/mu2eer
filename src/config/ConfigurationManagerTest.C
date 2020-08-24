@@ -43,6 +43,8 @@ TEST_GROUP( CoreGroup )
  */
 TEST( CoreGroup, DefaultConfig )
 {
+  STRCMP_EQUAL( DEFAULT_CONFIG_FILE_PATH, _cm->configFileGet().c_str() );
+
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
   STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
@@ -52,13 +54,43 @@ TEST( CoreGroup, DefaultConfig )
 }
 
 /**
+ * Test hostnameGet
+ *
+ * Verify that the hostname is returned in the expected form.
+ *
+ * Note: this test will fail if the host it's running on is not added to the test conditional.
+ */
+TEST( CoreGroup, HostnameGet )
+{
+  auto hostname = ConfigurationManager::hostnameGet();
+
+  CHECK( hostname == "adlinux" || hostname == "srsd" );
+}
+
+/**
+ * Test Get Host Config File
+ *
+ * Verify that the static hostConfigFileGet() method returns a file name in the form
+ * /etc/mu2eer.d/<hostname>-mu2eerd.conf.
+ *
+ * Note: this test will fail if the host it's running on is not added to the test conditional.
+ */
+TEST( CoreGroup, HostConfigFile )
+{
+  auto filename = ConfigurationManager::hostConfigFileGet();
+
+  CHECK( filename == "/etc/mu2eer.d/adlinux-mu2eerd.conf" ||
+         filename == "/etc/mu2eer.d/srsd-mu2eerd.conf" );
+}
+
+/**
  * Test Bad Config
  *
  * Verify that excpetions are thrown for bad configuration files.
  */
 TEST( CoreGroup, LoadBadConfig )
 {
-  CHECK_THROWS( config_error, _cm->load( "../etc/mu2eer.d/parse-error.conf" ) );
+  CHECK_THROWS( Error, _cm->load( "../etc/mu2eer.d/parse-error.conf" ) );
 }
 
 /**
@@ -68,10 +100,12 @@ TEST( CoreGroup, LoadBadConfig )
  */
 TEST( CoreGroup, LoadReferenceConfig )
 {
-  CHECK_THROWS( config_error, _cm->load( "file_does_not_exist" ) );
+  CHECK_THROWS( Error, _cm->load( "file_does_not_exist" ) );
 
   _cm->load( "../etc/mu2eer.d/reference.conf" );
   
+  STRCMP_EQUAL( "../etc/mu2eer.d/reference.conf", _cm->configFileGet().c_str() );
+
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
   STRCMP_EQUAL( "mock", _cm->ssmGet().driverGet().c_str() );
@@ -88,6 +122,9 @@ TEST( CoreGroup, LoadReferenceConfig )
 TEST( CoreGroup, ReloadConfig )
 {
   _cm->load( "../etc/mu2eer.d/reference.conf" );
+  
+  STRCMP_EQUAL( "../etc/mu2eer.d/reference.conf", _cm->configFileGet().c_str() );
+
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
   _cm->tclkDriverSet( "real" );
@@ -95,15 +132,4 @@ TEST( CoreGroup, ReloadConfig )
 
   _cm->reload();
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
-}
-
-/**
- * Test Hostname
- *
- * Verify that ConfigurationManager returns the correct hostname.
- */
-TEST( CoreGroup, GetHostname )
-{
-  // \todo {remove hardcoded hostname from test}
-  STRCMP_EQUAL( "adlinux", _cm->hostnameGet().c_str() );
 }
