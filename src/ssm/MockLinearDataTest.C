@@ -56,6 +56,7 @@ TEST_GROUP( MockLinearInitGroup )
  * Verify that we can initialize the SSM module with a basic configuration
  * and initialize the shared memory vector.
  */
+ /*
 TEST( MockLinearInitGroup, Initialize )
 {
 
@@ -82,6 +83,7 @@ TEST( MockLinearInitGroup, Initialize )
     CHECK_EQUAL( j , arr[i] );
     j--;
   }
-*/
+  
   cout << "Mock linear test done" << endl;
 }
+*/
