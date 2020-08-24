@@ -70,7 +70,7 @@ TEST( MockLinearInitGroup, Initialize )
   size = smb.dataSizeGet();
 
   cout << "Mock linear is starting" << endl;
-  cout << "Data size is " << smb.dataSizeGet() << endl;
+  cout << "Data size is " << size << endl;
 
   //arr = smb.dataGet();
 
