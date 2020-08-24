@@ -28,8 +28,7 @@ int fef_init( int argc, char* argv[] )
   try
     {
       // Register devices
-      // Note: we're using the ADCDriverStub until the real ADCDriver is implemented
-      register_dev( new SSMDevice( "/mu2eerd", "mu2eerd" ) );
+      register_dev( new SSMDevice( MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME ) );
       
       syslog( LOG_INFO, "acnet_ssm started" );
     }

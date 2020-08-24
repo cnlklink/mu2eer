@@ -15,7 +15,40 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
-  registerMethod( ATTR_STATE_READING, *this, &SSMDevice::stateRead, STATE_READING_MAX );
+  registerMethod( ATTR_STATE_READING, 
+                  *this, 
+                  &SSMDevice::stateRead, 
+                  STATE_READING_MAX );
+
+  registerMethod( ATTR_SPILL_COUNTER_READING, 
+                  *this, 
+                  &SSMDevice::spillCounterRead, 
+                  SPILL_COUNTER_READING_MAX );
+}
+
+void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest, 
+                                  ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( SPILL_COUNTER_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) > 
+      static_cast<int>( SPILL_COUNTER_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      dest[0] = 0;
+    }
+  catch( runtime_error e )
+    {
+      throw Ex_DEVFAILED;
+    }
 }
 
 void SSMDevice::stateRead( Array<SSMDevice::state_read_t>& dest, ReqInfo const* reqinfo )
