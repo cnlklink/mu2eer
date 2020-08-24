@@ -31,7 +31,7 @@ static SharedMemoryManager _shmm( "mu2eer_test" );
  */
 static SpillStateMachine* _ssm;
 
-TEST_GROUP( InitGroup )
+TEST_GROUP( MockInitGroup )
 {
   void setup()
   {
@@ -49,7 +49,7 @@ TEST_GROUP( InitGroup )
  *
  * Verify that we can initializae the SSM module with a basic configuration
  */
-TEST( InitGroup, Initialize )
+TEST( MockInitGroup, MockInitialize )
 {
   auto& smb = _shmm.ssmBlockGet();
 
