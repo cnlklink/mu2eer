@@ -29,7 +29,7 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   fileToCreate << "Shared Memory Data" << endl << endl;
   for (i = 0; i < size; i++) {
     cout << "entry " << i << ": " << arr[i] << endl;
-    fileToCreate << "entry " << i << ":" << arr[i] << endl;
+    fileToCreate << "entry " << i << ": " << arr[i] << endl;
   }
 
   fileToCreate.close();
