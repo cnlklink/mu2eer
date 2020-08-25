@@ -6,8 +6,6 @@
 * @author rtadkins
 */
 
- #include <iostream>
-
  #include "SpillStateMachineSMB.H"
 
  using namespace Mu2eER;
@@ -34,6 +32,6 @@
    int i = 0, j = 0;
    for (i = 15999; i >= 0; i--)
    {
-     _data[j++] = i;
+       _data[j++] = i;
    }
  }
