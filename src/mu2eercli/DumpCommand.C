@@ -28,6 +28,7 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   std::ofstream fileToCreate("shared_memory.csv");
   fileToCreate << "Data" << endl;
   for (i = 0; i < size; i++) {
+    cout << "entry " << i << ": " << arr[i] << endl;
     fileToCreate << arr[i] << endl;
   }
 
