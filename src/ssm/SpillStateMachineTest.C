@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include "CppUTest/TestHarness.h"
 
@@ -231,7 +232,22 @@ TEST_GROUP( MockLinearInitGroup )
  */
 TEST( MockLinearInitGroup, Initialize )
 {
-  int size = 0;
+  int i = 0, size = 0, j = 15999;
+  const int *arr;
+  
   auto& smb = _shmm.ssmBlockGet();
   _ssm->initialize();
+  size = smb.dataSizeGet();
+
+  cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
+  smb.initialize();
+  smb.addLinearData();
+  arr = smb.dataGet(); 
+
+  for ( i = 0; i < size; i++ ) {
+   CHECK_EQUAL( j , arr[i] );
+   j--;
+  }
+  
+  cout << "Mock linear test done" << endl;
 }
