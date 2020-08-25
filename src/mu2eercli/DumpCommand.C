@@ -26,7 +26,7 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   const int* arr = _shmc.ssmBlockGet().dataGet();
 
   std::ofstream fileToCreate("shared_memory.csv");
-  fileToCreate << "Data" << endl;
+  fileToCreate << "Shared Memory Data" << endl << endl;
   for (i = 0; i < size; i++) {
     cout << "entry " << i << ": " << arr[i] << endl;
     fileToCreate << "entry " << i << ":" << arr[i] << endl;
