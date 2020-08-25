@@ -5,6 +5,8 @@
 *
 * @author rtadkins
 */
+ 
+ #include <iostream>
 
  #include "SpillStateMachineSMB.H"
 
