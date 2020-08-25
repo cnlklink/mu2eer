@@ -204,3 +204,34 @@ TEST( ThreadGroup, TestRunning )
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
 }
+
+/**
+ * Initialization Group
+ *
+ * Tests related to initializing and tearing-down the SSM module.
+ */
+TEST_GROUP( MockLinearInitGroup )
+{
+  void setup()
+  {
+    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+  }
+
+  void teardown()
+  {
+    delete _ssm;
+  }
+};
+
+/**
+ * Test Initialization
+ *
+ * Verify that we can initialize the SSM module with a basic configuration
+ * and initialize the shared memory vector.
+ */
+TEST( MockLinearInitGroup, Initialize )
+{
+  int size = 0;
+  auto& smb = _shmm.ssmBlockGet();
+  _ssm->initialize();
+}
