@@ -36,7 +36,7 @@ static SpillStateMachine* _ssm;
  *
  * Tests related to initializing and tearing-down the SSM module.
  */
-TEST_GROUP( MockLinearInitGroup )
+TEST_GROUP( MockLinearGroup )
 {
   void setup()
   {
@@ -56,7 +56,7 @@ TEST_GROUP( MockLinearInitGroup )
  * Verify that we can initialize the SSM module with a basic configuration
  * and initialize the shared memory vector.
  */
- TEST( MockLinearInitGroup, Initialize )
+ TEST( MockLinearGroup, Initialize )
  {
    int i = 0, size = 0, j = 15999;
    const int *arr;
