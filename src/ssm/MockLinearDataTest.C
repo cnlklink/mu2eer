@@ -31,45 +31,11 @@ static SharedMemoryManager _shmm( "mu2eer_test" );
  */
 static SpillStateMachine* _ssm;
 
-TEST_GROUP( MockInitGroup )
-{
-  void setup()
-  {
-    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
-  }
-
-  void teardown()
-  {
-    delete _ssm;
-  }
-};
-
-/**
- * Test Initialization
- *
- * Verify that we can initializae the SSM module with a basic configuration
- */
-TEST( MockInitGroup, MockInitialize )
-{
-  auto& smb = _shmm.ssmBlockGet();
-
-  CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
-
-  _ssm->initialize();
-
-  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smb.currentStateGet() );
-
-  CHECK_EQUAL( 0, smb.spillCounterGet() );
-
-  CHECK_EQUAL( 0, smb.timeInSpillGet() );
-}
-
 /**
  * Initialization Group
  *
  * Tests related to initializing and tearing-down the SSM module.
  */
- /*
 TEST_GROUP( MockLinearInitGroup )
 {
   void setup()
@@ -82,7 +48,7 @@ TEST_GROUP( MockLinearInitGroup )
   {
     delete _ssm;
   }
-};*/
+};
 
 /**
  * Test Initialization
@@ -90,34 +56,24 @@ TEST_GROUP( MockLinearInitGroup )
  * Verify that we can initialize the SSM module with a basic configuration
  * and initialize the shared memory vector.
  */
- /*
-TEST( MockLinearInitGroup, Initialize )
-{
+ TEST( MockLinearInitGroup, Initialize )
+ {
+   int i = 0, size = 0, j = 15999;
+   const int *arr;
 
-  int i = 0;
-  int size = 0;
-  int j = 15999;
-  //const int *arr;
+   auto& smb = _shmm.ssmBlockGet();
+   _ssm->initialize();
+   size = smb.dataSizeGet();
 
-  auto& smb = _shmm.ssmBlockGet();
-  _ssm->initialize();
+   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
+   smb.initialize();
+   smb.addLinearData();
+   arr = smb.dataGet();
 
-  size = smb.dataSizeGet();
-
-  cout << "Mock linear is starting" << endl;
-  cout << "Data size is " << size << endl;
-
-  //arr = smb.dataGet();
-
-/*
-  cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
-  smb.initialize();
-  smb.addLinearData();
-  for ( i = size - 1; i >= 0; i-- ) {
+   for ( i = 0; i < size; i++ ) {
     CHECK_EQUAL( j , arr[i] );
     j--;
-  }
+   }
 
-  cout << "Mock linear test done" << endl;
-}
-*/
+   cout << "Mock linear test done" << endl;
+ }
