@@ -25,7 +25,8 @@ MU2EERCLI_TEST_OBJS        = \
 	PIDCommand.o \
 	ShutdownCommand.o \
 	ShowCommand.o \
-	StartCommand.o
+	StartCommand.o \
+	DumpCommand.o
 MU2EERCLI_TEST_OBJS_PREFIX = $(addprefix mu2eercli/,$(MU2EERCLI_TEST_OBJS))
 MU2EERCLI_TEST_OBJS_HOST   = $(addprefix $(MU2EERCLI_HOST_OUT)/,$(MU2EERCLI_TEST_OBJS))
 
