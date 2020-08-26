@@ -1,10 +1,10 @@
-/**
-* MockLinearDataTest.C
+
+ckLinearDataTest.C
 *
-* This file contains unit tests (CppUTest) for the MockLinearData class.
-*
-* @author rtadkins
-*/
+* * This file contains unit tests (CppUTest) for the MockLinearData class.
+* *
+* * @author rtadkins
+* */
 
 #include <iostream>
 
@@ -17,25 +17,25 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
- * Use a default configuration for testing
- */
+ *  * Use a default configuration for testing
+ *   */
 static ConfigurationManager _cm;
 
 /**
- * A global SpillStateMachine object used for all tests
- */
+ *  * A global SpillStateMachine object used for all tests
+ *   */
 static SpillStateMachine* _ssm;
 
 /**
- * Shared memory manager for testing
- */
+ *  * Shared memory manager for testing
+ *   */
 SharedMemoryManager* _shmm;
 
 /**
- * Initialization Group
- *
- * Tests related to initializing and tearing-down the SSM module.
- */
+ *  * Initialization Group
+ *   *
+ *    * Tests related to initializing and tearing-down the SSM module.
+ *     */
 TEST_GROUP( MockLinearGroup )
 {
   void setup()
@@ -53,11 +53,11 @@ TEST_GROUP( MockLinearGroup )
 };
 
 /**
- * Test Initialization
- *
- * Verify that we can initialize the SSM module with a basic configuration
- * and initialize the shared memory vector.
- */
+ *  * Test Initialization
+ *   *
+ *    * Verify that we can initialize the SSM module with a basic configuration
+ *     * and initialize the shared memory vector.
+ *      */
  TEST( MockLinearGroup, Initialize )
  {
    int i = 0, size = 0, j = 15999;
