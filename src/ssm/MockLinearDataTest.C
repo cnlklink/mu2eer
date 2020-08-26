@@ -22,14 +22,14 @@ using namespace std;
 static ConfigurationManager _cm;
 
 /**
- * Shared memory manager for testing
- */
-static SharedMemoryManager _shmm( "mu2eer_test" );
-
-/**
  * A global SpillStateMachine object used for all tests
  */
 static SpillStateMachine* _ssm;
+
+/**
+ * Shared memory manager for testing
+ */
+SharedMemoryManager* _shmm;
 
 /**
  * Initialization Group
@@ -41,12 +41,14 @@ TEST_GROUP( MockLinearGroup )
   void setup()
   {
     cout << "Setting up mock linear test" << endl;
+    _shmm = new SharedMemoryManager( "mu2eer_test" )
     _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    delete _shmm;
   }
 };
 
