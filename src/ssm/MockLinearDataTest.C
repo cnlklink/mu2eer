@@ -41,7 +41,7 @@ TEST_GROUP( MockLinearGroup )
   void setup()
   {
     cout << "Setting up mock linear test" << endl;
-    _shmm = new SharedMemoryManager( "mu2eer_test" )
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
     _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
   }
 
@@ -63,7 +63,7 @@ TEST_GROUP( MockLinearGroup )
    int i = 0, size = 0, j = 15999;
    const int *arr;
 
-   auto& smb = _shmm.ssmBlockGet();
+   auto& smb = _shmm->ssmBlockGet();
    _ssm->initialize();
    size = smb.dataSizeGet();
 
