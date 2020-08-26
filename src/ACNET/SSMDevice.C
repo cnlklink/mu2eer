@@ -6,6 +6,8 @@
  * @author jdiamond
  */
 
+#include <syslog.h>
+
 #include "SSMDevice.H"
 
 using namespace Mu2eER;
@@ -24,6 +26,12 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   *this, 
                   &SSMDevice::spillCounterRead, 
                   SPILL_COUNTER_READING_MAX );
+
+  registerMethods( ATTR_STATUS_CONTROL,
+                   *this,
+                   &SSMDevice::statusCtrlRead,
+                   &SSMDevice::statusCtrlWrite,
+                   1 );
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest, 
@@ -47,6 +55,7 @@ void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
     }
   catch( runtime_error e )
     {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::spillCounterRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
 }
@@ -70,6 +79,41 @@ void SSMDevice::stateRead( Array<SSMDevice::state_read_t>& dest, ReqInfo const* 
     }
   catch( runtime_error e )
     {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::stateRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
+    }
+}
+
+void SSMDevice::statusCtrlRead( Array<status_t>& dest, ReqInfo const* reqinfo )
+{
+  throw Ex_DEVFAILED;
+}
+
+void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* reqinfo )
+{
+  if( src.offset.getValue() != 0 )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( src.total.getValue() != 1 )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  ControlMQClient cmq( _mqName );
+
+  switch( src[0] )
+    {
+    case CONTROL_RESET:
+      return;
+
+    case CONTROL_START:
+      cmq.start();
+      return;
+
+    default:
+      syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
+      throw Ex_BADSET;
     }
 }

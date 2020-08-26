@@ -48,4 +48,4 @@ tclk_tests: $(HOST_BIN_DIR)/tclk.a $(TCLK_TEST_OBJS_PREFIX)
 		$(HOST_BIN_DIR)/tclk.a \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
-	@./$(TCLK_HOST_OUT)/tclk_tests
+	@./$(TCLK_HOST_OUT)/tclk_tests $(TEST_RUN_FLAGS)

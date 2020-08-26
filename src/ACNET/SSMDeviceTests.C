@@ -107,3 +107,41 @@ TEST( CoreGroup, SpillCountReadInitial )
                                                 Count( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.spillCounterRead( destC, &request ) );
 }
+
+/**
+ * Control Tests
+ *
+ * Tests setting the "START" command for the SSM device basic control property.
+ */
+TEST( CoreGroup, ControlStart )
+{
+  // Construct a request for the "START" command
+  ReqInfo request;
+  const SSMDevice::control_t buf = { SSMDevice::CONTROL_START };
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  
+  // Verify the devide handles a bad offset
+  Array<const SSMDevice::control_t> srcA( &buf, Index( 1 ), Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.statusCtrlWrite( srcA, &request ) );
+  
+  // Verify the device handles a bad length
+  Array<const SSMDevice::control_t> srcB( &buf, Index( 0 ), Count( 2 ) );
+  CHECK_THROWS( AcnetError, device.statusCtrlWrite( srcB, &request ) );
+      
+  // Verify the device handles a bad command
+  const SSMDevice::control_t bufBad = { static_cast<SSMDevice::control_t>( 65535 ) };
+  Array<const SSMDevice::control_t> srcC( &bufBad, Index( 0 ), Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.statusCtrlWrite( srcC, &request ) );
+  
+  // Verify that we are in the IDLE state
+  SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
+  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  
+  // Send
+  Array<const SSMDevice::control_t> srcD( &buf, Index( 0 ), Count( 1 ) );
+  device.statusCtrlWrite( srcD, &request );
+  
+  // After starting the SSM mock driver should run this it's spill cycles and end in the FAULT state
+  smc.waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, smc.ssmBlockGet().currentStateGet() );
+}

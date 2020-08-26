@@ -52,4 +52,4 @@ ssm_tests: $(SSM_LIBS_HOST) $(SSM_TEST_OBJS_PREFIX)
 		$(SSM_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
-	@./$(SSM_HOST_OUT)/ssm_tests
+	@./$(SSM_HOST_OUT)/ssm_tests $(TEST_RUN_FLAGS)

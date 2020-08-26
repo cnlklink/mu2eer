@@ -8,6 +8,10 @@ ALL_OUT         += $(API_HOST_OUT) $(API_TARGET_OUT)
 ALL_SOURCES     += $(wildcard api/*.C)
 ALL_HEADERS     += $(wildcard api/*.H)
 
+API_LIBS        = api.a ssm.a config.a
+API_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(API_LIBS))
+API_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(API_LIBS))
+
 API_OBJS        = Error.o \
 	SharedMemoryManager.o \
 	SpillStateMachineSMB.o \
@@ -46,11 +50,12 @@ $(TARGET_BIN_DIR)/api.a: $(API_OBJS_PREFIX)
 	$(EES_OUT) $(RANLIB) $@
 
 # Unit test suite
-api_tests: $(HOST_BIN_DIR)/api.a $(API_TEST_OBJS_PREFIX)
+api_tests: $(API_LIBS_HOST) $(API_TEST_OBJS_PREFIX) mu2eerd/Controller.o
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(API_HOST_OUT)/api_tests \
 		$(API_TEST_OBJS_HOST) \
-		$(HOST_BIN_DIR)/api.a \
+		$(HOST_BIN_DIR)/mu2eerd/Controller.o \
+		$(API_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
-	@./$(API_HOST_OUT)/api_tests
+	@./$(API_HOST_OUT)/api_tests $(TEST_RUN_FLAGS)

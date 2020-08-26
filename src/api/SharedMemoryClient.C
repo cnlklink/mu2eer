@@ -112,3 +112,19 @@ void SharedMemoryClient::waitForState( mu2eerd_state_t waitForState,
       this_thread::sleep_for( chrono::milliseconds( interval ) );
     }
 }
+
+void SharedMemoryClient::waitForSSMState( ssm_state_t waitForState, 
+                                          unsigned int interval, 
+                                          unsigned int tries ) const
+{
+  auto& ssm = ssmBlockGet();
+
+  for( unsigned int i = 0; tries == 0 || i < tries; i++ )
+    {
+      if( ssm.currentStateGet() == waitForState )
+        {
+          break;
+        }
+      this_thread::sleep_for( chrono::milliseconds( interval ) );
+    }
+}

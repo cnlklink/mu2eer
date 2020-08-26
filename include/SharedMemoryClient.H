@@ -95,6 +95,19 @@ namespace Mu2eER
                        unsigned int interval = 5, 
                        unsigned int tries = 0 ) const;
 
+    /**
+     * Wait For Spill State Machine
+     *
+     * Wait for the spill state machine to enter the given state.
+     *
+     * @param waitForState State to wait for
+     * @param interval How long to wait in ms
+     * @param tries Number of tries before giving up (0: try forever, timeout = interval * tries)
+     */
+    void waitForSSMState( ssm_state_t waitForState, 
+                          unsigned int interval = 5, 
+                          unsigned int tries = 0 ) const;
+
   private:
     /**
      * Shared memory file descriptor

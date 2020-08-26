@@ -28,6 +28,11 @@ namespace Mu2eER
   {
   public:
     /**
+     * Status & control device / Control property type
+     */
+    typedef uint32_t control_t;
+
+    /**
      * Spill counter device / reading property type
      */
     typedef uint32_t spill_counter_read_t;
@@ -38,12 +43,27 @@ namespace Mu2eER
     typedef uint16_t state_read_t;
 
     /**
+     * Status & control device / Status property type
+     */
+    typedef uint32_t status_t;
+
+    /**
      * SSDN Attribute IDs
      */
     enum
       {
         ATTR_STATE_READING = 0x00,
-        ATTR_SPILL_COUNTER_READING = 0x01
+        ATTR_SPILL_COUNTER_READING = 0x01,
+        ATTR_STATUS_CONTROL = 0x02
+      };
+
+    /**
+     * SSM Device / Control property commands
+     */
+    enum
+      {
+        CONTROL_RESET = 0x00,
+        CONTROL_START = 0x01
       };
 
     /**
@@ -79,6 +99,22 @@ namespace Mu2eER
      * @param reqinfo ACNET request object
      */
     void stateRead( Array<state_read_t>& dest, ReqInfo const* reqinfo );
+
+    /**
+     * Status & Control / Status property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void statusCtrlRead( Array<status_t>& dest, ReqInfo const* reqinfo );
+
+    /**
+     * Status & Control / Control property
+     *
+     * @param src ACNET setting buffer
+     * @param reqinfo ACNET request object
+     */
+    void statusCtrlWrite( Array<const control_t>& src, ReqInfo const* reqinfo );
 
   private:
     /**

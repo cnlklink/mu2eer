@@ -8,6 +8,8 @@
 
 #include "CppUTest/TestHarness.h"
 
+#include "../mu2eerd/Controller.H"
+#include "ControlMQClient.H"
 #include "SharedMemoryClient.H"
 #include "SharedMemoryManager.H"
 
@@ -56,6 +58,30 @@ TEST_GROUP( WaitForStateGroup )
 };
 
 /**
+ * WaitForSSM Group
+ *
+ * Tests the waitForSSMState method.
+ */
+TEST_GROUP( WaitForSSMStateGroup )
+{
+  void setup()
+  {
+    Controller::testDaemonStart();
+
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
+  }
+
+  void teardown()
+  {
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
+    mqc.shutdown();
+
+    Controller::testDaemonCleanup();
+  }
+};
+
+/**
  * Test Instantiation
  *
  * Verify instantiation and connecting to the shared memory API.
@@ -87,4 +113,23 @@ TEST( WaitForStateGroup, WaitForever )
   CHECK_EQUAL( MU2EERD_RUNNING, shmc.currentStateGet() );
 
   t.join();
+}
+
+/**
+ * Wait For Spill State Machine Test
+ *
+ * Verify that waitForSSMState works for an indefinite amout of time.
+ */
+TEST( WaitForSSMStateGroup, WaitForever )
+{
+  SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+  auto& ssm = shmc.ssmBlockGet();
+
+  CHECK_EQUAL( SSM_IDLE, ssm.currentStateGet() );
+
+  ControlMQClient cmq( Controller::TEST_DAEMON_CMQ_NAME );
+  cmq.start();
+
+  shmc.waitForSSMState( SSM_FAULT );
+  CHECK_EQUAL( SSM_FAULT, ssm.currentStateGet() );
 }
