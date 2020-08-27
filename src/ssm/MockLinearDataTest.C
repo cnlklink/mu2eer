@@ -29,7 +29,7 @@ static SpillStateMachine* _ssm;
 /**
  *  * Shared memory manager for testing
  *   */
-SharedMemoryManager* _shmm( "mu2eer_test" );
+SharedMemoryManager* _shmm;
 
 /**
  *  * Initialization Group
@@ -41,7 +41,7 @@ TEST_GROUP( MockLinearGroup )
   void setup()
   {
     cout << "Setting up mock linear test" << endl;
-    //_shmm = new SharedMemoryManager( "mu2eer_test" );
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
     _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
   }
 
