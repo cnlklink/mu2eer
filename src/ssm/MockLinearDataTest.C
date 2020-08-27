@@ -1,10 +1,10 @@
 
-ckLinearDataTest.C
-*
-* * This file contains unit tests (CppUTest) for the MockLinearData class.
-* *
-* * @author rtadkins
-* */
+/**
+ * MockLinearDataTest.C
+ * This file contains unit tests (CppUTest) for the MockLinearData class.
+ *
+ * @author rtadkins
+ */
 
 #include <iostream>
 
