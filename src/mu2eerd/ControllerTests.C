@@ -318,3 +318,20 @@ TEST( OperationGroup, StartSSM )
 
   CHECK( _shmc->ssmBlockGet().threadRunningGet() );
 }
+
+TEST( OperationGroup, ResetSSM )
+{
+  auto& ssm = _shmc->ssmBlockGet();
+
+  // Start the spill state machine and wait for it to run through it's spill cycles
+  _mqc->start();
+  _shmc->waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, ssm.currentStateGet() );
+
+  // Reset
+  _mqc->reset();
+  _shmc->waitForSSMState( SSM_IDLE, 100, 10 );
+  CHECK_EQUAL( SSM_IDLE, ssm.currentStateGet() );
+  CHECK_EQUAL( 0, ssm.spillCounterGet() );
+  CHECK_EQUAL( 0, ssm.timeInSpillGet() );
+}

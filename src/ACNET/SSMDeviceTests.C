@@ -109,11 +109,11 @@ TEST( CoreGroup, SpillCountReadInitial )
 }
 
 /**
- * Control Tests
+ * Control Property Tests
  *
- * Tests setting the "START" command for the SSM device basic control property.
+ * Verify the control device.
  */
-TEST( CoreGroup, ControlStart )
+TEST( CoreGroup, Control )
 {
   // Construct a request for the "START" command
   ReqInfo request;
@@ -131,17 +131,65 @@ TEST( CoreGroup, ControlStart )
   // Verify the device handles a bad command
   const SSMDevice::control_t bufBad = { static_cast<SSMDevice::control_t>( 65535 ) };
   Array<const SSMDevice::control_t> srcC( &bufBad, Index( 0 ), Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.statusCtrlWrite( srcC, &request ) );
+  CHECK_THROWS( AcnetError, device.statusCtrlWrite( srcC, &request ) );  
+}
+
+/**
+ * Control Property / Start Command Tests
+ *
+ * Tests setting the "START" command for the SSM device basic control property.
+ */
+TEST( CoreGroup, ControlStart )
+{
+  // Construct a request for the "START" command
+  ReqInfo request;
+  const SSMDevice::control_t buf = { SSMDevice::CONTROL_START };
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
   
   // Verify that we are in the IDLE state
   SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
   CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
   
   // Send
-  Array<const SSMDevice::control_t> srcD( &buf, Index( 0 ), Count( 1 ) );
-  device.statusCtrlWrite( srcD, &request );
+  Array<const SSMDevice::control_t> src( &buf, Index( 0 ), Count( 1 ) );
+  device.statusCtrlWrite( src, &request );
   
-  // After starting the SSM mock driver should run this it's spill cycles and end in the FAULT state
+  // After starting the SSM mock driver should run this it's spill cycles and end
+  // in the FAULT state
   smc.waitForSSMState( SSM_FAULT, 100, 10 );
   CHECK_EQUAL( SSM_FAULT, smc.ssmBlockGet().currentStateGet() );
+}
+
+/**
+ * Control Property / Reset Command Tests
+ *
+ * Tests setting the "RESET" command for the SSM device basic control property.
+ */
+TEST( CoreGroup, ControlReset )
+{
+  // Construct a request for the "RESET" command
+  ReqInfo request;
+  const SSMDevice::control_t buf = { SSMDevice::CONTROL_RESET };
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  
+  // Verify that we are in the IDLE state
+  SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
+  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  
+  // First, start the SSM
+  ControlMQClient cmq( Controller::TEST_DAEMON_CMQ_NAME );
+  cmq.start();
+  
+  // After starting the SSM mock driver should run this it's spill cycles and end
+  // in the FAULT state
+  smc.waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, smc.ssmBlockGet().currentStateGet() );
+
+  // Now send the reset command
+  Array<const SSMDevice::control_t> src( &buf, Index( 0 ), Count( 1 ) );
+  device.statusCtrlWrite( src, &request );
+
+  // And the SSM mock driver should return to the IDLE state
+  smc.waitForSSMState( SSM_IDLE, 100, 10 );
+  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
 }

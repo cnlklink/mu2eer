@@ -52,6 +52,13 @@ namespace Mu2eER
     void initialize();
 
     /**
+     * Reset
+     *
+     * Resets the spill state machine to the initial / idle state.
+     */
+    void reset();
+
+    /**
      * Run
      *
      * Enter the SSM event loop.

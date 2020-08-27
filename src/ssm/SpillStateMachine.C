@@ -67,13 +67,20 @@ SpillStateMachine::~SpillStateMachine()
 
 void SpillStateMachine::initialize()
 {
-  cout << "Initializing Spill Statate Machine...";
-
   // Initialize firmware
   _ssmDev->initialize();
   _smbUpdate();
+}
 
-  cout << " done." << endl;
+void SpillStateMachine::reset()
+{
+  // Stop the thread
+  stop();
+
+  // Reset the SSM
+  _ssmDev->reset();
+
+  _smbUpdate();
 }
 
 void SpillStateMachine::run()

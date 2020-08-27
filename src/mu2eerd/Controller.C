@@ -109,6 +109,12 @@ void Controller::_createMQ()
 
 }
 
+void Controller::_handleReset()
+{
+  // Reset just an alias for initialize
+  _ssm.reset();
+}
+
 void Controller::_handleShutdown()
 {
   // Shutdown tasks...
@@ -164,6 +170,10 @@ void Controller::_processMessages()
 
             case COMMAND_SSM_INIT:
               _handleSSMInit();
+              break;
+
+            case COMMAND_RESET:
+              _handleReset();
               break;
 
             case COMMAND_START:

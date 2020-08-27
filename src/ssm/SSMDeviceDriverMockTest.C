@@ -315,6 +315,34 @@ TEST( CoreGroup, Delay )
 }
 
 /**
+* Test Reset
+*
+* Verifies that resetting the mock returns us to the initial state.
+*/
+TEST( CoreGroup, Reset )
+{
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+  CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
+  CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+
+  // Make a sequence with 2 spills
+  _gDriver->loadSpillSequence( 2 );
+
+  _gDriver->initialize();
+
+  // Step through the entire sequence
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_FAULT, _gDriver->stateGet() );
+  CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
+  CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
+
+  _gDriver->reset();
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+  CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
+  CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+}
+
+/**
  * Test Default Config Load
  *
  * Verifies that we load a default configuration without error.

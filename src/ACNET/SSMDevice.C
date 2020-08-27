@@ -106,6 +106,7 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
   switch( src[0] )
     {
     case CONTROL_RESET:
+      cmq.reset();
       return;
 
     case CONTROL_START:
