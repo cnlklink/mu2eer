@@ -56,9 +56,9 @@ TEST_GROUP( MockLinearGroup )
  *
  * Verify that we can initialize the SSM and SMM modules with a basic configuration
  * and initialize the shared memory array.
- */
- TEST( MockLinearGroup, Initialize )
- {
+*/
+TEST( MockLinearGroup, Initialize )
+{
    int i = 0, size = 0, j = 15999;
    const int *arr;
 
@@ -77,4 +77,4 @@ TEST_GROUP( MockLinearGroup )
    }
 
    cout << "Mock linear test done" << endl;
- }
+}
