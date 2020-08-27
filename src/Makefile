@@ -32,6 +32,9 @@ MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 # -fprofile-arcs and -ftest-coverage enable gcov test coverage analysis
 TEST_FLAGS      = -lCppUTest -lCppUTestExt -fprofile-arcs -ftest-coverage 
 
+# Flags passed when the tests are ran
+TEST_RUN_FLAGS  ?= -c
+
 # -lrt needed for POSIX shared memory
 DEV_LIBS        = -lconfig++ -lrt
 TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt

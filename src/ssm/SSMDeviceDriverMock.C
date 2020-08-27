@@ -64,6 +64,16 @@ void SSMDeviceDriverMock::loadSpillSequence( unsigned int spills )
   stateSequenceSet( sequence );
 }
 
+void SSMDeviceDriverMock::reset()
+{
+  _delay = 0;
+  _spillCount = 0;
+  _state = SSM_IDLE;
+  _timeInSpill = 0;
+  _initialSequence.clear();
+  _stateSequence.clear();
+}
+
 void SSMDeviceDriverMock::_resetSequence()
 {
   _stateSequence.clear();
@@ -74,11 +84,8 @@ void SSMDeviceDriverMock::_resetSequence()
 }
 
 SSMDeviceDriverMock::SSMDeviceDriverMock()
-  : _delay( 0 ),
-    _spillCount( 0 ),
-    _state( SSM_IDLE ),
-    _timeInSpill( 0 )
 {
+  reset();
 }
 
 SSMDeviceDriverMock::SSMDeviceDriverMock( const vector<ssm_state_t>& sequence )

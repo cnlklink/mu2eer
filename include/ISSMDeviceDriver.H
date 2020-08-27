@@ -64,6 +64,13 @@ namespace Mu2eER
     virtual ~ISSMDeviceDriver();
 
     /**
+     * Reset firmware
+     *
+     * Send a message to the firmware to reset.
+     */
+    virtual void reset() = 0;
+
+    /**
      * Read Spill Counter
      *
      * @return The number of spills observed since the device was initialized

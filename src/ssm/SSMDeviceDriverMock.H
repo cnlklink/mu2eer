@@ -47,6 +47,9 @@ namespace Mu2eER
      */
     void loadSpillSequence( unsigned int spills );
 
+    // Override
+    void reset();
+
     /**
      * Default Constructor
      */
