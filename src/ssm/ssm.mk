@@ -12,7 +12,7 @@ SSM_LIBS        = ssm.a config.a api.a
 SSM_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(SSM_LIBS))
 SSM_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(SSM_LIBS))
 
-SSM_OBJS        = ISSMDeviceDriver.o SSMDeviceDriverMock.o SpillStateMachine.o SpillStateMachineSMB.o
+SSM_OBJS        = ISSMDeviceDriver.o SSMDeviceDriverMock.o SpillStateMachine.o
 SSM_OBJS_PREFIX = $(addprefix ssm/,$(SSM_OBJS))
 SSM_OBJS_HOST   = $(addprefix $(SSM_HOST_OUT)/,$(SSM_OBJS))
 SSM_OBJS_TARGET = $(addprefix $(SSM_TARGET_OUT)/,$(SSM_OBJS))
