@@ -26,7 +26,7 @@ static ConfigurationManager _cm;
 /**
  * Shared memory manager for testing
  */
-static SharedMemoryManager _shmm( "mu2eer_test" );
+static SharedMemoryManager* _shmm;
 
 /**
  * A global SpillStateMachine object used for all tests
@@ -46,7 +46,7 @@ void pollForCycles( unsigned int n, unsigned int wait = 5, unsigned int timeout 
 {
   unsigned int totalWait = 0;
 
-  auto& smb = _shmm.ssmBlockGet();
+  auto& smb = _shmm->ssmBlockGet();
 
   while( smb.spillCounterGet() < n )
     {
@@ -69,12 +69,14 @@ TEST_GROUP( InitGroup )
 {
   void setup()
   {
-    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+    _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    delete _shmm;
   }
 };
 
@@ -85,7 +87,7 @@ TEST_GROUP( InitGroup )
  */
 TEST( InitGroup, Initialize )
 {
-  auto& smb = _shmm.ssmBlockGet();
+  auto& smb = _shmm->ssmBlockGet();
 
   CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
 
@@ -108,12 +110,14 @@ TEST_GROUP( SpillCounterGroup )
   void setup()
   {
     _cm.ssmGet().mockSpillsSet( 5 );
-    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+    _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    delete _shmm;
     _cm.ssmGet().mockSpillsSet( 0 );
   }
 };
@@ -126,7 +130,7 @@ TEST_GROUP( SpillCounterGroup )
 TEST( SpillCounterGroup, InitialValueIsZero )
 {
   _ssm->initialize();
-  CHECK_EQUAL( 0, _shmm.ssmBlockGet().spillCounterGet() );
+  CHECK_EQUAL( 0, _shmm->ssmBlockGet().spillCounterGet() );
 }
 
 /**
@@ -136,7 +140,7 @@ TEST( SpillCounterGroup, InitialValueIsZero )
  */
 TEST( SpillCounterGroup, ResetToZero )
 {
-  auto& smb = _shmm.ssmBlockGet();
+  auto& smb = _shmm->ssmBlockGet();
 
   // Ask for 5 fake spills
   _ssm->initialize();
@@ -162,12 +166,14 @@ TEST_GROUP( ThreadGroup )
 {
   void setup()
   {
-    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+    _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    delete _shmm;
   }
 };
 
@@ -178,7 +184,7 @@ TEST_GROUP( ThreadGroup )
  */
 TEST( ThreadGroup, TestInitialState )
 {
-  CHECK_EQUAL( false, _shmm.ssmBlockGet().threadRunningGet() );
+  CHECK_EQUAL( false, _shmm->ssmBlockGet().threadRunningGet() );
 }
 
 /**
@@ -188,7 +194,7 @@ TEST( ThreadGroup, TestInitialState )
  */
 TEST( ThreadGroup, TestRunning )
 {
-  auto& smb = _shmm.ssmBlockGet();
+  auto& smb = _shmm->ssmBlockGet();
 
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
@@ -215,12 +221,14 @@ TEST_GROUP( MockLinearInitGroup )
 {
   void setup()
   {
-    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+    _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
   }
 
   void teardown()
   {
     delete _ssm;
+    delete _shmm;
   }
 };
 
@@ -234,20 +242,20 @@ TEST( MockLinearInitGroup, Initialize )
 {
   int i = 0, size = 0, j = 15999;
   const int *arr;
-  
-  auto& smb = _shmm.ssmBlockGet();
+
+  auto& smb = _shmm->ssmBlockGet();
   _ssm->initialize();
   size = smb.dataSizeGet();
 
   cout << "Mock linear test : Testing Initializing spill state & shared memory" << endl;
   smb.initialize();
   smb.addLinearData();
-  arr = smb.dataGet(); 
+  arr = smb.dataGet();
 
   for ( i = 0; i < size; i++ ) {
    CHECK_EQUAL( j , arr[i] );
    j--;
   }
-  
+
   cout << "Mock linear test done" << endl;
 }
