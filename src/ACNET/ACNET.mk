@@ -82,5 +82,5 @@ acnet_tests: $(BIN_DIR) $(ACNET_TEST_OBJS_PREFIX) $(ACNET_ADC_OBJS_PREFIX) $(ACN
 		$(ACNET_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
-	@./$(ACNET_HOST_OUT)/acnet_tests
+	@./$(ACNET_HOST_OUT)/acnet_tests $(TEST_RUN_FLAGS)
 

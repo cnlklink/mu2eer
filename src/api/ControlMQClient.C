@@ -26,6 +26,13 @@ ControlMQClient::~ControlMQClient()
   mq_close( _mq );
 }
 
+void ControlMQClient::reset()
+{
+  control_msg_t msg;
+  msg.command = COMMAND_RESET;
+  _send( msg );
+}
+
 void ControlMQClient::shutdown()
 {
   control_msg_t msg;

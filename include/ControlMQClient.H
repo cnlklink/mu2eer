@@ -55,6 +55,13 @@ namespace Mu2eER
     void ssmInit();
 
     /**
+     * Reset the Spill State Machine
+     *
+     * Reset slow spill regulation.
+     */
+    void reset();
+
+    /**
      * Start the Spill State Machine
      *
      * Start the slow spill regulation.

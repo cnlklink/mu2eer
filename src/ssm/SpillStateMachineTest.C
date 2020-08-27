@@ -158,6 +158,34 @@ TEST( SpillCounterGroup, ResetToZero )
 }
 
 /**
+ * Test Reset
+ *
+ * Verify that we can reset the SSM module.
+ */
+TEST( SpillCounterGroup, Reset )
+{
+  auto& smb = _shmm.ssmBlockGet();
+
+  CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
+
+  _ssm->initialize();
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smb.currentStateGet() );
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
+  CHECK_EQUAL( 0, smb.timeInSpillGet() );
+
+  _ssm->run();
+  pollForCycles( 5 );
+  CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
+  CHECK_EQUAL( 5, smb.spillCounterGet() );
+  CHECK_EQUAL( 107, smb.timeInSpillGet() );
+
+  _ssm->reset();
+  CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
+  CHECK_EQUAL( 0, smb.spillCounterGet() );
+  CHECK_EQUAL( 0, smb.timeInSpillGet() );
+}
+
+/**
  * Thread Group
  *
  * Tests related to the operation of the SSM thread.
