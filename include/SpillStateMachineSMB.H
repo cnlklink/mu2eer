@@ -3,7 +3,7 @@
  *
  * This file contains the definition of the SpillStateMachineSMB class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #ifndef SPILLSTATEMACHINESMB_H
