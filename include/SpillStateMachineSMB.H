@@ -90,23 +90,21 @@ namespace Mu2eER
     /**
      * Get Data Array
      *
-     * @return Array holding data
+     * @return Array Holding Data
      */
     const int* dataGet() const;
 
     /**
-     * Get Data Array
+     * Get Data Array Size
      *
-     * @return Array holding data
+     * @return Size of Array
      */
     int dataSizeGet() const;
 
     /**
-     * Get Data Array
-     *
-     * @return Array holding data
+     * Transform Data Into Ideal Spill Waveform
      */
-     void addLinearData();
+     void idealSpillWaveform();
 
   private:
     /**

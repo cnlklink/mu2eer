@@ -74,7 +74,7 @@ int SpillStateMachineSMB::dataSizeGet() const
   return _dataSize;
 }
 
-void SpillStateMachineSMB::addLinearData()
+void SpillStateMachineSMB::idealSpillWaveform()
 {
   int i = 0, j = 0;
   for (i = 15999; i >= 0; i--)
