@@ -51,7 +51,11 @@ int main( int argc, char* argv[] )
   string cfgfile = ConfigurationManager::hostConfigFileGet();
   fstream fs;
   fs.open( cfgfile );
-  if( !fs.fail() )
+  if( fs.fail() )
+    {
+      syslog( LOG_INFO, "Could not open %s", cfgfile.c_str() );
+    }
+  else
     {
       loadConfigFlag = true;
     }
