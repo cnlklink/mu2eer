@@ -159,8 +159,12 @@ TEST( ConstructionGroup, DuplicateMQs )
 TEST( ConstructionGroup, InstatiateTwo )
 {
   ConfigurationManager cm;
-  Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
-  Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
+  {
+    Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
+  }
+  {
+    Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
+  }
 }
 
 TEST( ConstructionGroup, Instatiation )
