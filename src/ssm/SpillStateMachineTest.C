@@ -164,7 +164,7 @@ TEST( SpillCounterGroup, ResetToZero )
  */
 TEST( SpillCounterGroup, Reset )
 {
-  auto& smb = _shmm.ssmBlockGet();
+  auto& smb = _shmm->ssmBlockGet();
 
   CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
 
