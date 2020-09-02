@@ -22,8 +22,8 @@ DumpCommand::DumpCommand( ControlMQClient& mqc, SharedMemoryClient& shmc )
 void DumpCommand::run( unsigned int argc, const char* argv[] )
 {
   int i = 0;
-  int size = _shmc.ssmBlockGet().dataSizeGet();
-  const int* arr = _shmc.ssmBlockGet().dataGet();
+  int size = _shmc.ssmBlockGet().idealSpillWaveFormSizeGet();
+  const int* arr = _shmc.ssmBlockGet().idealSpillWaveFormGet();
 
   std::ofstream fileToCreate("ideal_spill_data.csv");
   fileToCreate << "Entry, Ideal Spill Data" << endl << endl;
