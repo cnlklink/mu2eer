@@ -92,14 +92,14 @@ namespace Mu2eER
      *
      * @return Array Holding Data
      */
-    const int* dataGet() const;
+    const int* idealSpillWaveFormGet() const;
 
     /**
      * Get Data Array Size
      *
      * @return Size of Array
      */
-    int dataSizeGet() const;
+    int idealSpillWaveFormSizeGet() const;
 
     /**
      * Transform Data Into Ideal Spill Waveform

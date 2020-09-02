@@ -65,12 +65,12 @@ void SpillStateMachineSMB::timeInSpillSet( float tis )
   _timeInSpill = tis;
 }
 
-const int* SpillStateMachineSMB::dataGet() const
+const int* SpillStateMachineSMB::idealSpillWaveFormGet() const
 {
    return _data;
 }
 
-int SpillStateMachineSMB::dataSizeGet() const
+int SpillStateMachineSMB::idealSpillWaveFormSizeGet() const
 {
   return _dataSize;
 }

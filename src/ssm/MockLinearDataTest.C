@@ -63,9 +63,9 @@ TEST( MockLinearGroup, Initialize )
 
    auto& smb = _shmm->ssmBlockGet();
    _ssm->initialize();
-   size = smb.dataSizeGet();
+   size = smb.idealSpillWaveFormSizeGet();
    smb.initialize();
-   arr = smb.dataGet();
+   arr = smb.idealSpillWaveFormGet();
 
    for ( i = 0; i < size; i++ ) {
     CHECK_EQUAL( j , arr[i] );
