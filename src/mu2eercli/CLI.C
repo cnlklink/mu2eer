@@ -11,6 +11,7 @@
 #include "ShowCommand.H"
 #include "ShutdownCommand.H"
 #include "StartCommand.H"
+#include "DumpCommand.H"
 
 using namespace Mu2eER;
 using namespace std;
@@ -23,6 +24,7 @@ CLI::CLI( const string cmqName, const string shmcName )
   _commands["show"] = unique_ptr<Command>( new ShowCommand( _mqc, _shmc ) );
   _commands["shutdown"] = unique_ptr<Command>( new ShutdownCommand( _mqc, _shmc ) );
   _commands["start"] = unique_ptr<Command>( new StartCommand( _mqc, _shmc ) );
+  _commands["dump"] = unique_ptr<Command>( new DumpCommand( _mqc, _shmc ) );
 }
 
 void CLI::run( unsigned int argc, const char* argv[] )
