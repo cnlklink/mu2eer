@@ -130,12 +130,12 @@ namespace Mu2eER
     /**
      * Size of array
      */
-    int _dataSize = 16000;
+    int _idealSpillWaveFormSize = 16000;
 
     /**
      * Data array
      */
-    int _data[16000];
+    int _idealSpillWaveFormData[16000];
   };
 };
 
