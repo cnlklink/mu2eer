@@ -343,6 +343,19 @@ TEST( CoreGroup, Reset )
 }
 
 /**
+ * Test Fault
+ *
+ * Verifies that faulting the mock puts us in the FAULT state.
+ */
+TEST( CoreGroup, Fault )
+{
+  CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
+
+  _gDriver->fault();
+  CHECK_EQUAL( SSM_FAULT, _gDriver->stateGet() );
+}
+
+/**
  * Test Default Config Load
  *
  * Verifies that we load a default configuration without error.

@@ -47,6 +47,13 @@ namespace Mu2eER
     static unique_ptr<ISSMDeviceDriver> factory( string driverId );
 
     /**
+     * Fault firmware
+     *
+     * Place the firmware in the fault state.
+     */
+    virtual void fault() = 0;
+
+    /**
      * Initialize firmware
      *
      * Send a message to the firmware to initlialize (or re-initialize).

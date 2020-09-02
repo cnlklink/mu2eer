@@ -232,3 +232,39 @@ TEST( ThreadGroup, TestRunning )
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
 }
+
+/**
+ * Operation Group
+ *
+ * Tests related to the operation of the SSM.
+ */
+TEST_GROUP( OperationGroup )
+{
+  void setup()
+  {
+    _ssm = new SpillStateMachine( _cm, _shmm.ssmBlockGet() );
+  }
+
+  void teardown()
+  {
+    delete _ssm;
+  }
+};
+
+/**
+ * Test Fault
+ *
+ * Verify that the SSM goes to the SSM_FAULT state when requested.
+ */
+TEST( OperationGroup, TestFault )
+{
+  auto& smb = _shmm.ssmBlockGet();
+
+  _ssm->initialize();
+
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smb.currentStateGet() );
+
+  _ssm->fault();
+
+  CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
+}

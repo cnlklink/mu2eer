@@ -45,6 +45,13 @@ namespace Mu2eER
     ~SpillStateMachine();
 
     /**
+     * Fault
+     *
+     * Place the Spill State Machine in the fault state (for testing / debugging).
+     */
+    void fault();
+
+    /**
      * Initialize
      *
      * Initializes the spill state machine.

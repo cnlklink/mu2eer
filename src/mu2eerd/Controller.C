@@ -109,6 +109,11 @@ void Controller::_createMQ()
 
 }
 
+void Controller::_handleFault()
+{
+  _ssm.fault();
+}
+
 void Controller::_handleReset()
 {
   // Reset just an alias for initialize
@@ -164,6 +169,10 @@ void Controller::_processMessages()
 	  // Handle according to the command
 	  switch( msg.command )
 	    {
+            case COMMAND_FAULT:
+              _handleFault();
+              return;
+
 	    case COMMAND_SHUTDOWN:
               _handleShutdown();
 	      return;

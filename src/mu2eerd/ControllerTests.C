@@ -335,3 +335,15 @@ TEST( OperationGroup, ResetSSM )
   CHECK_EQUAL( 0, ssm.spillCounterGet() );
   CHECK_EQUAL( 0, ssm.timeInSpillGet() );
 }
+
+TEST( OperationGroup, FaultSSM )
+{
+  auto& ssm = _shmc->ssmBlockGet();
+
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, ssm.currentStateGet() );
+  
+  _mqc->fault();
+  _shmc->waitForSSMState( SSM_FAULT, 100, 10 );
+  
+  CHECK_EQUAL( SSM_FAULT, ssm.currentStateGet() );
+}

@@ -9,7 +9,9 @@ MU2EERCLI_OBJS        = \
 	main.o \
 	CLI.o \
 	Command.o \
+	FaultCommand.o \
 	PIDCommand.o \
+	ResetCommand.o \
 	ShutdownCommand.o \
 	ShowCommand.o \
 	StartCommand.o
@@ -21,7 +23,9 @@ MU2EERCLI_TEST_OBJS        = \
 	AllTests.o \
 	CLITests.o CLI.o \
 	Command.o \
+	FaultCommand.o \
 	PIDCommand.o \
+	ResetCommand.o \
 	ShutdownCommand.o \
 	ShowCommand.o \
 	StartCommand.o

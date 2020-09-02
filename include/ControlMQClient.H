@@ -41,6 +41,13 @@ namespace Mu2eER
     ~ControlMQClient();
 
     /**
+     * Cause a Spill State Machine Fault
+     *
+     * Trigger the SSM to go to the fault state (for testing and debugging).
+     */
+    void fault();
+
+    /**
      * Shutdown
      *
      * Sends CMD_SHUTDOWN to bpmd.

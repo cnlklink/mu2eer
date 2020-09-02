@@ -65,6 +65,13 @@ SpillStateMachine::~SpillStateMachine()
   stop();
 }
 
+void SpillStateMachine::fault()
+{
+  _ssmDev->fault();
+
+  _smbUpdate();
+}
+
 void SpillStateMachine::initialize()
 {
   // Initialize firmware
