@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the SSMDevice class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <syslog.h>
@@ -17,14 +17,14 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
-  registerMethod( ATTR_STATE_READING, 
-                  *this, 
-                  &SSMDevice::stateRead, 
+  registerMethod( ATTR_STATE_READING,
+                  *this,
+                  &SSMDevice::stateRead,
                   STATE_READING_MAX );
 
-  registerMethod( ATTR_SPILL_COUNTER_READING, 
-                  *this, 
-                  &SSMDevice::spillCounterRead, 
+  registerMethod( ATTR_SPILL_COUNTER_READING,
+                  *this,
+                  &SSMDevice::spillCounterRead,
                   SPILL_COUNTER_READING_MAX );
 
   registerMethods( ATTR_STATUS_CONTROL,
@@ -32,9 +32,14 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                    &SSMDevice::statusCtrlRead,
                    &SSMDevice::statusCtrlWrite,
                    1 );
+
+  registerMethod( ATTR_IDEAL_SPILL_READING,
+                   *this,
+                   &SSMDevice::idealSpillRead,
+                   IDEAL_SPILL_READING_MAX );
 }
 
-void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest, 
+void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
                                   ReqInfo const* reqinfo )
 {
   if( dest.offset.getValue() > static_cast<int>( SPILL_COUNTER_READING_MAX ) )
@@ -42,7 +47,7 @@ void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
       throw Ex_BADOFF;
     }
 
-  if( (dest.offset.getValue() + dest.total.getValue()) > 
+  if( (dest.offset.getValue() + dest.total.getValue()) >
       static_cast<int>( SPILL_COUNTER_READING_MAX ) )
     {
       throw Ex_BADOFLEN;
@@ -116,5 +121,33 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
     default:
       syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
       throw Ex_BADSET;
+    }
+}
+
+void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
+                                  ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      for ( i = 0; i < IDEAL_SPILL_READING_MAX; i++ ) {
+        dest[i] = arr[i];
+      }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
     }
 }
