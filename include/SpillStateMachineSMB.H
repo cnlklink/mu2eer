@@ -3,7 +3,7 @@
  *
  * This file contains the definition of the SpillStateMachineSMB class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #ifndef SPILLSTATEMACHINESMB_H
@@ -25,6 +25,11 @@ namespace Mu2eER
      * Constructor
      */
     SpillStateMachineSMB();
+
+    /**
+     * Initialize
+     */
+    void initialize();
 
     /**
      * Set Current State
@@ -82,6 +87,25 @@ namespace Mu2eER
      */
     void timeInSpillSet( float tis );
 
+    /**
+     * Get Data Array
+     *
+     * @return Array Holding Data
+     */
+    const int* idealSpillWaveFormGet() const;
+
+    /**
+     * Get Data Array Size
+     *
+     * @return Size of Array
+     */
+    int idealSpillWaveFormSizeGet() const;
+
+    /**
+     * Transform Data Into Ideal Spill Waveform
+     */
+     void idealSpillWaveform();
+
   private:
     /**
      * Current state
@@ -102,6 +126,16 @@ namespace Mu2eER
      * Time spent in the last spill cycle (ms)
      */
     float _timeInSpill;
+
+    /**
+     * Size of array
+     */
+    int _idealSpillWaveFormSize = 16000;
+
+    /**
+     * Data array
+     */
+    int _idealSpillWaveFormData[16000];
   };
 };
 

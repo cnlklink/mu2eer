@@ -152,16 +152,24 @@ TEST( ConstructionGroup, DuplicateMQs )
 {
   ConfigurationManager cm;
   Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
-  
   CHECK_THROWS( api_error, Controller( cm, "/mu2eer_test", "mu2eer_test2" ) );
 }
 
+/**
+  jsd - 9/4/2020
+NOT SUPPORTED - two controllers is not needed right now.  The problem is that a regular user
+does not seem to have permission to mlock() more than one shm.
 TEST( ConstructionGroup, InstatiateTwo )
 {
   ConfigurationManager cm;
-  Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
-  Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
+  {
+    Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
+  }
+  {
+    Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
+  }
 }
+*/
 
 TEST( ConstructionGroup, Instatiation )
 {

@@ -63,7 +63,7 @@ TEST_GROUP( PIDGroup )
   {
     delete _cli;
 
-    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
     Controller::testDaemonCleanup();
   }
@@ -113,12 +113,12 @@ TEST( ShutdownGroup, Run )
 {
   unsigned int argc = 2;
   const char *argv[] = { "mu2eercli", "shutdown" };
-  
+
   SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
 
   // Because we're running in the same process as the test daemon, this should timeout...
   CHECK_THROWS( Error, _cli->run( argc, argv ) );
-  
+
   // But then we should be in the shutdown state
   CHECK_EQUAL( MU2EERD_SHUTDOWN, shmc.currentStateGet() );
 }
@@ -144,7 +144,7 @@ TEST_GROUP( ShowGroup )
   {
     delete _cli;
 
-    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
     Controller::testDaemonCleanup();
   }
@@ -179,7 +179,7 @@ TEST_GROUP( StartGroup )
   {
     delete _cli;
 
-    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
     Controller::testDaemonCleanup();
   }
@@ -189,7 +189,42 @@ TEST( StartGroup, Run )
 {
   unsigned int argc = 2;
   const char *argv[] = { "mu2eercli", "start" };
-  
+
+  _cli->run( argc, argv );
+}
+
+/**
+ * Dump Command Tests
+ *
+ * Tests related to executing the "dump" command.
+ */
+TEST_GROUP( DumpGroup )
+{
+  void setup()
+  {
+    Controller::testDaemonStart();
+
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
+
+    _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+  }
+
+  void teardown()
+  {
+    delete _cli;
+
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
+    mqc.shutdown();
+    Controller::testDaemonCleanup();
+  }
+};
+
+TEST( DumpGroup, Run )
+{
+  unsigned int argc = 2;
+  const char *argv[] = { "mu2eercli", "dump" };
+
   _cli->run( argc, argv );
 }
 
@@ -214,7 +249,7 @@ TEST_GROUP( FaultGroup )
   {
     delete _cli;
 
-    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
     Controller::testDaemonCleanup();
   }

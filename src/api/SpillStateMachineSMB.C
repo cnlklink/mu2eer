@@ -3,8 +3,10 @@
  *
  * This file contains the implementation of the SpillStateMachineSMB class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
+
+#include <iostream>
 
 #include "SpillStateMachineSMB.H"
 
@@ -14,6 +16,13 @@ using namespace std;
 SpillStateMachineSMB::SpillStateMachineSMB()
   : _currentState( SSM_UNKNOWN )
 {
+}
+
+void SpillStateMachineSMB::initialize()
+{
+  cout << "Initializing Spill State Machine Shared Memory...";
+  idealSpillWaveform();
+  cout << " done." << endl;
 }
 
 void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
@@ -54,4 +63,23 @@ float SpillStateMachineSMB::timeInSpillGet() const
 void SpillStateMachineSMB::timeInSpillSet( float tis )
 {
   _timeInSpill = tis;
+}
+
+const int* SpillStateMachineSMB::idealSpillWaveFormGet() const
+{
+   return _idealSpillWaveFormData;
+}
+
+int SpillStateMachineSMB::idealSpillWaveFormSizeGet() const
+{
+  return _idealSpillWaveFormSize;
+}
+
+void SpillStateMachineSMB::idealSpillWaveform()
+{
+  int i = 0, j = 0;
+  for (i = 15999; i >= 0; i--)
+  {
+      _idealSpillWaveFormData[j++] = i;
+  }
 }

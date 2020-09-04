@@ -114,7 +114,7 @@ namespace Mu2eER
      *
      * @return New state
      */
-    ssm_state_t _waitForStateChange() const;    
+    ssm_state_t _waitForStateChange() const;
   };
 };
 

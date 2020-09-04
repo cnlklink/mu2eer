@@ -122,7 +122,7 @@ void SpillStateMachine::stop()
   _smbUpdate();
 }
 
-void SpillStateMachine::_smbUpdate() 
+void SpillStateMachine::_smbUpdate()
 {
   _smb.currentStateSet( _ssmDev->stateGet() );
   _smb.spillCounterSet( _ssmDev->spillCounterGet() );

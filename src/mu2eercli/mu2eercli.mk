@@ -14,7 +14,8 @@ MU2EERCLI_OBJS        = \
 	ResetCommand.o \
 	ShutdownCommand.o \
 	ShowCommand.o \
-	StartCommand.o
+	StartCommand.o \
+	DumpCommand.o
 MU2EERCLI_OBJS_PREFIX = $(addprefix mu2eercli/,$(MU2EERCLI_OBJS))
 MU2EERCLI_OBJS_HOST   = $(addprefix $(MU2EERCLI_HOST_OUT)/,$(MU2EERCLI_OBJS))
 MU2EERCLI_OBJS_TARGET = $(addprefix $(MU2EERCLI_TARGET_OUT)/,$(MU2EERCLI_OBJS))
@@ -28,7 +29,8 @@ MU2EERCLI_TEST_OBJS        = \
 	ResetCommand.o \
 	ShutdownCommand.o \
 	ShowCommand.o \
-	StartCommand.o
+	StartCommand.o \
+	DumpCommand.o
 MU2EERCLI_TEST_OBJS_PREFIX = $(addprefix mu2eercli/,$(MU2EERCLI_TEST_OBJS))
 MU2EERCLI_TEST_OBJS_HOST   = $(addprefix $(MU2EERCLI_HOST_OUT)/,$(MU2EERCLI_TEST_OBJS))
 
@@ -43,7 +45,7 @@ ALL_COVERAGE    += $(MU2EERCLI_OBJS_HOST)
 $(MU2EERCLI_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(MU2EERCLI_TARGET_OUT)
 
-$(MU2EERCLI_HOST_OUT): 
+$(MU2EERCLI_HOST_OUT):
 	$(EES_OUT) mkdir -p $(MU2EERCLI_HOST_OUT)
 
 mu2eercli_clean:

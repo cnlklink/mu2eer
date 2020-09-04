@@ -7,6 +7,7 @@
  */
 
 #include <errno.h>
+#include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -109,18 +110,29 @@ SharedMemoryManager::SharedMemoryManager( const string& name )
   // Resize accordingly
   if( -1 == ftruncate( _fd, _size ) )
     {
+      close( _fd );
+      shm_unlink( _name.c_str() );
+      
       throw API_SHM_TRUNCFAIL;
     }
 
   // Map into our address space
   if( MAP_FAILED == (_ptr = mmap( 0, _size, PROT_READ | PROT_WRITE, MAP_SHARED, _fd, 0 )) )
     {
+      close( _fd );
+      shm_unlink( _name.c_str() );
+
       throw API_SHM_MAPFAIL;
     }
 
   // Lock the shared memory into physical address space (necessary for transfering DAQ data via DMA)
   if( mlock( _ptr, _size ) )
     {
+      munmap( _ptr, _size );
+
+      close( _fd );
+      shm_unlink( _name.c_str() );
+
       throw API_SHM_LOCKFAIL;
     }
 
@@ -136,6 +148,7 @@ SharedMemoryManager::~SharedMemoryManager()
       munmap( _ptr, _size );
 
       // Delete the shared memory region
+      close( _fd );
       shm_unlink( _name.c_str() );
     }
 }
