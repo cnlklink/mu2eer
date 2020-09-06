@@ -23,5 +23,18 @@ ResetCommand::ResetCommand( ControlMQClient& mqc, SharedMemoryClient& shmc )
 
 void ResetCommand::run( unsigned int argc, const char* argv[] )
 {
-  cout << "Spill state machine has been reset." << endl;
+  cout << "Requesting spill state machin reset...";
+
+  try
+    {
+      _mqc.reset();
+
+      _waitForSSMState( SSM_IDLE );
+
+      cout << "Spill state machine has been reset." << endl;
+    }
+  catch( Error e )
+    {
+      cout << " FAILED!" << endl;
+    }
 }

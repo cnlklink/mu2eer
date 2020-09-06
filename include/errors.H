@@ -53,6 +53,11 @@ namespace Mu2eER
    * Start command did not complete within the timeout period
    */
   extern const Error MU2EERCLI_START_ABORTED;
+
+  /**
+   * Timeout occurred while waiting for mu2eerd
+   */
+  extern const Error MU2EERCLI_TIMEOUT;
 };
 
 #endif

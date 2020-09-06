@@ -274,3 +274,60 @@ TEST( FaultGroup, Run )
       FAIL( "Exception occured." );
     }
 }
+
+/**
+ * Reset Command Tests
+ *
+ * Tests related to executing the "reset" command.
+ */
+TEST_GROUP( ResetGroup )
+{
+  void setup()
+  {
+    Controller::testDaemonStart();
+
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
+
+    _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+  }
+
+  void teardown()
+  {
+    delete _cli;
+
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
+    mqc.shutdown();
+    Controller::testDaemonCleanup();
+  }
+};
+
+TEST( ResetGroup, Run )
+{
+  try
+    {
+      SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+      auto& smb = shmc.ssmBlockGet();
+
+      // Should be in the IDLE state when we start
+      CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
+
+      // Should be in the FAULT state after running through all of the test cycles
+      unsigned int argc = 2;
+      const char *argv[] = { "mu2eercli", "start" };
+      _cli->run( argc, argv );
+      shmc.waitForSSMState( SSM_FAULT, 5, 20 );
+      CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
+
+      // Should be IDLE again after a reset
+      argv[1] = "reset";
+      _cli->run( argc, argv );
+      shmc.waitForSSMState( SSM_IDLE, 5, 20 );
+      CHECK_EQUAL( SSM_IDLE, smb.currentStateGet() );
+    }
+  catch( Error e )
+    {
+      cout << e.what() << endl;
+      FAIL( "Exception occured." );
+    }
+}

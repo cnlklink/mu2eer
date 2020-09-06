@@ -116,7 +116,6 @@ void Controller::_handleFault()
 
 void Controller::_handleReset()
 {
-  // Reset just an alias for initialize
   _ssm.reset();
 }
 
@@ -171,7 +170,7 @@ void Controller::_processMessages()
 	    {
             case COMMAND_FAULT:
               _handleFault();
-              return;
+              break;
 
 	    case COMMAND_SHUTDOWN:
               _handleShutdown();

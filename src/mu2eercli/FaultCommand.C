@@ -7,8 +7,6 @@
  */
 
 #include <iostream>
-#include <signal.h>
-#include <thread>
 
 #include "errors.H"
 #include "FaultCommand.H"
@@ -23,26 +21,11 @@ FaultCommand::FaultCommand( ControlMQClient& mqc, SharedMemoryClient& shmc )
 
 void FaultCommand::run( unsigned int argc, const char* argv[] )
 {
-  auto& smb = _shmc.ssmBlockGet();
-
-  cout << "Request spill state machine go to the fault state... ";
+  cout << "Request spill state machine go to the fault state...";
 
   _mqc.fault();
 
-  // Wait for SSM to enter the fault state
-  unsigned int count = 0;
-  while( SSM_FAULT != smb.currentStateGet() )
-    {
-      cout << ".";
-      cout.flush();
-      this_thread::sleep_for( chrono::seconds( 1 ) );
-
-      if( ++count > 3 )
-        {
-          cout << "FAILED!" << endl;
-          throw MU2EERCLI_FAULT_ABORTED;
-        }
-    }
+  _waitForSSMState( SSM_FAULT );
 
   cout << "Spill state machine is in the fault state." << endl;
 }
