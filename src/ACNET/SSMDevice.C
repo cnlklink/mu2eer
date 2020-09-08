@@ -150,6 +150,8 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
       smb.initialize();
       idealSpillData = smb.idealSpillWaveFormGet();
       size = smb.idealSpillWaveFormSizeGet();
+      cout << "size is " << size << endl;
+      cout << "show " << dest.total.getValue() << endl;
       for ( i = 0; i < size; i++ ) {
 	dest[i] = idealSpillData[i];
       }

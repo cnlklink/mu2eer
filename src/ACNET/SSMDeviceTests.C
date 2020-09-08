@@ -210,6 +210,9 @@ TEST( CoreGroup, IdealSpillReadInitial )
   Array<SSMDevice::ideal_spill_read_t> dest( &buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );  
 
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  
+  cout << "made it here" << endl;
+  
   device.idealSpillRead( dest, &request );
 
   cout << "Made it here in SSMDevice Tests class" << endl;
