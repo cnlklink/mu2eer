@@ -152,10 +152,13 @@ TEST( ConstructionGroup, DuplicateMQs )
 {
   ConfigurationManager cm;
   Controller ctlrA( cm, "/mu2eer_test", "mu2eer_test" );
-  
   CHECK_THROWS( api_error, Controller( cm, "/mu2eer_test", "mu2eer_test2" ) );
 }
 
+/**
+  jsd - 9/4/2020
+NOT SUPPORTED - two controllers is not needed right now.  The problem is that a regular user
+does not seem to have permission to mlock() more than one shm.
 TEST( ConstructionGroup, InstatiateTwo )
 {
   ConfigurationManager cm;
@@ -166,6 +169,7 @@ TEST( ConstructionGroup, InstatiateTwo )
     Controller ctlrB( cm, "/mu2eer_test2", "mu2eer_test2" );
   }
 }
+*/
 
 TEST( ConstructionGroup, Instatiation )
 {
@@ -338,4 +342,16 @@ TEST( OperationGroup, ResetSSM )
   CHECK_EQUAL( SSM_IDLE, ssm.currentStateGet() );
   CHECK_EQUAL( 0, ssm.spillCounterGet() );
   CHECK_EQUAL( 0, ssm.timeInSpillGet() );
+}
+
+TEST( OperationGroup, FaultSSM )
+{
+  auto& ssm = _shmc->ssmBlockGet();
+
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, ssm.currentStateGet() );
+  
+  _mqc->fault();
+  _shmc->waitForSSMState( SSM_FAULT, 100, 10 );
+  
+  CHECK_EQUAL( SSM_FAULT, ssm.currentStateGet() );
 }

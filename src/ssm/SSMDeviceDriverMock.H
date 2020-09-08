@@ -35,6 +35,9 @@ namespace Mu2eER
     void delaySet( unsigned int delay );
 
     // Override
+    virtual void fault();
+
+    // Override
     virtual void initialize();
 
     /**

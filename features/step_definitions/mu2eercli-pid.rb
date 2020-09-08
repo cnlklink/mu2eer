@@ -50,6 +50,11 @@ Given("the spill state machine has been started") do
    `./bin/host/mu2eercli/mu2eercli start`
 end
 
+Given("the spill state machine is in the fault state" ) do
+  @result = `./bin/host/mu2eercli/mu2eercli fault`
+  expect( $?.exitstatus ).to eq 0
+end
+
 Given(/(.*) (does|does not) exist/) do |file_name, does_or_doesnt|
   # replace <hostname> with this node's hostname
   expect( @hostname ).not_to be_nil

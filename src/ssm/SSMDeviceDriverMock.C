@@ -29,6 +29,12 @@ void SSMDeviceDriverMock::delaySet( unsigned int delay )
   _delay = delay;
 }
 
+void SSMDeviceDriverMock::fault()
+{
+  _state = SSM_FAULT;
+  _stateSequence.clear();
+}
+
 void SSMDeviceDriverMock::initialize()
 {
   // Reset spill counter

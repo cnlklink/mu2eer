@@ -132,6 +132,13 @@ namespace Mu2eER
     void _createMQ();
 
     /**
+     * Handle Fault
+     *
+     * Invoked by _processMessages().  Handles a fault request.
+     */
+    void _handleFault();
+
+    /**
      * Handle Reset
      *
      * Invoked by _processMessages().  Handles a reset request.

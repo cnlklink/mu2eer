@@ -50,6 +50,18 @@ namespace Mu2eER
      * Reference to the mu2eerd shared memory interface
      */
     SharedMemoryClient& _shmc;
+
+    /**
+     * Wait for SSM State
+     *
+     * Waits for the SSM to transition to the given state.  Prints a "." every delay until the
+     * max is reached.  Throws MU2EERCLI_TIMEOUT if max is reached.
+     *
+     * @param state State to wait for
+     * @param delay Delay between state checks
+     * @param max Maximum number of state checks 
+     */
+    void _waitForSSMState( ssm_state_t state, unsigned int delay = 1000, unsigned int max = 3 );
   };
 };
 

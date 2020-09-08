@@ -35,6 +35,16 @@ namespace Mu2eER
   extern const Error MU2EERCLI_ARGUMENT_MISSING;
 
   /**
+   * Fault command failed.
+   */
+  extern const Error MU2EERCLI_FAULT_ABORTED;
+
+  /**
+   * Reset command failed.
+   */
+  extern const Error MU2EERCLI_RESET_ABORTED;
+
+  /**
    * Shutdown command did not complete within the timeout period
    */
   extern const Error MU2EERCLI_SHUTDOWN_ABORTED;
@@ -43,6 +53,11 @@ namespace Mu2eER
    * Start command did not complete within the timeout period
    */
   extern const Error MU2EERCLI_START_ABORTED;
+
+  /**
+   * Timeout occurred while waiting for mu2eerd
+   */
+  extern const Error MU2EERCLI_TIMEOUT;
 };
 
 #endif
