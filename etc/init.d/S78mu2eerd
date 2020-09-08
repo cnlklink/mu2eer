@@ -10,7 +10,7 @@
 case "$1" in
     start)
         echo "Starting mu2eerd..."
-
+        /bin/mount -o remount,rw /
 	/usr/local/products/bin/mu2eerd
         echo "OK"
         ;;
