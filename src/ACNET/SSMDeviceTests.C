@@ -13,6 +13,7 @@
 #include "CppUTest/TestHarness.h"
 
 #include "../mu2eerd/Controller.H"
+#include "SpillStateMachineSMB.H"
 
 #include "SSMDevice.H"
 
@@ -201,31 +202,35 @@ TEST( CoreGroup, ControlReset )
  */
 TEST( CoreGroup, IdealSpillReadInitial )
 {
+  int i = 0, j = 15999, size = SSMDevice::IDEAL_SPILL_READING_MAX;
+
   // Construct an ACNET request and response buffer
   ReqInfo request;
   SSMDevice::ideal_spill_read_t buf;
-  Array<SSMDevice::ideal_spill_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
+  Array<SSMDevice::ideal_spill_read_t> dest( &buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );  
 
-  // Read spill counter, should return 0 in buf
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
   device.idealSpillRead( dest, &request );
-  // just check that it's 16000 to 0?
-  CHECK_EQUAL( 0, buf );
 
+  cout << "Made it here in SSMDevice Tests class" << endl;
+  for ( i = 0; i < size; i++ ) {
+    CHECK_EQUAL( j, (int) dest[i] );
+    j--;
+  }
 
   // Handle no shared memory by throwing Ex_DEVFAILED
   SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
-  CHECK_THROWS( AcnetError, deviceB.spillCounterRead( dest, &request ) );
+  CHECK_THROWS( AcnetError, deviceB.idealSpillRead( dest, &request ) );
 
   // Handle bad offset
   Array<SSMDevice::spill_counter_read_t> destB( &buf,
                                                 Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
                                                 Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.spillCounterRead( destB, &request ) );
+  CHECK_THROWS( AcnetError, device.idealSpillRead( destB, &request ) );
 
   // Handle bad length
   Array<SSMDevice::spill_counter_read_t> destC( &buf,
                                                 Index( 0 ),
                                                 Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
-  CHECK_THROWS( AcnetError, device.spillCounterRead( destC, &request ) );
+  CHECK_THROWS( AcnetError, device.idealSpillRead( destC, &request ) );
 }
