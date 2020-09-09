@@ -10,7 +10,7 @@ Feature: mu2eercli reset command
       And an exit code of 0 is returned
 
   Scenario: I want to run the test spills twice
-    Given mu2eerd is running
+    Given mu2eerd is running with the "-c etc/mu2eer.d/reference.conf" flags
     When I pass the "start" command to mu2eercli
       And I pass the "reset" command to mu2eercli
       And I pass the "start" command to mu2eercli
