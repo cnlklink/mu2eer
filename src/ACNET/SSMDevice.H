@@ -69,7 +69,8 @@ namespace Mu2eER
     enum
       {
         CONTROL_RESET = 0x00,
-        CONTROL_START = 0x01
+        CONTROL_START = 0x01,
+        CONTROL_FAULT = 0x03
       };
 
     /**

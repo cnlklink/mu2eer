@@ -118,6 +118,10 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
       cmq.start();
       return;
 
+    case CONTROL_FAULT:
+      cmq.fault();
+      return;
+
     default:
       syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
       throw Ex_BADSET;

@@ -206,6 +206,42 @@ TEST( CoreGroup, ControlReset )
 }
 
 /**
+ * Control Property / Fault Command Tests
+ *
+ * Tests setting the "FAULT" command for the SSM device basic control property.
+ */
+TEST( CoreGroup, ControlFault )
+{
+  try
+    {
+      // Construct a request for the "FAULT" command
+      ReqInfo request;
+      const SSMDevice::control_t buf = { SSMDevice::CONTROL_FAULT };
+      SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+      
+      // Verify that we are in the BETWEEN_CYCLES state
+      SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
+      CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
+      
+      // Now send the fault command
+      Array<const SSMDevice::control_t> src( &buf, Index( 0 ), Count( 1 ) );
+      device.statusCtrlWrite( src, &request );
+      
+      // And the SSM mock driver should go to the FAULT state
+      smc.waitForSSMState( SSM_FAULT, 100, 10 );
+      CHECK_EQUAL( SSM_FAULT, smc.ssmBlockGet().currentStateGet() );
+    }
+  catch( AcnetError e )
+    {
+      FAIL( "unexpected AcnetError caught" );
+    }
+  catch( Error e )
+    {
+      FAIL( "unexpected Error caught" );
+    }
+}
+
+/**
  * Time-in-Spill Read Test
  *
  * Test the Time-in-Spill device reading property
