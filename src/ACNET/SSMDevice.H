@@ -48,13 +48,19 @@ namespace Mu2eER
     typedef uint32_t status_t;
 
     /**
+     * Time-in-spill device / reading property type
+     */
+    typedef uint32_t tis_read_t;
+
+    /**
      * SSDN Attribute IDs
      */
     enum
       {
         ATTR_STATE_READING = 0x00,
         ATTR_SPILL_COUNTER_READING = 0x01,
-        ATTR_STATUS_CONTROL = 0x02
+        ATTR_STATUS_CONTROL = 0x02,
+        ATTR_TIS_READING = 0x03
       };
 
     /**
@@ -75,6 +81,11 @@ namespace Mu2eER
      * Size of the state device / reading property return buffer
      */
     static const unsigned int STATE_READING_MAX = 1;
+
+    /**
+     * Size of the time-in-spill device / reading property return buffer
+     */
+    static const unsigned int TIS_READING_MAX = 1;
 
     /**
      * Constructor
@@ -115,6 +126,14 @@ namespace Mu2eER
      * @param reqinfo ACNET request object
      */
     void statusCtrlWrite( Array<const control_t>& src, ReqInfo const* reqinfo );
+
+    /**
+     * Time-in-Spill Device / Reading Property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void timeInSpillRead( Array<tis_read_t>& dest, ReqInfo const* reqinfo );
 
   private:
     /**

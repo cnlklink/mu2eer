@@ -193,3 +193,37 @@ TEST( CoreGroup, ControlReset )
   smc.waitForSSMState( SSM_IDLE, 100, 10 );
   CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
 }
+
+/**
+ * Time-in-Spill Read Test
+ *
+ * Test the Time-in-Spill device reading property
+ */
+TEST( CoreGroup, TimeInSpill )
+{
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::tis_read_t buf;
+  Array<SSMDevice::tis_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
+
+  // Read time in spill, should return 0 in buf
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  device.timeInSpillRead( dest, &request );
+  CHECK_EQUAL( 0, buf );
+
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS( AcnetError, deviceB.timeInSpillRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::tis_read_t> destB( &buf, 
+                                      Index( SSMDevice::TIS_READING_MAX + 1 ), 
+                                      Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.timeInSpillRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::tis_read_t> destC( &buf, 
+                                      Index( 0 ), 
+                                      Count( SSMDevice::TIS_READING_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.timeInSpillRead( destC, &request ) );
+}

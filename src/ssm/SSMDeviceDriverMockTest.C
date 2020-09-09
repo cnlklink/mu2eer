@@ -336,10 +336,15 @@ TEST( CoreGroup, Reset )
   CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
 
+  // Reset, check and run the entire sequence again
   _gDriver->reset();
   CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
   CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+  CHECK_EQUAL( SSM_FAULT, _gDriver->stateGet() );
+  CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
+  CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
 }
 
 /**
