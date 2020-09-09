@@ -56,7 +56,7 @@ void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
   try
     {
       SharedMemoryClient shmc( _shmName );
-      dest[0] = 0;
+      dest[0] = shmc.ssmBlockGet().spillCounterGet();
     }
   catch( runtime_error e )
     {
@@ -141,7 +141,7 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
   try
     {
       SharedMemoryClient shmc( _shmName );
-      dest[0] = 0;
+      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
     }
   catch( runtime_error e )
     {

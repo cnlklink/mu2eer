@@ -29,7 +29,7 @@ TEST_GROUP( CoreGroup )
 {
   void setup()
   {
-    Controller::testDaemonStart();
+    Controller::testDaemonStart( "../etc/mu2eer.d/reference.conf" );
 
     SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
     shmc.waitForState( MU2EERD_RUNNING );
@@ -59,7 +59,7 @@ TEST( CoreGroup, SSMStateRead )
   // Read state, should return SSM_IDLE in buf
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
   device.stateRead( dest, &request );
-  CHECK_EQUAL( SSM_IDLE, buf );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, buf );
 
   // Handle no shared memory by throwing Ex_DEVFAILED
   SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
@@ -79,7 +79,7 @@ TEST( CoreGroup, SSMStateRead )
  *
  * Test the Spill Count device reading property
  */
-TEST( CoreGroup, SpillCountReadInitial )
+TEST( CoreGroup, SpillCountRead )
 {
   // Construct an ACNET request and response buffer
   ReqInfo request;
@@ -106,6 +106,17 @@ TEST( CoreGroup, SpillCountReadInitial )
                                                 Index( 0 ), 
                                                 Count( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.spillCounterRead( destC, &request ) );
+
+  // Run a few cycles...
+  ControlMQClient cmq( "/mu2eer_test" );
+  SharedMemoryClient shmc( "mu2eer_test" );
+  cmq.start();
+  shmc.waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, shmc.ssmBlockGet().currentStateGet() );
+
+  // There should have been 5 cycles
+  device.spillCounterRead( dest, &request );
+  CHECK_EQUAL( 5, buf );
 }
 
 /**
@@ -146,9 +157,9 @@ TEST( CoreGroup, ControlStart )
   const SSMDevice::control_t buf = { SSMDevice::CONTROL_START };
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
   
-  // Verify that we are in the IDLE state
+  // Verify that we are in the BETWEEN_CYCLES state
   SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
-  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
   
   // Send
   Array<const SSMDevice::control_t> src( &buf, Index( 0 ), Count( 1 ) );
@@ -172,9 +183,9 @@ TEST( CoreGroup, ControlReset )
   const SSMDevice::control_t buf = { SSMDevice::CONTROL_RESET };
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
   
-  // Verify that we are in the IDLE state
+  // Verify that we are in the BETWEEN_CYCLES state
   SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
-  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
   
   // First, start the SSM
   ControlMQClient cmq( Controller::TEST_DAEMON_CMQ_NAME );
@@ -226,4 +237,15 @@ TEST( CoreGroup, TimeInSpill )
                                       Index( 0 ), 
                                       Count( SSMDevice::TIS_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.timeInSpillRead( destC, &request ) );
+
+  // Run a few cycles...
+  ControlMQClient cmq( "/mu2eer_test" );
+  SharedMemoryClient shmc( "mu2eer_test" );
+  cmq.start();
+  shmc.waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, shmc.ssmBlockGet().currentStateGet() );
+
+  // The last time in spill should be 107ms
+  device.timeInSpillRead( dest, &request );
+  CHECK_EQUAL( 107, buf );
 }

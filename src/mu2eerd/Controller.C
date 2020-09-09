@@ -227,9 +227,14 @@ void Controller::start()
   _shutdown();
 }
 
-void Controller::testDaemonStart()
+void Controller::testDaemonStart( string cfile )
 {
   _testdCM = new ConfigurationManager();
+  if( cfile != "" )
+    {
+      _testdCM->load( cfile );
+    }
+
   _testdCtlr = new Controller( *_testdCM, TEST_DAEMON_CMQ_NAME, TEST_DAEMON_SHM_NAME );
 
   _testdThread = new thread( []() {
