@@ -1,7 +1,7 @@
 pipeline {
 
- agent {
-    any
+ agent any
+// agent {
 //     node { 
 //        label 'ad130482'
 //        customWorkspace "build/conc405x_generic_buildroot"
