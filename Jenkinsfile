@@ -1,11 +1,12 @@
 pipeline {
 
-//  agent {
+ agent {
+    any
 //     node { 
 //        label 'ad130482'
 //        customWorkspace "build/conc405x_generic_buildroot"
 //        } 
-//  }
+ }
   stages {
 
     stage('Make') {
