@@ -3,6 +3,7 @@
 *.gcov
 *.gcda
 *.info
+*.csv
 acnet_tests
 acnet_adc
 adc_tests
