@@ -17,6 +17,7 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
+<<<<<<< HEAD
   registerMethod( ATTR_STATE_READING,
                   *this,
                   &SSMDevice::stateRead,
@@ -25,7 +26,17 @@ SSMDevice::SSMDevice( string mqName, string shmName )
   registerMethod( ATTR_SPILL_COUNTER_READING,
                   *this,
                   &SSMDevice::spillCounterRead,
+=======
+  registerMethod( ATTR_SPILL_COUNTER_READING, 
+                  *this, 
+                  &SSMDevice::spillCounterRead, 
+>>>>>>> master
                   SPILL_COUNTER_READING_MAX );
+
+  registerMethod( ATTR_STATE_READING, 
+                  *this, 
+                  &SSMDevice::stateRead, 
+                  STATE_READING_MAX );
 
   registerMethods( ATTR_STATUS_CONTROL,
                    *this,
@@ -33,10 +44,17 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                    &SSMDevice::statusCtrlWrite,
                    1 );
 
+<<<<<<< HEAD
   registerMethod( ATTR_IDEAL_SPILL_READING,
                    *this,
                    &SSMDevice::idealSpillRead,
                    IDEAL_SPILL_READING_MAX );
+=======
+  registerMethod( ATTR_TIS_READING,
+                  *this,
+                  &SSMDevice::timeInSpillRead,
+                  TIS_READING_MAX );
+>>>>>>> master
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -56,7 +74,7 @@ void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
   try
     {
       SharedMemoryClient shmc( _shmName );
-      dest[0] = 0;
+      dest[0] = shmc.ssmBlockGet().spillCounterGet();
     }
   catch( runtime_error e )
     {
@@ -118,28 +136,45 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
       cmq.start();
       return;
 
+    case CONTROL_FAULT:
+      cmq.fault();
+      return;
+
     default:
       syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
       throw Ex_BADSET;
     }
 }
 
+<<<<<<< HEAD
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
                                   ReqInfo const* reqinfo )
 {
   if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+=======
+void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest, 
+                                 ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
+>>>>>>> master
     {
       throw Ex_BADOFF;
     }
 
+<<<<<<< HEAD
   if( (dest.offset.getValue() + dest.total.getValue()) >
       static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+=======
+  if( (dest.offset.getValue() + dest.total.getValue()) > 
+      static_cast<int>( TIS_READING_MAX ) )
+>>>>>>> master
     {
       throw Ex_BADOFLEN;
     }
 
   try
     {
+<<<<<<< HEAD
       int i = 0, size = 0;
       const int* idealSpillData;
       SharedMemoryClient shmc( _shmName );
@@ -156,6 +191,14 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
+=======
+      SharedMemoryClient shmc( _shmName );
+      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
+>>>>>>> master
       throw Ex_DEVFAILED;
     }
 }

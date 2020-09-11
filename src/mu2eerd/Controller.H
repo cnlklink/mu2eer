@@ -68,8 +68,10 @@ namespace Mu2eER
      * Start Test Daemon
      *
      * Instantiates a test version of mu2eerd.
+     *
+     * @param cfile Configuration file name (default: none)
      */
-    static void testDaemonStart();
+    static void testDaemonStart( string cfile = "" );
 
     /**
      * Test Daemon Cleanup
