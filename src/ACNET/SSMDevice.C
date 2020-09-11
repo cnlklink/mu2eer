@@ -17,34 +17,14 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  registerMethod( ATTR_STATE_READING,
-                  *this,
-                  &SSMDevice::stateRead,
-                  STATE_READING_MAX );
-
-=======
->>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
   registerMethod( ATTR_SPILL_COUNTER_READING,
                   *this,
                   &SSMDevice::spillCounterRead,
-=======
-  registerMethod( ATTR_SPILL_COUNTER_READING, 
-                  *this, 
-                  &SSMDevice::spillCounterRead, 
->>>>>>> master
                   SPILL_COUNTER_READING_MAX );
 
-<<<<<<< HEAD
-  registerMethod( ATTR_STATE_READING, 
-                  *this, 
-                  &SSMDevice::stateRead, 
-=======
   registerMethod( ATTR_STATE_READING,
                   *this,
                   &SSMDevice::stateRead,
->>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
                   STATE_READING_MAX );
 
   registerMethods( ATTR_STATUS_CONTROL,
@@ -53,19 +33,6 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                    &SSMDevice::statusCtrlWrite,
                    1 );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  registerMethod( ATTR_IDEAL_SPILL_READING,
-                   *this,
-                   &SSMDevice::idealSpillRead,
-                   IDEAL_SPILL_READING_MAX );
-=======
-  registerMethod( ATTR_TIS_READING,
-                  *this,
-                  &SSMDevice::timeInSpillRead,
-                  TIS_READING_MAX );
->>>>>>> master
-=======
   registerMethod( ATTR_TIS_READING,
                   *this,
                   &SSMDevice::timeInSpillRead,
@@ -75,7 +42,6 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   *this,
                   &SSMDevice::idealSpillRead,
                   IDEAL_SPILL_READING_MAX );
->>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -167,9 +133,6 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
                                  ReqInfo const* reqinfo )
 {
@@ -196,35 +159,22 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
     }
 }
 
->>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
-                                  ReqInfo const* reqinfo )
+				ReqInfo const* reqinfo )
 {
   if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
-=======
-void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest, 
-                                 ReqInfo const* reqinfo )
-{
-  if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
->>>>>>> master
     {
       throw Ex_BADOFF;
     }
 
-<<<<<<< HEAD
   if( (dest.offset.getValue() + dest.total.getValue()) >
       static_cast<int>( IDEAL_SPILL_READING_MAX ) )
-=======
-  if( (dest.offset.getValue() + dest.total.getValue()) > 
-      static_cast<int>( TIS_READING_MAX ) )
->>>>>>> master
     {
       throw Ex_BADOFLEN;
     }
 
   try
     {
-<<<<<<< HEAD
       int i = 0, size = 0;
       const int* idealSpillData;
       SharedMemoryClient shmc( _shmName );
@@ -235,20 +185,12 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
       size = smb.idealSpillWaveFormSizeGet();
 
       for ( i = 0; i < size; i++ ) {
-	       dest[i] = idealSpillData[i];
+	dest[i] = idealSpillData[i];
       }
     }
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
-=======
-      SharedMemoryClient shmc( _shmName );
-      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
-    }
-  catch( runtime_error e )
-    {
-      syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
->>>>>>> master
       throw Ex_DEVFAILED;
     }
 }
