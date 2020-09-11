@@ -36,7 +36,7 @@ namespace Mu2eER
      * Spill counter device / reading property type
      */
     typedef uint32_t spill_counter_read_t;
-    
+
     /**
      * State device / reading property type
      */
@@ -46,6 +46,11 @@ namespace Mu2eER
      * Status & control device / Status property type
      */
     typedef uint32_t status_t;
+
+    /**
+     * Time-in-spill device / reading property type
+     */
+    typedef uint32_t tis_read_t;
 
     /**
      * Ideal spill device / reading property type
@@ -60,7 +65,8 @@ namespace Mu2eER
         ATTR_STATE_READING = 0x00,
         ATTR_SPILL_COUNTER_READING = 0x01,
         ATTR_STATUS_CONTROL = 0x02,
-        ATTR_IDEAL_SPILL_READING = 0x03
+        ATTR_TIS_READING = 0x03,
+        ATTR_IDEAL_SPILL_READING = 0x04
       };
 
     /**
@@ -69,7 +75,8 @@ namespace Mu2eER
     enum
       {
         CONTROL_RESET = 0x00,
-        CONTROL_START = 0x01
+        CONTROL_START = 0x01,
+        CONTROL_FAULT = 0x03
       };
 
     /**
@@ -81,6 +88,11 @@ namespace Mu2eER
      * Size of the state device / reading property return buffer
      */
     static const unsigned int STATE_READING_MAX = 1;
+
+    /**
+     * Size of the time-in-spill device / reading property return buffer
+     */
+    static const unsigned int TIS_READING_MAX = 1;
 
     /**
      * Size of the ideal spill device / reading property return buffer
@@ -126,6 +138,14 @@ namespace Mu2eER
      * @param reqinfo ACNET request object
      */
     void statusCtrlWrite( Array<const control_t>& src, ReqInfo const* reqinfo );
+
+    /**
+     * Time-in-Spill Device / Reading Property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void timeInSpillRead( Array<tis_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
      * Ideal Spill / Reading Property

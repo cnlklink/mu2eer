@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the SSMDevice class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <syslog.h>
@@ -33,15 +33,15 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                    &SSMDevice::statusCtrlWrite,
                    1 );
 
-  registerMethod( ATTR_IDEAL_SPILL_READING,
-                  *this,
-                  &SSMDevice::idealSpillRead,
-                  IDEAL_SPILL_READING_MAX );
-
   registerMethod( ATTR_TIS_READING,
                   *this,
                   &SSMDevice::timeInSpillRead,
                   TIS_READING_MAX );
+
+  registerMethod( ATTR_IDEAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::idealSpillRead,
+                  IDEAL_SPILL_READING_MAX );
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -133,6 +133,32 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
     }
 }
 
+void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
+                                 ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( TIS_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
+
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
                                   ReqInfo const* reqinfo )
 {
@@ -159,38 +185,12 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
       size = smb.idealSpillWaveFormSizeGet();
 
       for ( i = 0; i < size; i++ ) {
-	dest[i] = idealSpillData[i];
+	       dest[i] = idealSpillData[i];
       }
     }
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
-      throw Ex_DEVFAILED;
-    }
-}
-
-void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
-                                 ReqInfo const* reqinfo )
-{
-  if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
-    {
-      throw Ex_BADOFF;
-    }
-
-  if( (dest.offset.getValue() + dest.total.getValue()) >
-      static_cast<int>( TIS_READING_MAX ) )
-    {
-      throw Ex_BADOFLEN;
-    }
-
-  try
-    {
-      SharedMemoryClient shmc( _shmName );
-      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
-    }
-  catch( runtime_error e )
-    {
-      syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
 }
