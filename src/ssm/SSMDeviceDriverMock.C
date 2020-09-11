@@ -76,8 +76,7 @@ void SSMDeviceDriverMock::reset()
   _spillCount = 0;
   _state = SSM_IDLE;
   _timeInSpill = 0;
-  _initialSequence.clear();
-  _stateSequence.clear();
+  _resetSequence();
 }
 
 void SSMDeviceDriverMock::_resetSequence()
