@@ -94,6 +94,16 @@ time_t SharedMemoryClient::startTimeGet() const
   return _shmi->startTimeGet();
 }
 
+time_t SharedMemoryClient::uptimeGet() const
+{
+  // Get the current time
+  time_t now;
+  time( &now );
+
+  // Calculate and return the uptime
+  return now - startTimeGet();
+}
+
 string SharedMemoryClient::versionGet() const
 {
   return _shmi->versionGet();

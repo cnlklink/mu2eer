@@ -19,7 +19,10 @@ using namespace Mu2eER;
 using namespace FFF;
 using namespace std;
 
-TEST_GROUP( StateGroup )
+/**
+ * Tests for the Daemon Device
+ */
+TEST_GROUP( DaemonGroup )
 {
   void setup()
   {
@@ -37,45 +40,109 @@ TEST_GROUP( StateGroup )
   }
 };
 
-TEST( StateGroup, Read )
+/**
+ * Test Daemon Device / Uptime reading
+ */
+TEST( DaemonGroup, ReadingArray )
 {
   ReqInfo request;
-  Mu2eerdDevice::state_read_t buf;
+  Mu2eerdDevice::daemon_read_t buf[Mu2eerdDevice::DAEMON_READ_MAX];
+  Array<Mu2eerdDevice::daemon_read_t> 
+    dest( buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_READ_MAX ) );
 
-  // Read state
-  Array<Mu2eerdDevice::state_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
   Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
-  device.stateRead( dest, &request );
-  CHECK_EQUAL( MU2EERD_INITIALIZING, buf );
-
+  
   // Handle no shared memory by throwing Ex_DEVFAILED
   Mu2eerdDevice deviceB( "/mu2eer_test", "does_not_exist" );
-  CHECK_THROWS( AcnetError, deviceB.stateRead( dest, &request ) );
+  CHECK_THROWS( AcnetError, deviceB.daemonRead( dest, &request ) );
 
   // Handle bad offset
-  Array<Mu2eerdDevice::state_read_t> destB( &buf, 
-                                            Index( Mu2eerdDevice::STATE_READ_MAX + 1 ), 
-                                            Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.stateRead( destB, &request ) );
+  Array<Mu2eerdDevice::daemon_read_t> destB( buf, 
+                                             Index( Mu2eerdDevice::DAEMON_READ_MAX + 1 ), 
+                                             Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.daemonRead( destB, &request ) );
 
   // Handle bad length
-  Array<Mu2eerdDevice::state_read_t> destC( &buf, 
-                                            Index( 0 ), 
-                                            Count( Mu2eerdDevice::STATE_READ_MAX + 1 ) );
-  CHECK_THROWS( AcnetError, device.stateRead( destC, &request ) );
+  Array<Mu2eerdDevice::daemon_read_t> destC( buf, 
+                                             Index( 0 ), 
+                                             Count( Mu2eerdDevice::DAEMON_READ_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.daemonRead( destC, &request ) );
+
+  try
+    {
+      // 1 second delay to register an uptime > 0
+      this_thread::sleep_for( chrono::seconds( 1 ) );
+
+      SharedMemoryClient shmc( "mu2eer_test" );
+      Mu2eerdDevice::daemon_read_t expected_uptime = shmc.uptimeGet();
+      Mu2eerdDevice::daemon_read_t expected_pid = shmc.pidGet();
+      Mu2eerdDevice::daemon_read_t expected_jenkins_num = 2;
+
+      // Read the whole array
+      device.daemonRead( dest, &request );
+      CHECK_EQUAL( expected_uptime, dest[0] );
+      CHECK_EQUAL( expected_pid, dest[1] );
+      CHECK_EQUAL( expected_jenkins_num, dest[2] );
+
+      // Read each array element individually
+      Array<Mu2eerdDevice::daemon_read_t> 
+        destD( buf, 
+               Index( Mu2eerdDevice::DAEMON_READ_IDX_UPTIME ),
+               Count( 1 ) );
+      device.daemonRead( destD, &request );
+      CHECK_EQUAL( expected_uptime, dest[0] );
+
+      Array<Mu2eerdDevice::daemon_read_t> 
+        destE( buf, 
+               Index( Mu2eerdDevice::DAEMON_READ_IDX_PID ),
+               Count( 1 ) );
+      device.daemonRead( destE, &request );
+      CHECK_EQUAL( expected_pid, dest[0] );
+
+      Array<Mu2eerdDevice::daemon_read_t> 
+        destF( buf, 
+               Index( Mu2eerdDevice::DAEMON_READ_IDX_JENKINS_NUM ),
+               Count( 1 ) );
+      device.daemonRead( destF, &request );
+      CHECK_EQUAL( expected_jenkins_num, dest[0] );
+
+      // Read a slice of the array
+      Array<Mu2eerdDevice::daemon_read_t> 
+        destG( buf, 
+               Index( Mu2eerdDevice::DAEMON_READ_IDX_PID ),
+               Count( 2 ) );
+      device.daemonRead( destG, &request );
+      CHECK_EQUAL( expected_pid, dest[0] );
+      CHECK_EQUAL( expected_jenkins_num, dest[1] );
+    }
+  catch( ... )
+    {
+      FAIL( "daemonRead threw an unexpected exception" );
+    }
 }
 
-TEST( StateGroup, LotsOfReads )
+TEST( DaemonGroup, LotsOfReads )
 {
   ReqInfo request;
-  Mu2eerdDevice::state_read_t buf;
+  Mu2eerdDevice::daemon_read_t buf[Mu2eerdDevice::DAEMON_READ_MAX];
 
-  // Test that we can handle a lot of quick reads
-  Array<Mu2eerdDevice::state_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
-  Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
-  for( unsigned int i = 0; i != 65000; i++ )
+  SharedMemoryClient shmc( "mu2eer_test" );
+  Mu2eerdDevice::daemon_read_t expected_pid = shmc.pidGet();
+
+  try
     {
-      device.stateRead( dest, &request );
-      CHECK_EQUAL( MU2EERD_INITIALIZING, buf );
+      // Test that we can handle a lot of quick reads
+      Array<Mu2eerdDevice::daemon_read_t> 
+        dest( buf, Index( Mu2eerdDevice::DAEMON_READ_IDX_PID ), Count( 1 ) );
+      Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
+      for( unsigned int i = 0; i != 65000; i++ )
+        {
+          device.daemonRead( dest, &request );
+          CHECK_EQUAL( expected_pid, buf[0] );
+        }
+    }
+  catch( ... )
+    {
+      FAIL( "unexpected exception caught" );
     }
 }

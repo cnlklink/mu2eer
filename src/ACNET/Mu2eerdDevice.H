@@ -30,22 +30,53 @@ namespace Mu2eER
   {
   public:
     /**
-     * State read device type
+     * Daemon reading device type
      */
-    typedef uint16_t state_read_t;
+    typedef uint32_t daemon_read_t;
+
+    /**
+     * Daemon status & control device type
+     */
+    typedef uint32_t daemon_statusctrl_t;
 
     /**
      * SSDN Attribute IDs
      */
     enum
       {
-        ATTR_STATE_READ = 0x00
+        ATTR_DAEMON_READ = 0x00,
+        ATTR_DAEMON_STATUSCTRL = 0x01
       };
 
     /**
-     * Size of the state return buffer
+     * Daemon Device / Reading property array indeces
      */
-    static const unsigned int STATE_READ_MAX = 1;
+    enum
+      {
+        DAEMON_READ_IDX_UPTIME = 0,
+        DAEMON_READ_IDX_PID = 1,
+        DAEMON_READ_IDX_JENKINS_NUM = 2
+      };
+
+    /**
+     * Size of the daemon reading return buffer
+     */
+    static const unsigned int DAEMON_READ_MAX = 3;
+
+    /**
+     * Size of the daemon status & control return buffer
+     */
+    static const unsigned int DAEMON_STATUSCTRL_MAX = 1;
+
+    /**
+     * Read Daemon Block
+     *
+     * Returns an array of information about the mu2eerd daemon to ACNET.
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET recquest object
+     */
+    void daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
      * Constructor
@@ -54,14 +85,6 @@ namespace Mu2eER
      * @param shmName Name of the mu2eerd shared memory region
      */
     Mu2eerdDevice( string mqName, string shmName );
-
-    /**
-     * State Device Reading Property
-     *
-     * @param dest ACNET response buffer
-     * @param reqinfo Reference to ACNET request object
-     */
-    void stateRead( Array<state_read_t>& dest, ReqInfo const* reqinfo );
 
   private:
     /**
@@ -73,6 +96,15 @@ namespace Mu2eER
      * mu2eerd Shared memory name
      */
     string _shmName;
+
+    /**
+     * Get Jenkins Number
+     *
+     * Reads and returns the value from /etc/jenkins_build_number.
+     *
+     * @return Jenkins build number
+     */
+    unsigned int _jenkinsNumberGet() const;
   };
 };
 
