@@ -1,12 +1,14 @@
 pipeline {
 
  agent any
+
 // agent {
 //     node { 
 //        label 'ad130482'
-//        customWorkspace "build/conc405x_generic_buildroot"
+//        customWorkspace "build/achilles_generic_buildroot"
 //        } 
 // }
+
   stages {
 
     stage('Make') {
