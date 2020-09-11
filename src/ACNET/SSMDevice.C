@@ -7,22 +7,25 @@
  */
 
 #include <syslog.h>
-#include <iostream>
+
 #include "SSMDevice.H"
 
 using namespace Mu2eER;
-using namespace std;
+
 SSMDevice::SSMDevice( string mqName, string shmName )
   : Device<32>( "SSMDevice", "Spill State Machine Device" ),
     _mqName( mqName ),
     _shmName( shmName )
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   registerMethod( ATTR_STATE_READING,
                   *this,
                   &SSMDevice::stateRead,
                   STATE_READING_MAX );
 
+=======
+>>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
   registerMethod( ATTR_SPILL_COUNTER_READING,
                   *this,
                   &SSMDevice::spillCounterRead,
@@ -33,9 +36,15 @@ SSMDevice::SSMDevice( string mqName, string shmName )
 >>>>>>> master
                   SPILL_COUNTER_READING_MAX );
 
+<<<<<<< HEAD
   registerMethod( ATTR_STATE_READING, 
                   *this, 
                   &SSMDevice::stateRead, 
+=======
+  registerMethod( ATTR_STATE_READING,
+                  *this,
+                  &SSMDevice::stateRead,
+>>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
                   STATE_READING_MAX );
 
   registerMethods( ATTR_STATUS_CONTROL,
@@ -44,6 +53,7 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                    &SSMDevice::statusCtrlWrite,
                    1 );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   registerMethod( ATTR_IDEAL_SPILL_READING,
                    *this,
@@ -55,6 +65,17 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   &SSMDevice::timeInSpillRead,
                   TIS_READING_MAX );
 >>>>>>> master
+=======
+  registerMethod( ATTR_TIS_READING,
+                  *this,
+                  &SSMDevice::timeInSpillRead,
+                  TIS_READING_MAX );
+
+  registerMethod( ATTR_IDEAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::idealSpillRead,
+                  IDEAL_SPILL_READING_MAX );
+>>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -147,6 +168,35 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
+                                 ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( TIS_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      dest[0] = shmc.ssmBlockGet().timeInSpillGet();
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
+
+>>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
                                   ReqInfo const* reqinfo )
 {
@@ -179,13 +229,13 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
       const int* idealSpillData;
       SharedMemoryClient shmc( _shmName );
       SpillStateMachineSMB smb = SpillStateMachineSMB();
-           
+
       smb.initialize();
       idealSpillData = smb.idealSpillWaveFormGet();
       size = smb.idealSpillWaveFormSizeGet();
 
       for ( i = 0; i < size; i++ ) {
-	dest[i] = idealSpillData[i];
+	       dest[i] = idealSpillData[i];
       }
     }
   catch( runtime_error e )

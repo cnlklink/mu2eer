@@ -159,9 +159,9 @@ TEST( CoreGroup, ControlStart )
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
 <<<<<<< HEAD
 
-  // Verify that we are in the IDLE state
+  // Verify that we are in the BETWEEN_CYCLES state
   SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
-  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
 
 =======
   
@@ -193,9 +193,9 @@ TEST( CoreGroup, ControlReset )
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
 <<<<<<< HEAD
 
-  // Verify that we are in the IDLE state
+  // Verify that we are in the BETWEEN_CYCLES state
   SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
-  CHECK_EQUAL( SSM_IDLE, smc.ssmBlockGet().currentStateGet() );
+  CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
 
 =======
   
@@ -224,6 +224,90 @@ TEST( CoreGroup, ControlReset )
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ * Control Property / Fault Command Tests
+ *
+ * Tests setting the "FAULT" command for the SSM device basic control property.
+ */
+TEST( CoreGroup, ControlFault )
+{
+  try
+    {
+      // Construct a request for the "FAULT" command
+      ReqInfo request;
+      const SSMDevice::control_t buf = { SSMDevice::CONTROL_FAULT };
+      SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+
+      // Verify that we are in the BETWEEN_CYCLES state
+      SharedMemoryClient smc( Controller::TEST_DAEMON_SHM_NAME );
+      CHECK_EQUAL( SSM_BETWEEN_CYCLES, smc.ssmBlockGet().currentStateGet() );
+
+      // Now send the fault command
+      Array<const SSMDevice::control_t> src( &buf, Index( 0 ), Count( 1 ) );
+      device.statusCtrlWrite( src, &request );
+
+      // And the SSM mock driver should go to the FAULT state
+      smc.waitForSSMState( SSM_FAULT, 100, 10 );
+      CHECK_EQUAL( SSM_FAULT, smc.ssmBlockGet().currentStateGet() );
+    }
+  catch( AcnetError e )
+    {
+      FAIL( "unexpected AcnetError caught" );
+    }
+  catch( Error e )
+    {
+      FAIL( "unexpected Error caught" );
+    }
+}
+
+/**
+ * Time-in-Spill Read Test
+ *
+ * Test the Time-in-Spill device reading property
+ */
+TEST( CoreGroup, TimeInSpill )
+{
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::tis_read_t buf;
+  Array<SSMDevice::tis_read_t> dest( &buf, Index( 0 ), Count( 1 ) );
+
+  // Read time in spill, should return 0 in buf
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+  device.timeInSpillRead( dest, &request );
+  CHECK_EQUAL( 0, buf );
+
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS( AcnetError, deviceB.timeInSpillRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::tis_read_t> destB( &buf,
+                                      Index( SSMDevice::TIS_READING_MAX + 1 ),
+                                      Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.timeInSpillRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::tis_read_t> destC( &buf,
+                                      Index( 0 ),
+                                      Count( SSMDevice::TIS_READING_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.timeInSpillRead( destC, &request ) );
+
+  // Run a few cycles...
+  ControlMQClient cmq( "/mu2eer_test" );
+  SharedMemoryClient shmc( "mu2eer_test" );
+  cmq.start();
+  shmc.waitForSSMState( SSM_FAULT, 100, 10 );
+  CHECK_EQUAL( SSM_FAULT, shmc.ssmBlockGet().currentStateGet() );
+
+  // The last time in spill should be 107ms
+  device.timeInSpillRead( dest, &request );
+  CHECK_EQUAL( 107, buf );
+}
+
+/**
+>>>>>>> d088ddc005dd1cd5da57d0ec9a66e8d2e2724f70
  * Ideal Spill Read Test
  *
  * Test the Ideal Spill device reading property
@@ -236,9 +320,9 @@ TEST( CoreGroup, IdealSpillReadInitial )
   ReqInfo request;
   SSMDevice::ideal_spill_read_t* spill_buf = new SSMDevice::ideal_spill_read_t[16000];
 
-  Array<SSMDevice::ideal_spill_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );  
+  Array<SSMDevice::ideal_spill_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
-    
+
   device.idealSpillRead( dest, &request );
 
   for ( i = 0; i < size; i++ ) {
