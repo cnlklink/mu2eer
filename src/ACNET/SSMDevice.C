@@ -144,18 +144,14 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
       const int* idealSpillData;
       SharedMemoryClient shmc( _shmName );
       SpillStateMachineSMB smb = SpillStateMachineSMB();
-      
-      cout << " Here in SSMDevice class" << endl;
-      
+           
       smb.initialize();
       idealSpillData = smb.idealSpillWaveFormGet();
       size = smb.idealSpillWaveFormSizeGet();
-      cout << "size is " << size << endl;
-      cout << "show " << dest.total.getValue() << endl;
+
       for ( i = 0; i < size; i++ ) {
 	dest[i] = idealSpillData[i];
       }
-      cout << "Finished transferring data" << endl;
     }
   catch( runtime_error e )
     {

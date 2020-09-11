@@ -206,16 +206,13 @@ TEST( CoreGroup, IdealSpillReadInitial )
 
   // Construct an ACNET request and response buffer
   ReqInfo request;
-  SSMDevice::ideal_spill_read_t buf;
-  Array<SSMDevice::ideal_spill_read_t> dest( &buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );  
+  SSMDevice::ideal_spill_read_t* spill_buf = new SSMDevice::ideal_spill_read_t[16000];
 
+  Array<SSMDevice::ideal_spill_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );  
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
-  
-  cout << "made it here" << endl;
-  
+    
   device.idealSpillRead( dest, &request );
 
-  cout << "Made it here in SSMDevice Tests class" << endl;
   for ( i = 0; i < size; i++ ) {
     CHECK_EQUAL( j, (int) dest[i] );
     j--;
@@ -226,14 +223,16 @@ TEST( CoreGroup, IdealSpillReadInitial )
   CHECK_THROWS( AcnetError, deviceB.idealSpillRead( dest, &request ) );
 
   // Handle bad offset
-  Array<SSMDevice::spill_counter_read_t> destB( &buf,
+  Array<SSMDevice::spill_counter_read_t> destB( spill_buf,
                                                 Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
                                                 Count( 1 ) );
   CHECK_THROWS( AcnetError, device.idealSpillRead( destB, &request ) );
 
   // Handle bad length
-  Array<SSMDevice::spill_counter_read_t> destC( &buf,
+  Array<SSMDevice::spill_counter_read_t> destC( spill_buf,
                                                 Index( 0 ),
                                                 Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.idealSpillRead( destC, &request ) );
+
+  delete[] spill_buf;
 }
