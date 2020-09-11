@@ -1,13 +1,13 @@
 pipeline {
 
- agent any
+// agent any
 
-// agent {
-//     node { 
-//        label 'ad130482'
-//        customWorkspace "build/achilles_generic_buildroot"
-//        } 
-// }
+  agent {
+     node { 
+        label 'ad130482'
+        customWorkspace "build/achilles_generic_buildroot"
+        } 
+  }
 
   stages {
 
