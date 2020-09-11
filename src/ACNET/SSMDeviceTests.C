@@ -3,7 +3,7 @@
 *
 * This file contains unit tests for the SSMDevice class.
 *
-* @author jdiamond
+* @author jdiamond and rtadkins
 */
 
 #include <chrono>
