@@ -6,6 +6,7 @@
  * @author jdiamond
  */
 
+#include <fstream>
 #include <syslog.h>
 
 #include "errors.H"
@@ -72,5 +73,10 @@ void Mu2eerdDevice::daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqin
 
 unsigned int Mu2eerdDevice::_jenkinsNumberGet() const
 {
-  return 0;
+  fstream jnfile( "/etc/jenkins_build_number", ios_base::in );
+  unsigned int num;
+
+  jnfile >> num;
+
+  return num;
 }

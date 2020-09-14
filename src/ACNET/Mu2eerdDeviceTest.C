@@ -76,7 +76,7 @@ TEST( DaemonGroup, ReadingArray )
       SharedMemoryClient shmc( "mu2eer_test" );
       Mu2eerdDevice::daemon_read_t expected_uptime = shmc.uptimeGet();
       Mu2eerdDevice::daemon_read_t expected_pid = shmc.pidGet();
-      Mu2eerdDevice::daemon_read_t expected_jenkins_num = 2;
+      Mu2eerdDevice::daemon_read_t expected_jenkins_num = 123;
 
       // Read the whole array
       device.daemonRead( dest, &request );
