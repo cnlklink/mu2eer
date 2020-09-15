@@ -315,13 +315,13 @@ TEST( CoreGroup, IdealSpillReadInitial )
   CHECK_THROWS( AcnetError, deviceB.idealSpillRead( dest, &request ) );
 
   // Handle bad offset
-  Array<SSMDevice::spill_counter_read_t> destB( spill_buf,
+  Array<SSMDevice::ideal_spill_read_t> destB( spill_buf,
                                                 Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
                                                 Count( 1 ) );
   CHECK_THROWS( AcnetError, device.idealSpillRead( destB, &request ) );
 
   // Handle bad length
-  Array<SSMDevice::spill_counter_read_t> destC( spill_buf,
+  Array<SSMDevice::ideal_spill_read_t> destC( spill_buf,
                                                 Index( 0 ),
                                                 Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
   CHECK_THROWS( AcnetError, device.idealSpillRead( destC, &request ) );

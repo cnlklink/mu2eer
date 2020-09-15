@@ -55,7 +55,7 @@ namespace Mu2eER
     /**
      * Ideal spill device / reading property type
      */
-    typedef uint32_t ideal_spill_read_t;
+    typedef int16_t ideal_spill_read_t;
 
     /**
      * SSDN Attribute IDs
