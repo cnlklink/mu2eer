@@ -76,6 +76,16 @@ namespace Mu2eER
     time_t startTimeGet() const;
 
     /**
+     * Get Uptime
+     *
+     * Using the start time recorded in the shared memory block, calculates and returns the
+     * uptime for mu2eerd.
+     *
+     * @return Uptime for mu2eerd (in seconds)
+     */
+    time_t uptimeGet() const;
+
+    /**
      * Get API Version
      *
      * @return API version string

@@ -28,7 +28,7 @@ int fef_init( int argc, char* argv[] )
   try
     {
       // Register devices
-      register_dev( new Mu2eerdDevice( MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME ) );
+      register_dev( new Mu2eerdDevice( MU2EERD_PROCESS_NAME, MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME ) );
       
       syslog( LOG_INFO, "acnet_mu2eerd started" );
     }

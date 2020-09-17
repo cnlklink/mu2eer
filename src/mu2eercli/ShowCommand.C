@@ -34,23 +34,16 @@ void ShowCommand::_outputSSMSection() const
 
 void ShowCommand::run( unsigned int argc, const char* argv[] )
 {
-  // Get the current time
-  time_t now;
-  time( &now );
-
   // Get the start time
   time_t startTime = _shmc.startTimeGet();
   tm* localST = localtime( &startTime );
   char startTimeStr[40];
   strftime( startTimeStr, sizeof( startTimeStr ), "%Y-%m-%d %H:%M:%S", localST );
 
-  // Calculate uptime
-  time_t uptime = (now - startTime);
-
   // Output PID, uptime and start time
   cout << "mu2eerd (pid: " << _shmc.pidGet() << ")"
        << " running since " << startTimeStr
-       << ", uptime: " << uptime << " seconds" << endl
+       << ", uptime: " << _shmc.uptimeGet() << " seconds" << endl
        << "  with configuration: " << _shmc.configFileGet() << endl
        << endl;
 
