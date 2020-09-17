@@ -7,10 +7,11 @@
  */
 
 #include <syslog.h>
-
+#include <iostream>
 #include "SSMDevice.H"
 
 using namespace Mu2eER;
+using namespace std;
 
 SSMDevice::SSMDevice( string mqName, string shmName )
   : Device<32>( "SSMDevice", "Spill State Machine Device" ),
@@ -175,17 +176,18 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
 
   try
     {
-      int i = 0, size = 0;
-      const int* idealSpillData;
+      int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
       SharedMemoryClient shmc( _shmName );
       SpillStateMachineSMB smb = SpillStateMachineSMB();
 
       smb.initialize();
-      idealSpillData = smb.idealSpillWaveFormGet();
-      size = smb.idealSpillWaveFormSizeGet();
 
-      for ( i = 0; i < size; i++ ) {
-	dest[i] = idealSpillData[i];
+      auto idealSpillData = smb.idealSpillWaveFormGet();
+      upper_bound = lower_bound + sample_size;
+ 
+      for ( i = lower_bound; i < upper_bound; i++ ) {
+	dest[j] = idealSpillData[i];
+	j++;
       }
     }
   catch( runtime_error e )

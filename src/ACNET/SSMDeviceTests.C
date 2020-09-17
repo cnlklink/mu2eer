@@ -328,3 +328,49 @@ TEST( CoreGroup, IdealSpillReadInitial )
 
   delete[] spill_buf;
 }
+
+/**
+ * Ideal Spill Read Slice Test
+ *
+ * Test the Ideal Spill device reading property of a slice of the data
+ */
+TEST( CoreGroup, IdealSpillReadSlice )
+{
+  int i = 0, j = 0, size = SSMDevice::IDEAL_SPILL_READING_MAX, 
+   count = 100, lower_bound = 0;
+  
+  lower_bound = size - count - 1;
+
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::ideal_spill_read_t* spill_buf = new SSMDevice::ideal_spill_read_t[16000];
+
+  Array<SSMDevice::ideal_spill_read_t> dest( spill_buf, Index( lower_bound ), Count( count ) );
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+
+  device.idealSpillRead( dest, &request );
+
+  j = count;    
+  for ( i = 0; i < count; i++ ) {
+    CHECK_EQUAL( j, (int) dest[i] );
+    j--;
+  }
+  
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS( AcnetError, deviceB.idealSpillRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::ideal_spill_read_t> destB( spill_buf,
+					      Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
+					      Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.idealSpillRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::ideal_spill_read_t> destC( spill_buf,
+					      Index( 0 ),
+					      Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.idealSpillRead( destC, &request ) );
+
+  delete[] spill_buf;
+}
