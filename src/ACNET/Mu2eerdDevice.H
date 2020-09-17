@@ -59,6 +59,15 @@ namespace Mu2eER
       };
 
     /**
+     * Daemon Device / Status Property bit definitions
+     */
+    enum
+      {
+        // Bit 0 - daemon is running
+        DAEMON_STATUS_RUNNING = 0x01
+      };
+
+    /**
      * Size of the daemon reading return buffer
      */
     static const unsigned int DAEMON_READ_MAX = 3;
@@ -74,19 +83,35 @@ namespace Mu2eER
      * Returns an array of information about the mu2eerd daemon to ACNET.
      *
      * @param dest ACNET response buffer
-     * @param reqinfo ACNET recquest object
+     * @param reqinfo ACNET request object
      */
     void daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
+     * Daemon Device / Status Property
+     *
+     * Returns digital status for the Daemon device.
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo const* reqinfo );
+
+    /**
      * Constructor
      *
+     * @param daemonName Name of the mu2eerd process
      * @param mqName Name of the mu2eerd control queue
      * @param shmName Name of the mu2eerd shared memory region
      */
-    Mu2eerdDevice( string mqName, string shmName );
+    Mu2eerdDevice( string daemonName, string mqName, string shmName );
 
   private:
+    /**
+     * mu2eerd process name
+     */
+    string _daemonName;
+
     /**
      * mu2eerd Control message queue name
      */
@@ -96,6 +121,13 @@ namespace Mu2eER
      * mu2eerd Shared memory name
      */
     string _shmName;
+
+    /**
+     * Daemon is Running
+     *
+     * @return True if the mu2eerd process is running
+     */
+    bool _daemonIsRunning() const;
 
     /**
      * Get Jenkins Number

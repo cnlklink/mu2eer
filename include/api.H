@@ -23,6 +23,11 @@
 #define MU2EERD_CMQ_NAME "/mu2eer"
 
 /**
+ * Name of the mu2eerd process
+ */
+#define MU2EERD_PROCESS_NAME "mu2eerd"
+
+/**
  * Name of the mu2eerd shared memory region
  */
 #define MU2EERD_SHM_NAME "mu2eer"

@@ -41,7 +41,46 @@ TEST_GROUP( DaemonGroup )
 };
 
 /**
- * Test Daemon Device / Uptime reading
+ * Test Daemon Device / Status property
+ */
+TEST( DaemonGroup, Status )
+{
+  ReqInfo request;
+  Mu2eerdDevice::daemon_statusctrl_t buf;
+  Array<Mu2eerdDevice::daemon_statusctrl_t> 
+    dest( &buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX ) );
+
+  Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );
+
+  // Handle bad offset
+  Array<Mu2eerdDevice::daemon_read_t> 
+    destB( &buf, Index( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX + 1 ), Count( 1 ) );
+  CHECK_THROWS( AcnetError, device.daemonStatus( destB, &request ) );
+
+  // Handle bad length
+  Array<Mu2eerdDevice::daemon_read_t> 
+    destC( &buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX + 1 ) );
+  CHECK_THROWS( AcnetError, device.daemonStatus( destC, &request ) );
+
+  try
+    {
+      // Initial status
+      device.daemonStatus( dest, &request );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, buf );
+
+      // Use a different process name to test daemon process status
+      Mu2eerdDevice deviceB( "mu2eerd", "/mu2eer_test", "mu2eer_test" );
+      deviceB.daemonStatus( dest, &request );
+      CHECK_EQUAL( 0, buf );
+    }
+  catch( Error e )
+    {
+      FAIL( "daemonStatus threw an unexpected exception" );
+    }
+}
+
+/**
+ * Test Daemon Device / Reading property
  */
 TEST( DaemonGroup, ReadingArray )
 {
@@ -50,10 +89,10 @@ TEST( DaemonGroup, ReadingArray )
   Array<Mu2eerdDevice::daemon_read_t> 
     dest( buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_READ_MAX ) );
 
-  Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
+  Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );;
   
   // Handle no shared memory by throwing Ex_DEVFAILED
-  Mu2eerdDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  Mu2eerdDevice deviceB( "acnet_tests", "/mu2eer_test", "does_not_exist" );
   CHECK_THROWS( AcnetError, deviceB.daemonRead( dest, &request ) );
 
   // Handle bad offset
@@ -115,7 +154,7 @@ TEST( DaemonGroup, ReadingArray )
       CHECK_EQUAL( expected_pid, dest[0] );
       CHECK_EQUAL( expected_jenkins_num, dest[1] );
     }
-  catch( ... )
+  catch( Error e )
     {
       FAIL( "daemonRead threw an unexpected exception" );
     }
@@ -134,7 +173,7 @@ TEST( DaemonGroup, LotsOfReads )
       // Test that we can handle a lot of quick reads
       Array<Mu2eerdDevice::daemon_read_t> 
         dest( buf, Index( Mu2eerdDevice::DAEMON_READ_IDX_PID ), Count( 1 ) );
-      Mu2eerdDevice device( "/mu2eer_test", "mu2eer_test" );;
+      Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );;
       for( unsigned int i = 0; i != 65000; i++ )
         {
           device.daemonRead( dest, &request );
