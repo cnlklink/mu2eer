@@ -355,22 +355,6 @@ TEST( CoreGroup, IdealSpillReadSlice )
     CHECK_EQUAL( j, (int) dest[i] );
     j--;
   }
-  
-  // Handle no shared memory by throwing Ex_DEVFAILED
-  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
-  CHECK_THROWS( AcnetError, deviceB.idealSpillRead( dest, &request ) );
-
-  // Handle bad offset
-  Array<SSMDevice::ideal_spill_read_t> destB( spill_buf,
-					      Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
-					      Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.idealSpillRead( destB, &request ) );
-
-  // Handle bad length
-  Array<SSMDevice::ideal_spill_read_t> destC( spill_buf,
-					      Index( 0 ),
-					      Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
-  CHECK_THROWS( AcnetError, device.idealSpillRead( destC, &request ) );
 
   delete[] spill_buf;
 }
