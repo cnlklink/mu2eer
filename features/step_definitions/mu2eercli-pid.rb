@@ -32,7 +32,7 @@ Given(/^mu2eerd (is|is not) running$/) do |running|
     if !system( "./bin/host/mu2eerd/mu2eerd" )
       puts "Failed to start mu2eerd!"
     end
-    
+
     @expectedPID = `pidof mu2eerd`
   else
     # Do not start mu2eerd...
@@ -119,7 +119,7 @@ end
 
 Then("within {int} seconds the mu2eerd process terminates") do |timeout|
   expect( `pidof mu2eerd` ).to eq ""
-end 
+end
 
 Then("{string} is in the output") do |needle|
   expect( @result ).to match needle
@@ -160,12 +160,12 @@ Then("the PID for mu2eerd is displayed") do
 
   # Extract the PID
   pid = @result.match /pid: (\d+)/
-  
+
   # Use `pidof` to verify
   expect( pid[1].to_i ).to eq `pidof mu2eerd`.strip.to_i
 end
 
-Then("the SSM state displayed is {string}") do |expected_state_string| 
+Then("the SSM state displayed is {string}") do |expected_state_string|
   # Expect the SSM state to be present in the output
   expect( @result ).to match /SSM state: /
 
@@ -222,4 +222,9 @@ Then("the configuration file displayed is {string}") do |expected_config_file_na
 
   # Expect the configuration file to match
   expect( config_file_name[1] ).to eq expected_config_file_name
+end
+
+Then("the contents of the shared memory for mu2eerd are displayed") do |shared_memory|
+  # Expect the array contents to be present in the output
+  expect( @result ).to match /i: \d+/
 end
