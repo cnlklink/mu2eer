@@ -225,8 +225,9 @@ Then("the configuration file displayed is {string}") do |expected_config_file_na
   expect( config_file_name[1] ).to eq expected_config_file_name
 end
 
-Then("the contents of the shared memory displayed are {string}") do |shared_memory|
+Then("the contents of the shared memory are displayed") do |shared_memory|
   # Expect the array contents to be present in the output
+  expect( @result ).to match /Entry, Ideal Spill Data\n([\s\S]+)/
   table = CSV.parse(@result)
   table.delete(0)
   table do |row|
