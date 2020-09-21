@@ -8,6 +8,8 @@
 
 #include <syslog.h>
 #include <iostream>
+
+#include "errors.H"
 #include "SSMDevice.H"
 
 using namespace Mu2eER;
@@ -112,25 +114,33 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
       throw Ex_BADOFLEN;
     }
 
-  ControlMQClient cmq( _mqName );
-
-  switch( src[0] )
+  try
     {
-    case CONTROL_RESET:
-      cmq.reset();
-      return;
-
-    case CONTROL_START:
-      cmq.start();
-      return;
-
-    case CONTROL_FAULT:
-      cmq.fault();
-      return;
-
-    default:
-      syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
-      throw Ex_BADSET;
+      ControlMQClient cmq( _mqName );
+      
+      switch( src[0] )
+        {
+        case CONTROL_RESET:
+          cmq.reset();
+          return;
+          
+        case CONTROL_START:
+          cmq.start();
+          return;
+          
+        case CONTROL_FAULT:
+          cmq.fault();
+          return;
+          
+        default:
+          syslog( LOG_ERR, "bad command in SSMDevice::statusCtrlWrite(..) - %d", src[0] );
+          throw Ex_BADSET;
+        }
+    }
+  catch( Error e )
+    {
+      syslog( LOG_ERR, "Error caught in SSMDevice::statusCtrlWrite(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
     }
 }
 

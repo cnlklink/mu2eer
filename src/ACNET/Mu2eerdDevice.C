@@ -81,10 +81,31 @@ Mu2eerdDevice::Mu2eerdDevice( string daemonName, string mqName, string shmName )
                   &Mu2eerdDevice::daemonRead, 
                   DAEMON_READ_MAX );
 
-  registerMethod( ATTR_DAEMON_STATUSCTRL,
-                  *this,
-                  &Mu2eerdDevice::daemonStatus,
-                  DAEMON_STATUSCTRL_MAX );
+  registerMethods( ATTR_DAEMON_STATUSCTRL,
+                   *this,
+                   &Mu2eerdDevice::daemonStatus,
+                   &Mu2eerdDevice::daemonControl,
+                   DAEMON_STATUSCTRL_MAX );
+}
+
+void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInfo const* reqinfo )
+{
+  if( src.offset.getValue() != 0 )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( src.total.getValue() != 1 )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  switch( src[0] )
+    {
+    default:
+      syslog( LOG_ERR, "bad command in daemonControl(..) - %d", src[0] );
+      throw Ex_BADSET;
+    }
 }
 
 void Mu2eerdDevice::daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqinfo )

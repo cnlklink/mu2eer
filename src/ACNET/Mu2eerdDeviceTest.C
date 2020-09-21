@@ -11,6 +11,7 @@
 #include <thread>
 
 #include "CppUTest/TestHarness.h"
+#include "testutils.H"
 
 #include "../mu2eerd/Controller.H"
 #include "Mu2eerdDevice.H"
@@ -55,12 +56,12 @@ TEST( DaemonGroup, Status )
   // Handle bad offset
   Array<Mu2eerdDevice::daemon_read_t> 
     destB( &buf, Index( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX + 1 ), Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.daemonStatus( destB, &request ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.daemonStatus( destB, &request ) );
 
   // Handle bad length
   Array<Mu2eerdDevice::daemon_read_t> 
     destC( &buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX + 1 ) );
-  CHECK_THROWS( AcnetError, device.daemonStatus( destC, &request ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.daemonStatus( destC, &request ) );
 
   try
     {
@@ -93,19 +94,19 @@ TEST( DaemonGroup, ReadingArray )
   
   // Handle no shared memory by throwing Ex_DEVFAILED
   Mu2eerdDevice deviceB( "acnet_tests", "/mu2eer_test", "does_not_exist" );
-  CHECK_THROWS( AcnetError, deviceB.daemonRead( dest, &request ) );
+  CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.daemonRead( dest, &request ) );
 
   // Handle bad offset
   Array<Mu2eerdDevice::daemon_read_t> destB( buf, 
                                              Index( Mu2eerdDevice::DAEMON_READ_MAX + 1 ), 
                                              Count( 1 ) );
-  CHECK_THROWS( AcnetError, device.daemonRead( destB, &request ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.daemonRead( destB, &request ) );
 
   // Handle bad length
   Array<Mu2eerdDevice::daemon_read_t> destC( buf, 
                                              Index( 0 ), 
                                              Count( Mu2eerdDevice::DAEMON_READ_MAX + 1 ) );
-  CHECK_THROWS( AcnetError, device.daemonRead( destC, &request ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.daemonRead( destC, &request ) );
 
   try
     {
@@ -185,3 +186,33 @@ TEST( DaemonGroup, LotsOfReads )
       FAIL( "unexpected exception caught" );
     }
 }
+
+TEST( DaemonGroup, Control )
+{
+  // Construct a request for the "START" command
+  ReqInfo request;
+  const Mu2eerdDevice::daemon_statusctrl_t buf = { Mu2eerdDevice::DAEMON_CONTROL_START };
+  Mu2eerdDevice device( "mu2eerd", "/mu2eer_test", "mu2eer_test" );
+
+  // Verify the devide handles a bad offset
+  Array<const Mu2eerdDevice::daemon_statusctrl_t> srcA( &buf, Index( 1 ), Count( 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.daemonControl( srcA, &request ) );
+
+  // Verify the device handles a bad length
+  Array<const Mu2eerdDevice::daemon_statusctrl_t> srcB( &buf, Index( 0 ), Count( 2 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.daemonControl( srcB, &request ) );
+
+  // Verify the device handles a bad command
+  const Mu2eerdDevice::daemon_statusctrl_t bufBad = { 
+    static_cast<Mu2eerdDevice::daemon_statusctrl_t>( 65535 ) 
+  };
+  Array<const Mu2eerdDevice::daemon_statusctrl_t> srcC( &bufBad, Index( 0 ), Count( 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADSET, device.daemonControl( srcC, &request ) );
+}
+
+/*
+TEST( DaemonGroup, ControlStart )
+{
+  FAIL( "TODO" );
+}
+*/

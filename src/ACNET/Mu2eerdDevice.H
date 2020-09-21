@@ -49,6 +49,16 @@ namespace Mu2eER
       };
 
     /**
+     * Daemon Device / Control property commands
+     */
+    enum
+      {
+        DAEMON_CONTROL_SOFTREBOOT = 0x01,
+        DAEMON_CONTROL_START = 0x02,
+        DAEMON_CONTROL_STOP  = 0x00
+      };
+
+    /**
      * Daemon Device / Reading property array indeces
      */
     enum
@@ -76,6 +86,16 @@ namespace Mu2eER
      * Size of the daemon status & control return buffer
      */
     static const unsigned int DAEMON_STATUSCTRL_MAX = 1;
+
+    /**
+     * Daemon Device / Control property
+     *
+     * Process control commands for the Daemon device.
+     *
+     * @param src ACNET setting buffer
+     * @param reqinfo ACNET request object
+     */
+    void daemonControl( Array<const daemon_statusctrl_t>& src, ReqInfo const* reqinfo );
 
     /**
      * Read Daemon Block
