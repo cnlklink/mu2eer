@@ -7,7 +7,6 @@
 # @author jdiamond
 
 require 'rspec/expectations'
-require 'csv'
 
 After do
   # mu2eerd should not be left running!
