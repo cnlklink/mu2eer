@@ -51,6 +51,7 @@ void DaemonController::_exec( string cmd ) const
   if( rc != EXIT_SUCCESS )
     {
       syslog( LOG_ERR, "  command was - %s", cmd.c_str() );
+      syslog( LOG_ERR, "  output was - %s", result.c_str() );
       throw runtime_error( "failed to exec daemon command, command failure" );
     }
 }
