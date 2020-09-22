@@ -14,6 +14,7 @@
 #include "testutils.H"
 
 #include "../mu2eerd/Controller.H"
+#include "DaemonController.H"
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
@@ -51,7 +52,8 @@ TEST( DaemonGroup, Status )
   Array<Mu2eerdDevice::daemon_statusctrl_t> 
     dest( &buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_STATUSCTRL_MAX ) );
 
-  Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );
+  DaemonController dctlr( "acnet_tests", "", "" );
+  Mu2eerdDevice device( dctlr, "/mu2eer_test", "mu2eer_test" );
 
   // Handle bad offset
   Array<Mu2eerdDevice::daemon_read_t> 
@@ -70,7 +72,7 @@ TEST( DaemonGroup, Status )
       CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, buf );
 
       // Use a different process name to test daemon process status
-      Mu2eerdDevice deviceB( "mu2eerd", "/mu2eer_test", "mu2eer_test" );
+      Mu2eerdDevice deviceB( DaemonController( "mu2eerd", "", "" ), "/mu2eer_test", "mu2eer_test" );
       deviceB.daemonStatus( dest, &request );
       CHECK_EQUAL( 0, buf );
     }
@@ -90,10 +92,11 @@ TEST( DaemonGroup, ReadingArray )
   Array<Mu2eerdDevice::daemon_read_t> 
     dest( buf, Index( 0 ), Count( Mu2eerdDevice::DAEMON_READ_MAX ) );
 
-  Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );;
+  DaemonController dctlr( "acnet_tests", "", "" );
+  Mu2eerdDevice device( dctlr, "/mu2eer_test", "mu2eer_test" );;
   
   // Handle no shared memory by throwing Ex_DEVFAILED
-  Mu2eerdDevice deviceB( "acnet_tests", "/mu2eer_test", "does_not_exist" );
+  Mu2eerdDevice deviceB( dctlr, "/mu2eer_test", "does_not_exist" );
   CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.daemonRead( dest, &request ) );
 
   // Handle bad offset
@@ -174,7 +177,10 @@ TEST( DaemonGroup, LotsOfReads )
       // Test that we can handle a lot of quick reads
       Array<Mu2eerdDevice::daemon_read_t> 
         dest( buf, Index( Mu2eerdDevice::DAEMON_READ_IDX_PID ), Count( 1 ) );
-      Mu2eerdDevice device( "acnet_tests", "/mu2eer_test", "mu2eer_test" );;
+
+      DaemonController dctlr( "acnet_tests", "", "" );
+      Mu2eerdDevice device( dctlr, "/mu2eer_test", "mu2eer_test" );;
+
       for( unsigned int i = 0; i != 65000; i++ )
         {
           device.daemonRead( dest, &request );
@@ -192,7 +198,8 @@ TEST( DaemonGroup, Control )
   // Construct a request for the "START" command
   ReqInfo request;
   const Mu2eerdDevice::daemon_statusctrl_t buf = { Mu2eerdDevice::DAEMON_CONTROL_START };
-  Mu2eerdDevice device( "mu2eerd", "/mu2eer_test", "mu2eer_test" );
+  DaemonController dctlr( "mu2eerd", "", "" );
+  Mu2eerdDevice device( dctlr, "/mu2eer_test", "mu2eer_test" );
 
   // Verify the devide handles a bad offset
   Array<const Mu2eerdDevice::daemon_statusctrl_t> srcA( &buf, Index( 1 ), Count( 1 ) );
@@ -210,9 +217,58 @@ TEST( DaemonGroup, Control )
   CHECK_THROWS_ACNETERROR( Ex_BADSET, device.daemonControl( srcC, &request ) );
 }
 
-/*
 TEST( DaemonGroup, ControlStart )
 {
-  FAIL( "TODO" );
+  ReqInfo request;
+
+  const Mu2eerdDevice::daemon_statusctrl_t startBuf = { Mu2eerdDevice::DAEMON_CONTROL_START };
+  const Mu2eerdDevice::daemon_statusctrl_t stopBuf = { Mu2eerdDevice::DAEMON_CONTROL_STOP };
+  Mu2eerdDevice::daemon_statusctrl_t readBuf;
+
+  try
+    {
+      // Verify that the daemon is not running
+      Mu2eerdDevice deviceA( DaemonController( "mu2eerd", "", "" ), "/mu2eer_test", "mu2eer_test" );
+      Array<Mu2eerdDevice::daemon_statusctrl_t> dest( &readBuf, Index( 0 ), Count( 1 ) );
+      deviceA.daemonStatus( dest, &request );
+      CHECK_EQUAL( 0, readBuf );
+
+      // Send start command, start fails and should throw Ex_DEVFAILED
+      Mu2eerdDevice deviceB( DaemonController( "mu2eerd", 
+                                               "../bin/host/mu2eerd/notfound 2>&1", 
+                                               "../bin/host/mu2eercli/mu2eercli shutdown 2>&1" ), 
+                             "/mu2eer_test", 
+                             "mu2eer_test" );
+      Array<const Mu2eerdDevice::daemon_statusctrl_t> startSrc( &startBuf, Index( 0 ), Count( 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.daemonControl( startSrc, &request ) );
+
+      // Verify that the daemon is not running, again
+      deviceA.daemonStatus( dest, &request );
+      CHECK_EQUAL( 0, readBuf );
+
+      // Start for real this time
+      Mu2eerdDevice deviceC( DaemonController( "mu2eerd", 
+                                               "../bin/host/mu2eerd/mu2eerd 2>&1", 
+                                               "../bin/host/mu2eercli/mu2eercli shutdown 2>&1" ), 
+                             "/mu2eer_test", 
+                             "mu2eer_test" );
+      deviceC.daemonControl( startSrc, &request );
+
+      // Verify that the daemon is running
+      deviceA.daemonStatus( dest, &request );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, readBuf );
+
+      // Send stop request
+      Array<const Mu2eerdDevice::daemon_statusctrl_t> stopSrc( &stopBuf, Index( 0 ), Count( 1 ) );
+      deviceC.daemonControl( stopSrc, &request );
+
+      // Verify that the daemon is not running
+      deviceA.daemonStatus( dest, &request );
+      CHECK_EQUAL( 0, readBuf );
+    }
+  catch( exception e )
+    {
+      cout << e.what() << endl;
+      FAIL( "unexpected exception" );
+    }
 }
-*/

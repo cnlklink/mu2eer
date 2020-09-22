@@ -6,73 +6,18 @@
  * @author jdiamond
  */
 
-#include <dirent.h>
 #include <fstream>
 #include <syslog.h>
 
+#include "DaemonController.H"
 #include "errors.H"
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
 
-/**
- * Get Process ID By Name
- *
- * Returns the PID for the process with the given name.
- * 
- * From:
- *   https://stackoverflow.com/questions/45037193/how-to-check-if-a-process-is-running-in-c
- *
- * @param procName Process name
- * @return Process ID for procName or -1 if no process found
- */
-static int getProcIdByName(string procName)
-{
-  int pid = -1;
-  
-  // Open the /proc directory
-  DIR *dp = opendir("/proc");
-  if (dp != NULL)
-    {
-      // Enumerate all entries in directory until process found
-      struct dirent *dirp;
-      while (pid < 0 && (dirp = readdir(dp)))
-        {
-          // Skip non-numeric entries
-          int id = atoi(dirp->d_name);
-          if (id > 0)
-            {
-              // Read contents of virtual /proc/{pid}/cmdline file
-              string cmdPath = string("/proc/") + dirp->d_name + "/cmdline";
-              ifstream cmdFile(cmdPath.c_str());
-              string cmdLine;
-              getline(cmdFile, cmdLine);
-              if (!cmdLine.empty())
-                {
-                  // Keep first cmdline item which contains the program path
-                  size_t pos = cmdLine.find('\0');
-                  if (pos != string::npos)
-                    cmdLine = cmdLine.substr(0, pos);
-                  // Keep program name only, removing the path
-                  pos = cmdLine.rfind('/');
-                  if (pos != string::npos)
-                    cmdLine = cmdLine.substr(pos + 1);
-                  // Compare against requested process name
-                  if (procName == cmdLine)
-                    pid = id;
-                }
-            }
-        }
-    }
-  
-  closedir(dp);
-  
-  return pid;
-}
-
-Mu2eerdDevice::Mu2eerdDevice( string daemonName, string mqName, string shmName )
+Mu2eerdDevice::Mu2eerdDevice( DaemonController daemonCtrl, string mqName, string shmName )
   : Device<32>( "Mu2eerdDevice", "mu2eerd Device" ),
-    _daemonName( daemonName ),
+    _daemonCtlr( daemonCtrl ),
     _mqName( mqName ),
     _shmName( shmName )
 {
@@ -100,11 +45,27 @@ void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInf
       throw Ex_BADOFLEN;
     }
 
-  switch( src[0] )
+  try
     {
-    default:
-      syslog( LOG_ERR, "bad command in daemonControl(..) - %d", src[0] );
-      throw Ex_BADSET;
+      switch( src[0] )
+        {
+        case DAEMON_CONTROL_START:
+          _daemonCtlr.start();
+          break;
+
+        case DAEMON_CONTROL_STOP:
+          _daemonCtlr.stop();
+          break;
+          
+        default:
+          syslog( LOG_ERR, "bad command in daemonControl(..) - %d", src[0] );
+          throw Ex_BADSET;
+        }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in daemonControl(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
     }
 }
 
@@ -172,18 +133,13 @@ void Mu2eerdDevice::daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo cons
       dest[0] = 0;
 
       // Daemon process running/not running status
-      dest[0] |= _daemonIsRunning() ? DAEMON_STATUS_RUNNING : 0;
+      dest[0] |= _daemonCtlr.isRunning() ? DAEMON_STATUS_RUNNING : 0;
     }
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in Mu2eerdDevice::daemonRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
-}
-
-bool Mu2eerdDevice::_daemonIsRunning() const
-{
-  return -1 != getProcIdByName( _daemonName );
 }
 
 unsigned int Mu2eerdDevice::_jenkinsNumberGet() const

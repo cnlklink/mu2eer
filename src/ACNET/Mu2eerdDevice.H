@@ -120,17 +120,17 @@ namespace Mu2eER
     /**
      * Constructor
      *
-     * @param daemonName Name of the mu2eerd process
+     * @param daemonCtlr A daemon controller object (used for stopping/starting mu2eerd)
      * @param mqName Name of the mu2eerd control queue
      * @param shmName Name of the mu2eerd shared memory region
      */
-    Mu2eerdDevice( string daemonName, string mqName, string shmName );
+    Mu2eerdDevice( DaemonController daemonCtlr, string mqName, string shmName );
 
   private:
     /**
-     * mu2eerd process name
+     * Controlls the daemon process
      */
-    string _daemonName;
+    DaemonController _daemonCtlr;
 
     /**
      * mu2eerd Control message queue name
@@ -141,13 +141,6 @@ namespace Mu2eER
      * mu2eerd Shared memory name
      */
     string _shmName;
-
-    /**
-     * Daemon is Running
-     *
-     * @return True if the mu2eerd process is running
-     */
-    bool _daemonIsRunning() const;
 
     /**
      * Get Jenkins Number
