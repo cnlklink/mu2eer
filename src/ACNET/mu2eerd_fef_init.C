@@ -31,7 +31,7 @@ int fef_init( int argc, char* argv[] )
       // Register devices
       register_dev( new Mu2eerdDevice( DaemonController( MU2EERD_PROCESS_NAME, 
                                                          "/etc/init.d/S78mu2eerd start 2>&1",
-                                                         "/etc/init.d/S78mu2eerd shutdown 2>&1" ),
+                                                         "/etc/init.d/S78mu2eerd stop 2>&1" ),
                                        MU2EERD_CMQ_NAME, 
                                        MU2EERD_SHM_NAME ) );
       
