@@ -50,11 +50,11 @@ void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInf
       switch( src[0] )
         {
         case DAEMON_CONTROL_START:
-          _daemonCtlr.start();
+          _start();
           break;
 
         case DAEMON_CONTROL_STOP:
-          _daemonCtlr.stop();
+          _stop();
           break;
           
         default:
@@ -150,4 +150,24 @@ unsigned int Mu2eerdDevice::_jenkinsNumberGet() const
   jnfile >> num;
 
   return num;
+}
+
+void Mu2eerdDevice::_start()
+{
+  if( _daemonCtlr.isRunning() )
+    {
+      syslog( LOG_ERR, "attempt to start mu2eerd when mu2eerd is already running" );
+      throw Ex_BADSET;
+    }
+  _daemonCtlr.start();
+}
+
+void Mu2eerdDevice::_stop()
+{
+  if( !_daemonCtlr.isRunning() )
+    {
+      syslog( LOG_ERR, "attempt to stop mu2eerd when mu2eerd is not running" );
+      throw Ex_BADSET;
+    }
+  _daemonCtlr.stop();
 }

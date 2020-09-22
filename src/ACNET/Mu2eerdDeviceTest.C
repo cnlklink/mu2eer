@@ -258,6 +258,9 @@ TEST( DaemonGroup, ControlStart )
       deviceA.daemonStatus( dest, &request );
       CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, readBuf );
 
+      // Starting again should throw Ex_BADSET
+      CHECK_THROWS_ACNETERROR( Ex_BADSET, deviceC.daemonControl( startSrc, &request ) );
+
       // Send stop request
       Array<const Mu2eerdDevice::daemon_statusctrl_t> stopSrc( &stopBuf, Index( 0 ), Count( 1 ) );
       deviceC.daemonControl( stopSrc, &request );
@@ -265,6 +268,9 @@ TEST( DaemonGroup, ControlStart )
       // Verify that the daemon is not running
       deviceA.daemonStatus( dest, &request );
       CHECK_EQUAL( 0, readBuf );
+
+      // Stopping again should throw Ex_BADSET
+      CHECK_THROWS_ACNETERROR( Ex_BADSET, deviceC.daemonControl( stopSrc, &request ) );
     }
   catch( exception e )
     {

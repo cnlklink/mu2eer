@@ -150,6 +150,16 @@ namespace Mu2eER
      * @return Jenkins build number
      */
     unsigned int _jenkinsNumberGet() const;
+
+    /**
+     * Start Daemon
+     */
+    void _start();
+
+    /**
+     * Stop Daemon
+     */
+    void _stop();
   };
 };
 
