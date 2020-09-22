@@ -9,6 +9,7 @@
 #include <array>
 #include <dirent.h>
 #include <fstream>
+#include <syslog.h>
 
 #include "DaemonController.H"
 
@@ -49,6 +50,7 @@ void DaemonController::_exec( string cmd ) const
   auto rc = pclose( pipe );
   if( rc != EXIT_SUCCESS )
     {
+      syslog( LOG_ERR, "  command was - %s", cmd.c_str() );
       throw runtime_error( "failed to exec daemon command, command failure" );
     }
 }
