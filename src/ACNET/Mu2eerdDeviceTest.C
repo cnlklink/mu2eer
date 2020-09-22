@@ -217,7 +217,7 @@ TEST( DaemonGroup, Control )
   CHECK_THROWS_ACNETERROR( Ex_BADSET, device.daemonControl( srcC, &request ) );
 }
 
-TEST( DaemonGroup, ControlStart )
+TEST( DaemonGroup, ControlStartStop )
 {
   ReqInfo request;
 
