@@ -49,6 +49,16 @@ namespace Mu2eER
       };
 
     /**
+     * Daemon Device / Control property commands
+     */
+    enum
+      {
+        DAEMON_CONTROL_SOFTREBOOT = 0x01,
+        DAEMON_CONTROL_START = 0x02,
+        DAEMON_CONTROL_STOP  = 0x00
+      };
+
+    /**
      * Daemon Device / Reading property array indeces
      */
     enum
@@ -56,6 +66,15 @@ namespace Mu2eER
         DAEMON_READ_IDX_UPTIME = 0,
         DAEMON_READ_IDX_PID = 1,
         DAEMON_READ_IDX_JENKINS_NUM = 2
+      };
+
+    /**
+     * Daemon Device / Status Property bit definitions
+     */
+    enum
+      {
+        // Bit 0 - daemon is running
+        DAEMON_STATUS_RUNNING = 0x01
       };
 
     /**
@@ -69,24 +88,50 @@ namespace Mu2eER
     static const unsigned int DAEMON_STATUSCTRL_MAX = 1;
 
     /**
+     * Daemon Device / Control property
+     *
+     * Process control commands for the Daemon device.
+     *
+     * @param src ACNET setting buffer
+     * @param reqinfo ACNET request object
+     */
+    void daemonControl( Array<const daemon_statusctrl_t>& src, ReqInfo const* reqinfo );
+
+    /**
      * Read Daemon Block
      *
      * Returns an array of information about the mu2eerd daemon to ACNET.
      *
      * @param dest ACNET response buffer
-     * @param reqinfo ACNET recquest object
+     * @param reqinfo ACNET request object
      */
     void daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
+     * Daemon Device / Status Property
+     *
+     * Returns digital status for the Daemon device.
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo const* reqinfo );
+
+    /**
      * Constructor
      *
+     * @param daemonCtlr A daemon controller object (used for stopping/starting mu2eerd)
      * @param mqName Name of the mu2eerd control queue
      * @param shmName Name of the mu2eerd shared memory region
      */
-    Mu2eerdDevice( string mqName, string shmName );
+    Mu2eerdDevice( DaemonController daemonCtlr, string mqName, string shmName );
 
   private:
+    /**
+     * Controlls the daemon process
+     */
+    DaemonController _daemonCtlr;
+
     /**
      * mu2eerd Control message queue name
      */
@@ -105,6 +150,16 @@ namespace Mu2eER
      * @return Jenkins build number
      */
     unsigned int _jenkinsNumberGet() const;
+
+    /**
+     * Start Daemon
+     */
+    void _start();
+
+    /**
+     * Stop Daemon
+     */
+    void _stop();
   };
 };
 

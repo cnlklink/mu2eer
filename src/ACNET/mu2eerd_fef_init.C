@@ -8,6 +8,7 @@
 
 #include <syslog.h>
 
+#include "DaemonController.H"
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
@@ -28,7 +29,11 @@ int fef_init( int argc, char* argv[] )
   try
     {
       // Register devices
-      register_dev( new Mu2eerdDevice( MU2EERD_CMQ_NAME, MU2EERD_SHM_NAME ) );
+      register_dev( new Mu2eerdDevice( DaemonController( MU2EERD_PROCESS_NAME, 
+                                                         "/etc/init.d/S78mu2eerd start 2>&1",
+                                                         "/etc/init.d/S78mu2eerd stop 2>&1" ),
+                                       MU2EERD_CMQ_NAME, 
+                                       MU2EERD_SHM_NAME ) );
       
       syslog( LOG_INFO, "acnet_mu2eerd started" );
     }

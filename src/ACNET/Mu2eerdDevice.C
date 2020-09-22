@@ -9,13 +9,15 @@
 #include <fstream>
 #include <syslog.h>
 
+#include "DaemonController.H"
 #include "errors.H"
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
 
-Mu2eerdDevice::Mu2eerdDevice( string mqName, string shmName )
+Mu2eerdDevice::Mu2eerdDevice( DaemonController daemonCtrl, string mqName, string shmName )
   : Device<32>( "Mu2eerdDevice", "mu2eerd Device" ),
+    _daemonCtlr( daemonCtrl ),
     _mqName( mqName ),
     _shmName( shmName )
 {
@@ -23,6 +25,48 @@ Mu2eerdDevice::Mu2eerdDevice( string mqName, string shmName )
                   *this, 
                   &Mu2eerdDevice::daemonRead, 
                   DAEMON_READ_MAX );
+
+  registerMethods( ATTR_DAEMON_STATUSCTRL,
+                   *this,
+                   &Mu2eerdDevice::daemonStatus,
+                   &Mu2eerdDevice::daemonControl,
+                   DAEMON_STATUSCTRL_MAX );
+}
+
+void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInfo const* reqinfo )
+{
+  if( src.offset.getValue() != 0 )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( src.total.getValue() != 1 )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      switch( src[0] )
+        {
+        case DAEMON_CONTROL_START:
+          _start();
+          break;
+
+        case DAEMON_CONTROL_STOP:
+          _stop();
+          break;
+          
+        default:
+          syslog( LOG_ERR, "bad command in daemonControl(..) - %d", src[0] );
+          throw Ex_BADSET;
+        }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in daemonControl(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
 }
 
 void Mu2eerdDevice::daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqinfo )
@@ -71,6 +115,33 @@ void Mu2eerdDevice::daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqin
     }
 }
 
+void Mu2eerdDevice::daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( DAEMON_STATUSCTRL_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue() ) >
+      static_cast<int>( DAEMON_STATUSCTRL_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      dest[0] = 0;
+
+      // Daemon process running/not running status
+      dest[0] |= _daemonCtlr.isRunning() ? DAEMON_STATUS_RUNNING : 0;
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in Mu2eerdDevice::daemonRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
+
 unsigned int Mu2eerdDevice::_jenkinsNumberGet() const
 {
   fstream jnfile( "/etc/jenkins_build_number", ios_base::in );
@@ -79,4 +150,24 @@ unsigned int Mu2eerdDevice::_jenkinsNumberGet() const
   jnfile >> num;
 
   return num;
+}
+
+void Mu2eerdDevice::_start()
+{
+  if( _daemonCtlr.isRunning() )
+    {
+      syslog( LOG_ERR, "attempt to start mu2eerd when mu2eerd is already running" );
+      throw Ex_BADSET;
+    }
+  _daemonCtlr.start();
+}
+
+void Mu2eerdDevice::_stop()
+{
+  if( !_daemonCtlr.isRunning() )
+    {
+      syslog( LOG_ERR, "attempt to stop mu2eerd when mu2eerd is not running" );
+      throw Ex_BADSET;
+    }
+  _daemonCtlr.stop();
 }

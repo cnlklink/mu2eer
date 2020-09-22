@@ -3,28 +3,31 @@
  *
  * This file contains the implementation of the SSMDevice class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <syslog.h>
+#include <iostream>
 
+#include "errors.H"
 #include "SSMDevice.H"
 
 using namespace Mu2eER;
+using namespace std;
 
 SSMDevice::SSMDevice( string mqName, string shmName )
   : Device<32>( "SSMDevice", "Spill State Machine Device" ),
     _mqName( mqName ),
     _shmName( shmName )
 {
-  registerMethod( ATTR_SPILL_COUNTER_READING, 
-                  *this, 
-                  &SSMDevice::spillCounterRead, 
+  registerMethod( ATTR_SPILL_COUNTER_READING,
+                  *this,
+                  &SSMDevice::spillCounterRead,
                   SPILL_COUNTER_READING_MAX );
 
-  registerMethod( ATTR_STATE_READING, 
-                  *this, 
-                  &SSMDevice::stateRead, 
+  registerMethod( ATTR_STATE_READING,
+                  *this,
+                  &SSMDevice::stateRead,
                   STATE_READING_MAX );
 
   registerMethods( ATTR_STATUS_CONTROL,
@@ -37,9 +40,14 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   *this,
                   &SSMDevice::timeInSpillRead,
                   TIS_READING_MAX );
+
+  registerMethod( ATTR_IDEAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::idealSpillRead,
+                  IDEAL_SPILL_READING_MAX );
 }
 
-void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest, 
+void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
                                   ReqInfo const* reqinfo )
 {
   if( dest.offset.getValue() > static_cast<int>( SPILL_COUNTER_READING_MAX ) )
@@ -47,7 +55,7 @@ void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
       throw Ex_BADOFF;
     }
 
-  if( (dest.offset.getValue() + dest.total.getValue()) > 
+  if( (dest.offset.getValue() + dest.total.getValue()) >
       static_cast<int>( SPILL_COUNTER_READING_MAX ) )
     {
       throw Ex_BADOFLEN;
@@ -106,29 +114,37 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
       throw Ex_BADOFLEN;
     }
 
-  ControlMQClient cmq( _mqName );
-
-  switch( src[0] )
+  try
     {
-    case CONTROL_RESET:
-      cmq.reset();
-      return;
-
-    case CONTROL_START:
-      cmq.start();
-      return;
-
-    case CONTROL_FAULT:
-      cmq.fault();
-      return;
-
-    default:
-      syslog( LOG_ERR, "bad command in statusCtrlWrite(..) - %d", src[0] );
-      throw Ex_BADSET;
+      ControlMQClient cmq( _mqName );
+      
+      switch( src[0] )
+        {
+        case CONTROL_RESET:
+          cmq.reset();
+          return;
+          
+        case CONTROL_START:
+          cmq.start();
+          return;
+          
+        case CONTROL_FAULT:
+          cmq.fault();
+          return;
+          
+        default:
+          syslog( LOG_ERR, "bad command in SSMDevice::statusCtrlWrite(..) - %d", src[0] );
+          throw Ex_BADSET;
+        }
+    }
+  catch( Error e )
+    {
+      syslog( LOG_ERR, "Error caught in SSMDevice::statusCtrlWrite(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
     }
 }
 
-void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest, 
+void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
                                  ReqInfo const* reqinfo )
 {
   if( dest.offset.getValue() > static_cast<int>( TIS_READING_MAX ) )
@@ -136,7 +152,7 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
       throw Ex_BADOFF;
     }
 
-  if( (dest.offset.getValue() + dest.total.getValue()) > 
+  if( (dest.offset.getValue() + dest.total.getValue()) >
       static_cast<int>( TIS_READING_MAX ) )
     {
       throw Ex_BADOFLEN;
@@ -150,6 +166,43 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::timeInSpillRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
+
+void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
+				ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
+      SharedMemoryClient shmc( _shmName );
+      SpillStateMachineSMB smb = SpillStateMachineSMB();
+
+      smb.initialize();
+
+      auto idealSpillData = smb.idealSpillWaveFormGet();
+      upper_bound = lower_bound + sample_size;
+ 
+      for ( i = lower_bound; i < upper_bound; i++ ) {
+	dest[j] = idealSpillData[i];
+	j++;
+      }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
 }

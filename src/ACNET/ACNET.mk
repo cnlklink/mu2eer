@@ -17,7 +17,7 @@ ACNET_ADC_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_ADC_OBJS))
 ACNET_ADC_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_ADC_OBJS))
 ACNET_ADC_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_ADC_OBJS))
 
-ACNET_MU2EERD_OBJS        = Mu2eerdDevice.o mu2eerd_fef_init.o
+ACNET_MU2EERD_OBJS        = Mu2eerdDevice.o mu2eerd_fef_init.o DaemonController.o
 ACNET_MU2EERD_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_MU2EERD_OBJS))
 ACNET_MU2EERD_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_MU2EERD_OBJS))
 ACNET_MU2EERD_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_MU2EERD_OBJS))
@@ -29,6 +29,7 @@ ACNET_SSM_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_SSM_OBJS))
 
 ACNET_TEST_OBJS        = ADCDevice.o \
 	ADCDeviceTest.o \
+	DaemonController.o \
 	Mu2eerdDevice.o \
 	Mu2eerdDeviceTest.o \
 	SSMDevice.o \
