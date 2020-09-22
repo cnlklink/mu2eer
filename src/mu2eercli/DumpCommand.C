@@ -26,7 +26,7 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   const int* arr = _shmc.ssmBlockGet().idealSpillWaveFormGet();
 
   std::ofstream fileToCreate("ideal_spill_data.csv");
-  fileToCreate << "Entry, Ideal Spill Data" << endl;
+  fileToCreate << "Entry, Ideal Spill Data" << endl << endl;
   for (i = 0; i < size; i++) {
     cout << i << ": " << arr[i] << endl;
     fileToCreate << i << ", " << arr[i] << endl;
