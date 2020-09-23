@@ -75,7 +75,13 @@ namespace Mu2eER
     enum
       {
         // Bit 0 - daemon is running
-        DAEMON_STATUS_RUNNING = 0x01
+        DAEMON_STATUS_RUNNING = 0x01,
+
+        // Bit 1 - shared memory is connected
+        DAEMON_STATUS_SHM_CONNECTED = 0x02,
+
+        // Bit 2 - command queue is connected
+        DAEMON_STATUS_CMQ_CONNECTED = 0x04
       };
 
     /**

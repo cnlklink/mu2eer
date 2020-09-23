@@ -71,15 +71,38 @@ TEST( DaemonGroup, Status )
     {
       // Initial status
       device.daemonStatus( dest, &request );
-      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, buf );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING |
+                   Mu2eerdDevice::DAEMON_STATUS_SHM_CONNECTED |
+                   Mu2eerdDevice::DAEMON_STATUS_CMQ_CONNECTED, 
+                   buf );
 
-      // Use a different process name to test daemon process status
+      // Use a different process/shm/cmq name to test daemon process status
       Mu2eerdDevice deviceB( sysctlr,
                              DaemonController( "mu2eerd", "", "" ), 
                              "/mu2eer_test", 
                              "mu2eer_test" );
       deviceB.daemonStatus( dest, &request );
-      CHECK_EQUAL( 0, buf );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_SHM_CONNECTED |
+                   Mu2eerdDevice::DAEMON_STATUS_CMQ_CONNECTED,
+                   buf );
+
+      Mu2eerdDevice deviceC( sysctlr,
+                             DaemonController( "acnet_tests", "", "" ), 
+                             "/does_not_exist", 
+                             "mu2eer_test" );
+      deviceC.daemonStatus( dest, &request );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING |
+                   Mu2eerdDevice::DAEMON_STATUS_SHM_CONNECTED, 
+                   buf );
+
+      Mu2eerdDevice deviceD( sysctlr,
+                             DaemonController( "acnet_tests", "", "" ), 
+                             "/mu2eer_test", 
+                             "does_not_exist" );
+      deviceD.daemonStatus( dest, &request );
+      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING |
+                   Mu2eerdDevice::DAEMON_STATUS_CMQ_CONNECTED, 
+                   buf );
     }
   catch( Error e )
     {
@@ -243,7 +266,7 @@ TEST( DaemonGroup, ControlStartStop )
                              "mu2eer_test" );
       Array<Mu2eerdDevice::daemon_statusctrl_t> dest( &readBuf, Index( 0 ), Count( 1 ) );
       deviceA.daemonStatus( dest, &request );
-      CHECK_EQUAL( 0, readBuf );
+      CHECK_EQUAL( 0, readBuf & Mu2eerdDevice::DAEMON_STATUS_RUNNING );
 
       // Send start command, start fails and should throw Ex_DEVFAILED
       Mu2eerdDevice deviceB( sysctlr,
@@ -257,7 +280,7 @@ TEST( DaemonGroup, ControlStartStop )
 
       // Verify that the daemon is not running, again
       deviceA.daemonStatus( dest, &request );
-      CHECK_EQUAL( 0, readBuf );
+      CHECK_EQUAL( 0, readBuf & Mu2eerdDevice::DAEMON_STATUS_RUNNING );
 
       // Start for real this time
       Mu2eerdDevice deviceC( sysctlr,
@@ -270,7 +293,7 @@ TEST( DaemonGroup, ControlStartStop )
 
       // Verify that the daemon is running
       deviceA.daemonStatus( dest, &request );
-      CHECK_EQUAL( Mu2eerdDevice::DAEMON_STATUS_RUNNING, readBuf );
+      CHECK( Mu2eerdDevice::DAEMON_STATUS_RUNNING & readBuf );
 
       // Starting again should throw Ex_BADSET
       CHECK_THROWS_ACNETERROR( Ex_BADSET, deviceC.daemonControl( startSrc, &request ) );
@@ -281,7 +304,7 @@ TEST( DaemonGroup, ControlStartStop )
 
       // Verify that the daemon is not running
       deviceA.daemonStatus( dest, &request );
-      CHECK_EQUAL( 0, readBuf );
+      CHECK_EQUAL( 0, readBuf & Mu2eerdDevice::DAEMON_STATUS_RUNNING );
 
       // Stopping again should throw Ex_BADSET
       CHECK_THROWS_ACNETERROR( Ex_BADSET, deviceC.daemonControl( stopSrc, &request ) );

@@ -142,6 +142,28 @@ void Mu2eerdDevice::daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo cons
 
       // Daemon process running/not running status
       dest[0] |= _daemonCtlr.isRunning() ? DAEMON_STATUS_RUNNING : 0;
+
+      // Shared memory status
+      try
+        {
+          SharedMemoryClient shmc( _shmName );
+          dest[0] |= DAEMON_STATUS_SHM_CONNECTED;
+        }
+      catch( runtime_error e )
+        {
+          // Not connected
+        }
+
+      // Control queue status
+      try
+        {
+          ControlMQClient cmq( _mqName );
+          dest[0] |= DAEMON_STATUS_CMQ_CONNECTED;
+        }
+      catch( runtime_error e )
+        {
+          // Not connected
+        }
     }
   catch( runtime_error e )
     {
