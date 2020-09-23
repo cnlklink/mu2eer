@@ -10,6 +10,7 @@
 
 #include "DaemonController.H"
 #include "Mu2eerdDevice.H"
+#include "SystemController.H"
 
 using namespace Mu2eER;
 
@@ -29,7 +30,9 @@ int fef_init( int argc, char* argv[] )
   try
     {
       // Register devices
-      register_dev( new Mu2eerdDevice( DaemonController( MU2EERD_PROCESS_NAME, 
+      SystemController sysctlr;
+      register_dev( new Mu2eerdDevice( sysctlr,
+                                       DaemonController( MU2EERD_PROCESS_NAME, 
                                                          "/etc/init.d/S78mu2eerd start 2>&1",
                                                          "/etc/init.d/S78mu2eerd stop 2>&1" ),
                                        MU2EERD_CMQ_NAME, 

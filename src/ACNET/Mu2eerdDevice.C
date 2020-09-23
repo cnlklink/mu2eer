@@ -6,20 +6,24 @@
  * @author jdiamond
  */
 
-#include <fstream>
 #include <syslog.h>
 
 #include "DaemonController.H"
 #include "errors.H"
+#include "ISystemController.H"
 #include "Mu2eerdDevice.H"
 
 using namespace Mu2eER;
 
-Mu2eerdDevice::Mu2eerdDevice( DaemonController daemonCtrl, string mqName, string shmName )
+Mu2eerdDevice::Mu2eerdDevice( ISystemController& sysCtrl,
+                              DaemonController daemonCtrl, 
+                              string mqName, 
+                              string shmName )
   : Device<32>( "Mu2eerdDevice", "mu2eerd Device" ),
     _daemonCtlr( daemonCtrl ),
     _mqName( mqName ),
-    _shmName( shmName )
+    _shmName( shmName ),
+    _sysCtlr( sysCtrl )
 {
   registerMethod( ATTR_DAEMON_READ, 
                   *this, 
@@ -49,6 +53,10 @@ void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInf
     {
       switch( src[0] )
         {
+        case DAEMON_CONTROL_SOFTREBOOT:
+          _reboot();
+          break;
+
         case DAEMON_CONTROL_START:
           _start();
           break;
@@ -99,7 +107,7 @@ void Mu2eerdDevice::daemonRead( Array<daemon_read_t>& dest, ReqInfo const* reqin
               break;
               
             case DAEMON_READ_IDX_JENKINS_NUM:
-              dest[i] = _jenkinsNumberGet();
+              dest[i] = _sysCtlr.jenkinsNumberGet();
               break;
               
             default:
@@ -142,14 +150,14 @@ void Mu2eerdDevice::daemonStatus( Array<daemon_statusctrl_t>& dest, ReqInfo cons
     }
 }
 
-unsigned int Mu2eerdDevice::_jenkinsNumberGet() const
+void Mu2eerdDevice::_reboot()
 {
-  fstream jnfile( "/etc/jenkins_build_number", ios_base::in );
-  unsigned int num;
-
-  jnfile >> num;
-
-  return num;
+  if( _sysCtlr.isRebooting() )
+    {
+      syslog( LOG_ERR, "attempt to reboot when we're already rebooting" );
+      throw Ex_BADSET;
+    }
+  _sysCtlr.doReboot();
 }
 
 void Mu2eerdDevice::_start()
