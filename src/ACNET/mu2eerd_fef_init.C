@@ -14,6 +14,8 @@
 
 using namespace Mu2eER;
 
+static SystemController sysctlr;
+
 extern void register_dev( DeviceBase* );
 
 /**
@@ -30,7 +32,6 @@ int fef_init( int argc, char* argv[] )
   try
     {
       // Register devices
-      SystemController sysctlr;
       register_dev( new Mu2eerdDevice( sysctlr,
                                        DaemonController( MU2EERD_PROCESS_NAME, 
                                                          "/etc/init.d/S78mu2eerd start 2>&1",
