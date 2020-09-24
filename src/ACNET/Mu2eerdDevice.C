@@ -179,6 +179,7 @@ void Mu2eerdDevice::_reboot()
       syslog( LOG_ERR, "attempt to reboot when we're already rebooting" );
       throw Ex_BADSET;
     }
+  
   _sysCtlr.doReboot();
 }
 

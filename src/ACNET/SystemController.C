@@ -6,8 +6,10 @@
  * @author jdiamond
  */
 
+#include <chrono>
 #include <fstream>
 #include <sys/reboot.h>
+#include <thread>
 #include <unistd.h>
 
 #include "SystemController.H"
@@ -34,8 +36,13 @@ void SystemController::doReboot()
 {
   _rebooting = true;
   
-  sync();
-  reboot( RB_AUTOBOOT );
+  // Start a thread that executes the reboot after waiting a half-second to give us just a little
+  // time to acknowledge success before the system reboots
+  thread rebootT( []() {
+      this_thread::sleep_for( chrono::milliseconds( 500 ) );
+      sync();
+      reboot( RB_AUTOBOOT );
+    } );
 }
 
 SystemController::SystemController()
