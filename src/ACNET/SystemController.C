@@ -43,6 +43,7 @@ void SystemController::doReboot()
       sync();
       reboot( RB_AUTOBOOT );
     } );
+  rebootT.detach();
 }
 
 SystemController::SystemController()
