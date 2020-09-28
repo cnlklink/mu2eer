@@ -234,11 +234,11 @@ void SSMDevice::actualSpillRead( Array<SSMDevice::actual_spill_read_t>& dest,
 
       smb.initialize();
 
-      auto actualSpillData = smb.idealSpillWaveFormGet();
+      auto actualSpillData = smb.actualSpillWaveFormGet();
       upper_bound = lower_bound + sample_size;
 
       for ( i = lower_bound; i < upper_bound; i++ ) {
-	       dest[j] = idealSpillData[i];
+	       dest[j] = actualSpillData[i];
 	       j++;
       }
     }

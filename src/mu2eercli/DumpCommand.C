@@ -1,4 +1,4 @@
-/**
+ /**
  * DumpCommand.C
  *
  * This file contains the implementation of the DumpCommand class.
@@ -23,13 +23,14 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
 {
   int i = 0;
   int size = _shmc.ssmBlockGet().idealSpillWaveFormSizeGet();
-  const int* arr = _shmc.ssmBlockGet().idealSpillWaveFormGet();
+  auto ideal = _shmc.ssmBlockGet().idealSpillWaveFormGet();
+  auto actual = _shmc.ssmBlockGet().actualSpillWaveFormGet();
 
-  std::ofstream fileToCreate("ideal_spill_data.csv");
-  fileToCreate << "Entry, Ideal Spill Data" << endl << endl;
+  std::ofstream fileToCreate("spill_data.csv");
+  fileToCreate << "Entry, Ideal Spill Data, Actual Spill Data" << endl << endl;
   for (i = 0; i < size; i++) {
-    cout << i << ": " << arr[i] << endl;
-    fileToCreate << i << ", " << arr[i] << endl;
+    cout << i << ", " << ideal[i] << ", " << actual[i] << endl;
+    fileToCreate << i << ", " << ideal[i] << ", " << actual[i] << endl;
   }
 
   fileToCreate.close();

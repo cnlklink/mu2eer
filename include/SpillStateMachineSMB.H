@@ -159,7 +159,7 @@ namespace Mu2eER
     /**
      * Actual Spill Data array
      */
-    int _actualSpillWaveFormData[16000];
+    int _actualSpillWaveFormData[16000] = {0};
   };
 };
 

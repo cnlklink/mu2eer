@@ -371,7 +371,7 @@ TEST( CoreGroup, IdealSpillReadSlice )
  *
  * Test the Ideal Spill device reading property
  */
-TEST( CoreGroup, IdealSpillReadInitial )
+TEST( CoreGroup, ActualSpillReadInitial )
 {
   int i = 0, j = 15999, size = SSMDevice::IDEAL_SPILL_READING_MAX;
 
@@ -382,16 +382,19 @@ TEST( CoreGroup, IdealSpillReadInitial )
   Array<SSMDevice::actual_spill_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );
   SSMDevice device( "/mu2eer_test", "mu2eer_test" );
 
-  device.actual_spill_read_t( dest, &request );
+  device.actualSpillRead( dest, &request );
 
-  for (i = 0; i < 16000; i++) {
-    cout << i <<": " << dest[i] << endl;
-  }
-
-/*
-  for ( i = 0; i < size; i++ ) {
-    CHECK_EQUAL( j, (int) dest[i] );
-    j--;
+  for ( j = size - 1; j >= 0; j-- ) 
+  {
+    if ( j % 1000 == 0 )
+    {
+      j-=100;
+      CHECK_EQUAL( j, (int) dest[i] );
+    } else 
+    {
+      CHECK_EQUAL( j, (int) dest[i] );
+    }
+    i++;
   }
 
   // Handle no shared memory by throwing Ex_DEVFAILED
@@ -409,6 +412,6 @@ TEST( CoreGroup, IdealSpillReadInitial )
                                                 Index( 0 ),
                                                 Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
   CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.idealSpillRead( destC, &request ) );
-*/
-  delete[] spill_buf;
+
+ delete[] spill_buf;
 }

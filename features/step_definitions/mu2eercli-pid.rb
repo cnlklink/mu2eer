@@ -226,5 +226,5 @@ end
 
 Then("the contents of the shared memory are displayed") do
   # Expect the array contents to be present in the output
-  expect( @result ).to match /([\d+: \d+\n]+)/
+  expect( @result ).to match /([\d+, \d+, \d+\n]+)/
 end

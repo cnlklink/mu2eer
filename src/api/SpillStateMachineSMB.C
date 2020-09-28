@@ -98,12 +98,15 @@ int SpillStateMachineSMB::actualSpillWaveFormSizeGet() const
 void SpillStateMachineSMB::actualSpillWaveform()
 {
   int i = 0, j = 0;
-  for (i = 15999; i >= 0; i--)
+
+  for ( i = 15999; i >= 0; i-- )
   {
-    if (i % 1000 == 0) {
+    if ( i % 1000 == 0 ) 
+    {
       i-=100;
       _actualSpillWaveFormData[j++] = i;
-    } else {
+    } else 
+    {
       _actualSpillWaveFormData[j++] = i;
     }
   }
