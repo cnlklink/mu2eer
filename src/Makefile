@@ -33,7 +33,7 @@ MYLIBS		= $(EES_ERLANG_LIBDIR)/lib/$(ERLANG_INT)/lib
 TEST_FLAGS      = -lCppUTest -lCppUTestExt -fprofile-arcs -ftest-coverage 
 
 # Flags passed when the tests are ran
-TEST_RUN_FLAGS  ?= -c -v
+TEST_RUN_FLAGS  ?= -c
 
 # -lrt needed for POSIX shared memory
 DEV_LIBS        = -lconfig++ -lrt

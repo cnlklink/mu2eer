@@ -1,4 +1,4 @@
- /**
+/**
  * DumpCommand.C
  *
  * This file contains the implementation of the DumpCommand class.
