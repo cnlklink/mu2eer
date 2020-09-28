@@ -14,6 +14,7 @@
 #include "device.h"
 
 #include "ControlMQClient.H"
+#include "ISystemController.H"
 #include "SharedMemoryClient.H"
 
 using namespace FFF;
@@ -74,7 +75,13 @@ namespace Mu2eER
     enum
       {
         // Bit 0 - daemon is running
-        DAEMON_STATUS_RUNNING = 0x01
+        DAEMON_STATUS_RUNNING = 0x01,
+
+        // Bit 1 - shared memory is connected
+        DAEMON_STATUS_SHM_CONNECTED = 0x02,
+
+        // Bit 2 - command queue is connected
+        DAEMON_STATUS_CMQ_CONNECTED = 0x04
       };
 
     /**
@@ -120,11 +127,15 @@ namespace Mu2eER
     /**
      * Constructor
      *
+     * @param sysCtlr A system controller object (used for rebooting)
      * @param daemonCtlr A daemon controller object (used for stopping/starting mu2eerd)
      * @param mqName Name of the mu2eerd control queue
      * @param shmName Name of the mu2eerd shared memory region
      */
-    Mu2eerdDevice( DaemonController daemonCtlr, string mqName, string shmName );
+    Mu2eerdDevice( ISystemController& sysCtlr,
+                   DaemonController daemonCtlr, 
+                   string mqName, 
+                   string shmName );
 
   private:
     /**
@@ -143,13 +154,14 @@ namespace Mu2eER
     string _shmName;
 
     /**
-     * Get Jenkins Number
-     *
-     * Reads and returns the value from /etc/jenkins_build_number.
-     *
-     * @return Jenkins build number
+     * System control
      */
-    unsigned int _jenkinsNumberGet() const;
+    ISystemController& _sysCtlr;
+
+    /**
+     * Soft reboot
+     */
+    void _reboot();
 
     /**
      * Start Daemon
