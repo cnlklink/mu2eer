@@ -45,6 +45,11 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   *this,
                   &SSMDevice::idealSpillRead,
                   IDEAL_SPILL_READING_MAX );
+
+  registerMethod( ATTR_ACTUAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::actualSpillRead,
+                  IDEAL_SPILL_READING_MAX );
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -117,21 +122,21 @@ void SSMDevice::statusCtrlWrite( Array<const control_t>& src, ReqInfo const* req
   try
     {
       ControlMQClient cmq( _mqName );
-      
+
       switch( src[0] )
         {
         case CONTROL_RESET:
           cmq.reset();
           return;
-          
+
         case CONTROL_START:
           cmq.start();
           return;
-          
+
         case CONTROL_FAULT:
           cmq.fault();
           return;
-          
+
         default:
           syslog( LOG_ERR, "bad command in SSMDevice::statusCtrlWrite(..) - %d", src[0] );
           throw Ex_BADSET;
@@ -194,15 +199,52 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
 
       auto idealSpillData = smb.idealSpillWaveFormGet();
       upper_bound = lower_bound + sample_size;
- 
+
       for ( i = lower_bound; i < upper_bound; i++ ) {
-	dest[j] = idealSpillData[i];
-	j++;
+	       dest[j] = idealSpillData[i];
+	       j++;
       }
     }
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
+
+void SSMDevice::actualSpillRead( Array<SSMDevice::actual_spill_read_t>& dest,
+				ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
+      SharedMemoryClient shmc( _shmName );
+      SpillStateMachineSMB smb = SpillStateMachineSMB();
+
+      smb.initialize();
+
+      auto actualSpillData = smb.actualSpillWaveFormGet();
+      upper_bound = lower_bound + sample_size;
+
+      for ( i = lower_bound; i < upper_bound; i++ ) {
+	       dest[j] = actualSpillData[i];
+	       j++;
+      }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::actualSpillRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
 }

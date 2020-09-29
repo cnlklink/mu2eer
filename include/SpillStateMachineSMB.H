@@ -88,14 +88,14 @@ namespace Mu2eER
     void timeInSpillSet( float tis );
 
     /**
-     * Get Data Array
+     * Get Ideal Spill Data Array
      *
      * @return Array Holding Data
      */
     const int* idealSpillWaveFormGet() const;
 
     /**
-     * Get Data Array Size
+     * Get Ideal Spill Data Array Size
      *
      * @return Size of Array
      */
@@ -104,7 +104,26 @@ namespace Mu2eER
     /**
      * Transform Data Into Ideal Spill Waveform
      */
-     void idealSpillWaveform();
+    void idealSpillWaveform();
+
+    /**
+     * Get Actual Spill Data Array
+     *
+     * @return Array Holding Data
+     */
+    const int* actualSpillWaveFormGet() const;
+
+    /**
+     * Get Data Array Size
+     *
+     * @return Size of Array
+     */
+    int actualSpillWaveFormSizeGet() const;
+
+    /**
+     * Transform Data Into Actual Spill Waveform
+     */
+    void actualSpillWaveform();
 
   private:
     /**
@@ -133,9 +152,14 @@ namespace Mu2eER
     int _idealSpillWaveFormSize = 16000;
 
     /**
-     * Data array
+     * Ideal Spill Data array
      */
     int _idealSpillWaveFormData[16000];
+
+    /**
+     * Actual Spill Data array
+     */
+    int _actualSpillWaveFormData[16000] = {0};
   };
 };
 

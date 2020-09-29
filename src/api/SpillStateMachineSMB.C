@@ -22,6 +22,7 @@ void SpillStateMachineSMB::initialize()
 {
   cout << "Initializing Spill State Machine Shared Memory...";
   idealSpillWaveform();
+  actualSpillWaveform();
   cout << " done." << endl;
 }
 
@@ -80,6 +81,33 @@ void SpillStateMachineSMB::idealSpillWaveform()
   int i = 0, j = 0;
   for (i = 15999; i >= 0; i--)
   {
-      _idealSpillWaveFormData[j++] = i;
+    _idealSpillWaveFormData[j++] = i;
+  }
+}
+
+const int* SpillStateMachineSMB::actualSpillWaveFormGet() const
+{
+   return _actualSpillWaveFormData;
+}
+
+int SpillStateMachineSMB::actualSpillWaveFormSizeGet() const
+{
+  return _idealSpillWaveFormSize;
+}
+
+void SpillStateMachineSMB::actualSpillWaveform()
+{
+  int i = 0, j = 0;
+
+  for ( i = 15999; i >= 0; i-- )
+  {
+    if ( i % 1000 == 0 ) 
+    {
+      i-=100;
+      _actualSpillWaveFormData[j++] = i;
+    } else 
+    {
+      _actualSpillWaveFormData[j++] = i;
+    }
   }
 }

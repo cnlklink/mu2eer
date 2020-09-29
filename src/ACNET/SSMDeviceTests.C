@@ -343,9 +343,9 @@ TEST( CoreGroup, IdealSpillReadInitial )
  */
 TEST( CoreGroup, IdealSpillReadSlice )
 {
-  int i = 0, j = 0, size = SSMDevice::IDEAL_SPILL_READING_MAX, 
+  int i = 0, j = 0, size = SSMDevice::IDEAL_SPILL_READING_MAX,
    count = 100, lower_bound = 0;
-  
+
   lower_bound = size - count - 1;
 
   // Construct an ACNET request and response buffer
@@ -357,11 +357,61 @@ TEST( CoreGroup, IdealSpillReadSlice )
 
   device.idealSpillRead( dest, &request );
 
-  j = count;    
+  j = count;
   for ( i = 0; i < count; i++ ) {
     CHECK_EQUAL( j, (int) dest[i] );
     j--;
   }
 
   delete[] spill_buf;
+}
+
+/**
+ * Actual Spill Read Test
+ *
+ * Test the Ideal Spill device reading property
+ */
+TEST( CoreGroup, ActualSpillReadInitial )
+{
+  int i = 0, j = 15999, size = SSMDevice::IDEAL_SPILL_READING_MAX;
+
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::actual_spill_read_t* spill_buf = new SSMDevice::actual_spill_read_t[16000];
+
+  Array<SSMDevice::actual_spill_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+
+  device.actualSpillRead( dest, &request );
+
+  for ( j = size - 1; j >= 0; j-- ) 
+  {
+    if ( j % 1000 == 0 )
+    {
+      j-=100;
+      CHECK_EQUAL( j, (int) dest[i] );
+    } else 
+    {
+      CHECK_EQUAL( j, (int) dest[i] );
+    }
+    i++;
+  }
+
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.idealSpillRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::ideal_spill_read_t> destB( spill_buf,
+                                                Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
+                                                Count( 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.idealSpillRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::ideal_spill_read_t> destC( spill_buf,
+                                                Index( 0 ),
+                                                Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.idealSpillRead( destC, &request ) );
+
+ delete[] spill_buf;
 }
