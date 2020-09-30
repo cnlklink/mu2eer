@@ -276,7 +276,7 @@ void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
 
       smb.initialize();
 
-      auto errorSignalData = smb.errorSignalWaveform();
+      auto errorSignalData = smb.errorSignalWaveFormGet();
       upper_bound = lower_bound + sample_size;
 
       for ( i = lower_bound; i < upper_bound; i++ ) {

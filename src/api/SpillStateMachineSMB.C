@@ -23,6 +23,7 @@ void SpillStateMachineSMB::initialize()
   cout << "Initializing Spill State Machine Shared Memory...";
   idealSpillWaveform();
   actualSpillWaveform();
+  errorSignalWaveform();
   cout << " done." << endl;
 }
 
