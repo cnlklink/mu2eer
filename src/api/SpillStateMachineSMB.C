@@ -101,13 +101,32 @@ void SpillStateMachineSMB::actualSpillWaveform()
 
   for ( i = 15999; i >= 0; i-- )
   {
-    if ( i % 1000 == 0 ) 
+    if ( i % 1000 == 0 )
     {
       i-=100;
       _actualSpillWaveFormData[j++] = i;
-    } else 
+    } else
     {
       _actualSpillWaveFormData[j++] = i;
     }
+  }
+}
+
+const int* SpillStateMachineSMB::errorSignalWaveFormGet() const
+{
+   return _errorSignalWaveFormData;
+}
+
+int SpillStateMachineSMB::errorSignalWaveFormSizeGet() const
+{
+  return _idealSpillWaveFormSize;
+}
+
+void SpillStateMachineSMB::errorSignalWaveform()
+{
+  int i = 0;
+
+  for ( i = 0; i < _idealSpillWaveFormSize; i++ ) {
+    _errorSignalWaveFormData[i] = _idealSpillWaveFormData[i] - _actualSpillWaveFormData[i];
   }
 }

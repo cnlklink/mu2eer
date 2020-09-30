@@ -50,6 +50,11 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   *this,
                   &SSMDevice::actualSpillRead,
                   IDEAL_SPILL_READING_MAX );
+
+  registerMethod( ATTR_ERROR_SIGNAL_READING,
+                  *this,
+                  &SSMDevice::errorSignalRead,
+                  IDEAL_SPILL_READING_MAX );
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,

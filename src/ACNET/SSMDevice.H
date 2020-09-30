@@ -63,6 +63,11 @@ namespace Mu2eER
     typedef int16_t actual_spill_read_t;
 
     /**
+     * Error signal device / reading property type
+     */
+    typedef int16_t error_signal_read_t;
+
+    /**
      * SSDN Attribute IDs
      */
     enum
@@ -72,7 +77,8 @@ namespace Mu2eER
         ATTR_STATUS_CONTROL = 0x02,
         ATTR_TIS_READING = 0x03,
         ATTR_IDEAL_SPILL_READING = 0x04,
-        ATTR_ACTUAL_SPILL_READING = 0x05
+        ATTR_ACTUAL_SPILL_READING = 0x05,
+        ATTR_ERROR_SIGNAL_READING = 0x06
       };
 
     /**
@@ -168,6 +174,14 @@ namespace Mu2eER
      * @param reqinfo ACNET request object
      */
     void actualSpillRead( Array<ideal_spill_read_t>& dest, ReqInfo const* reqinfo );
+
+    /**
+     * Error Signal / Reading Property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void errorSignalRead( Array<error_signal_read_t>& dest, ReqInfo const* reqinfo );
 
   private:
     /**
