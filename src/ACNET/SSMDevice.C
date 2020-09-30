@@ -253,3 +253,40 @@ void SSMDevice::actualSpillRead( Array<SSMDevice::actual_spill_read_t>& dest,
       throw Ex_DEVFAILED;
     }
 }
+
+void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
+				ReqInfo const* reqinfo )
+{
+  if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFF;
+    }
+
+  if( (dest.offset.getValue() + dest.total.getValue()) >
+      static_cast<int>( IDEAL_SPILL_READING_MAX ) )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
+      SharedMemoryClient shmc( _shmName );
+      SpillStateMachineSMB smb = SpillStateMachineSMB();
+
+      smb.initialize();
+
+      auto errorSignalData = smb.errorSignalWaveform();
+      upper_bound = lower_bound + sample_size;
+
+      for ( i = lower_bound; i < upper_bound; i++ ) {
+	       dest[j] = errorSignalData[i];
+	       j++;
+      }
+    }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::errorSignalRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
+}
