@@ -384,13 +384,13 @@ TEST( CoreGroup, ActualSpillReadInitial )
 
   device.actualSpillRead( dest, &request );
 
-  for ( j = size - 1; j >= 0; j-- ) 
+  for ( j = size - 1; j >= 0; j-- )
   {
     if ( j % 1000 == 0 )
     {
       j-=100;
       CHECK_EQUAL( j, (int) dest[i] );
-    } else 
+    } else
     {
       CHECK_EQUAL( j, (int) dest[i] );
     }
@@ -412,6 +412,72 @@ TEST( CoreGroup, ActualSpillReadInitial )
                                                 Index( 0 ),
                                                 Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
   CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.idealSpillRead( destC, &request ) );
+
+ delete[] spill_buf;
+}
+
+/**
+ * Error Signal Read Test
+ *
+ * Test the Error Signal device reading property
+ */
+TEST( CoreGroup, ErrorSignalReadInitial )
+{
+  int i = 0, j = 15999, size = SSMDevice::IDEAL_SPILL_READING_MAX;
+  int _ideal[16000] = {0};
+  int _actual[16000] = {0};
+  int _error[16000] = {0};
+  // Construct an ACNET request and response buffer
+  ReqInfo request;
+  SSMDevice::error_signal_read_t* spill_buf = new SSMDevice::error_signal_read_t[16000];
+
+  Array<SSMDevice::error_signal_read_t> dest( spill_buf, Index( 0 ), Count( SSMDevice::IDEAL_SPILL_READING_MAX ) );
+  SSMDevice device( "/mu2eer_test", "mu2eer_test" );
+
+  device.errorSignalRead( dest, &request );
+
+  j = 0;
+  for (i = 15999; i >= 0; i--)
+  {
+    _ideal[j++] = i;
+  }
+
+  i = 0, j = 0;
+  for ( i = 15999; i >= 0; i-- )
+  {
+    if ( i % 1000 == 0 )
+    {
+      i-=100;
+      _actual[j++] = i;
+    } else
+    {
+      _actual[j++] = i;
+    }
+  }
+
+  for ( i = 0; i < size; i++ ) {
+    _error[i] = _ideal[i] - _actual[i];
+  }
+
+  for ( i = 0; i < size; i++ ) {
+    CHECK_EQUAL( _error[i], (int) dest[i] );
+  }
+
+  // Handle no shared memory by throwing Ex_DEVFAILED
+  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.errorSignalRead( dest, &request ) );
+
+  // Handle bad offset
+  Array<SSMDevice::error_signal_read_t> destB( spill_buf,
+                                                Index( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ),
+                                                Count( 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.errorSignalRead( destB, &request ) );
+
+  // Handle bad length
+  Array<SSMDevice::error_signal_read_t> destC( spill_buf,
+                                                Index( 0 ),
+                                                Count( SSMDevice::IDEAL_SPILL_READING_MAX + 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.errorSignalRead( destC, &request ) );
 
  delete[] spill_buf;
 }
