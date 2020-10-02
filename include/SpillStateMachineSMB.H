@@ -114,7 +114,7 @@ namespace Mu2eER
     const int* actualSpillWaveFormGet() const;
 
     /**
-     * Get Data Array Size
+     * Get Actual Spill Data Array Size
      *
      * @return Size of Array
      */
@@ -124,6 +124,25 @@ namespace Mu2eER
      * Transform Data Into Actual Spill Waveform
      */
     void actualSpillWaveform();
+
+    /**
+     * Get Error Signal Data Array
+     *
+     * @return Array Holding Data
+     */
+    const int* errorSignalWaveFormGet() const;
+
+    /**
+     * Get Error Signal Data Array Size
+     *
+     * @return Size of Array
+     */
+    int errorSignalWaveFormSizeGet() const;
+
+    /**
+     * Transform Data Into Error Spill Waveform
+     */
+    void errorSignalWaveform();
 
   private:
     /**
@@ -160,6 +179,11 @@ namespace Mu2eER
      * Actual Spill Data array
      */
     int _actualSpillWaveFormData[16000] = {0};
+
+    /**
+     * Error Spill Data array
+     */
+    int _errorSignalWaveFormData[16000] = {0};
   };
 };
 
