@@ -117,7 +117,7 @@ Then(/(a confirmation|an error) message is displayed/) do |phrase|
   expect( @result != "" )
 end
 
-Then("within {int} seconds the mu2eerd process terminates") do |timeout|
+Then(/^within (\d+) seconds the mu2eerd process terminates/) do |timeout|
   expect( `pidof mu2eerd` ).to eq ""
 end
 

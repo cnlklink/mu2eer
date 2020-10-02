@@ -174,7 +174,7 @@ When("I request the reading property again") do
   @result_str = `#{@prev_acl_command}`
 end
 
-When(/I wait (\d+) second|seconds/) do |seconds|
+When(/^I wait (\d+) second|seconds$/) do |seconds|
   print "Waiting for #{seconds} second(s)..."
   seconds.to_i.downto(0) do |i|
     sleep 1
