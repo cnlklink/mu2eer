@@ -24,13 +24,37 @@ namespace Mu2eER
   {
   public:
     /**
+     * Configuration option
+     */
+    enum config_t
+      {
+        CONFIG_TEST,
+        CONFIG_PRODUCTION
+      };
+
+    /**
      * Constructor
+     *
+     * Construct a daemon controller where the test and production start commands are the same.
      *
      * @param name Process name
      * @param startCmd Command to start the daemon
      * @param stopCmd Command to stop the daemon
      */
     DaemonController( string name, string startCmd, string stopCmd );
+
+    /**
+     * Constructor (w/ Test Configuration)
+     *
+     * Construct a daemon controller with separate start commands for the test configuration and the
+     * production configuration.
+     *
+     * @param name Process name
+     * @param prodStartCmd Command to start the daemon with a production configuration
+     * @param testStartCmd Command to start the daemon with a test conifguration
+     * @param stopCmd Command to stop the daemon
+     */
+    DaemonController( string name, string prodStartCmd, string testStartCmd, string stopCmd );
     
     /**
      * Is Running
@@ -43,8 +67,10 @@ namespace Mu2eER
      * Start Daemon
      *
      * Starts the daemon process.
+     *
+     * @param config Test/production configuration (default: CONFIG_PRODUCTION)
      */
-    void start() const;
+    void start( config_t config = CONFIG_PRODUCTION ) const;
 
     /**
      * Stop Daemon
@@ -60,9 +86,14 @@ namespace Mu2eER
     string _processName;
     
     /**
-     * Command used to start the daemon process
+     * Command used to start the daemon process w/ production configuration
      */
-    string _startCmd;
+    string _startCmdProd;
+    
+    /**
+     * Command used to start the daemon process w/ test configuration
+     */
+    string _startCmdTest;
     
     /**
      * Command used to stop the daemon process

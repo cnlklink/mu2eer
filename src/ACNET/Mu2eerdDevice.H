@@ -41,12 +41,18 @@ namespace Mu2eER
     typedef uint32_t daemon_statusctrl_t;
 
     /**
+     * Startup setting device type
+     */
+    typedef uint32_t startup_set_t;
+
+    /**
      * SSDN Attribute IDs
      */
     enum
       {
         ATTR_DAEMON_READ = 0x00,
-        ATTR_DAEMON_STATUSCTRL = 0x01
+        ATTR_DAEMON_STATUSCTRL = 0x01,
+        ATTR_STARTUP_SET = 0x02
       };
 
     /**
@@ -85,6 +91,19 @@ namespace Mu2eER
       };
 
     /**
+     * Startup Device / Setting enum definitions
+     *   Off     - Do not start mu2eerd on startup
+     *   On_Test - Start mu2eerd w/ test configuration
+     *   On_Oper - Start mu2eerd w/ operational configuration
+     */
+    enum
+      {
+        STARTUP_OFF = 0,
+        STARTUP_ON_TEST = 1,
+        STARTUP_ON_OPER = 2
+      };
+
+    /**
      * Size of the daemon reading return buffer
      */
     static const unsigned int DAEMON_READ_MAX = 3;
@@ -93,6 +112,11 @@ namespace Mu2eER
      * Size of the daemon status & control return buffer
      */
     static const unsigned int DAEMON_STATUSCTRL_MAX = 1;
+
+    /**
+     * Size of the startup setting device array
+     */
+    static const unsigned int STARTUP_SET_MAX = 1;
 
     /**
      * Daemon Device / Control property
@@ -137,6 +161,26 @@ namespace Mu2eER
                    string mqName, 
                    string shmName );
 
+    /**
+     * Startup Device / Setting Property Read Method
+     *
+     * Returns the setting for the Startup device.
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void startupSetRead( Array<startup_set_t>& dest, ReqInfo const* reqinfo ); 
+
+    /**
+     * Startup Device / Setting Property Write Method
+     *
+     * Provides a new setting to the Startup device.
+     *
+     * @param src ACNET setting buffer
+     * @param reqinfo ACNET request object
+     */
+    void startupSetWrite( Array<const startup_set_t>& src, ReqInfo const* reqinfo );
+
   private:
     /**
      * Controlls the daemon process
@@ -154,9 +198,28 @@ namespace Mu2eER
     string _shmName;
 
     /**
+     * Setting value for the Startup device
+     */
+    startup_set_t _startupVal;
+
+    /**
      * System control
      */
     ISystemController& _sysCtlr;
+
+    /**
+     * On (Operation)
+     *
+     * Start mu2eerd w/ operational configuration.  If mu2eerd is already running, nothing is done.
+     */
+    void _onOper();
+
+    /**
+     * On (Test)
+     *
+     * Start mu2eerd w/ test configuration.  If mu2eerd is already running, nothing is done.
+     */
+    void _onTest();
 
     /**
      * Soft reboot

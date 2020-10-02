@@ -16,10 +16,19 @@
 using namespace Mu2eER;
 using namespace std;
 
-DaemonController::DaemonController( string name, string startCmd, string stopCmd )
+DaemonController::DaemonController( string name, 
+                                    string startCmdProd, 
+                                    string startCmdTest, 
+                                    string stopCmd )
   : _processName( name ),
-    _startCmd( startCmd ),
+    _startCmdProd( startCmdProd ),
+    _startCmdTest( startCmdTest ),
     _stopCmd( stopCmd )
+{
+}
+
+DaemonController::DaemonController( string name, string startCmd, string stopCmd )
+  : DaemonController( name, startCmd, startCmd, stopCmd )
 {
 }
 
@@ -107,9 +116,21 @@ bool DaemonController::isRunning() const
   return -1 != _getProcIdByName( _processName );
 }
 
-void DaemonController::start() const
+void DaemonController::start( DaemonController::config_t config ) const
 {
-  _exec( _startCmd );
+  switch( config )
+    {
+    case CONFIG_PRODUCTION: 
+      _exec( _startCmdProd ); 
+      return;
+
+    case CONFIG_TEST: 
+      _exec( _startCmdTest ); 
+      return;
+
+    default: 
+      throw runtime_error( "bad configuration option" );
+    }
 }
 
 void DaemonController::stop() const

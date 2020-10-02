@@ -22,6 +22,13 @@ using namespace Mu2eER;
 using namespace FFF;
 using namespace std;
 
+static TestSystemController _sysctlr;
+
+static DaemonController 
+_daemonCtlr( "mu2eerd", 
+             "../bin/host/mu2eerd/mu2eerd", 
+             "../bin/host/mu2eerd/mu2eerd -c ../etc/mu2eer.d/reference.conf 2>&1", 
+             "../bin/host/mu2eercli/mu2eercli shutdown 2>&1" );
 /**
  * Tests for the Daemon Device
  */
@@ -341,6 +348,157 @@ TEST( DaemonGroup, ControlReboot )
       // Second request should throw Ex_BADSET because we're already rebooting
       CHECK_THROWS_ACNETERROR( Ex_BADSET, device.daemonControl( src, &request ) );
       CHECK( sysctlr.isRebooting() );
+    }
+  catch( exception e )
+    {
+      cout << e.what() << endl;
+      FAIL( "unexpected exception" );
+    }
+}
+
+/**
+ * Tests for the Startup Device
+ */
+TEST_GROUP( StartupGroup )
+{
+  void setup()
+  {
+  }
+
+  void teardown()
+  {
+    if( _daemonCtlr.isRunning() )
+      {
+        _daemonCtlr.stop();
+      }
+  }
+};
+
+/**
+ * Test Startup Device Setting "OFF"
+ *
+ * Setting the Startup device to "OFF" should do nothing.  If mu2eerd is running, it stays running.
+ * If mu2eerd is not running, it does not startup.
+ */
+TEST( StartupGroup, Off )
+{
+  try
+    {
+      ReqInfo request;
+
+      // Device using the "test" SystemController
+      Mu2eerdDevice device( _sysctlr, _daemonCtlr, "/mu2eer_test", "mu2eer_test" );
+
+      Mu2eerdDevice::startup_set_t readBuf;
+
+      // Handle bad offset / reading
+      Array<Mu2eerdDevice::startup_set_t> destA( &readBuf, 
+                                                 Index( Mu2eerdDevice::STARTUP_SET_MAX + 1 ), 
+                                                 Count( 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.startupSetRead( destA, &request ) );
+      
+      // Handle bad length / reading
+      Array<Mu2eerdDevice::startup_set_t> destB( &readBuf, 
+                                                 Index( 0 ), 
+                                                 Count( Mu2eerdDevice::STARTUP_SET_MAX + 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.startupSetRead( destB, &request ) );
+      
+      // Initial reading should be "Off"
+      Array<Mu2eerdDevice::startup_set_t> destC( &readBuf, Index( 0 ), Count( 1 ) );
+      device.startupSetRead( destC, &request );
+      CHECK_EQUAL( Mu2eerdDevice::STARTUP_OFF, destC[0] );
+      
+      // Handle bad offset / setting
+      const Mu2eerdDevice::startup_set_t onTestSetBuf = { Mu2eerdDevice::STARTUP_ON_TEST };
+      Array<const Mu2eerdDevice::startup_set_t> srcA( &onTestSetBuf, 
+                                                      Index( Mu2eerdDevice::STARTUP_SET_MAX + 1 ), 
+                                                      Count( 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.startupSetWrite( srcA, &request ) );
+      
+      // Handle bad length / setting
+      Array<const Mu2eerdDevice::startup_set_t> srcB( &onTestSetBuf, 
+                                                      Index( 0 ), 
+                                                      Count( Mu2eerdDevice::STARTUP_SET_MAX + 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.startupSetWrite( srcB, &request ) );
+      
+      // Construct an invalid setting
+      const Mu2eerdDevice::startup_set_t invalidSetBuf = { 
+        static_cast<Mu2eerdDevice::startup_set_t>( 0xBAD )
+      };
+      Array<const Mu2eerdDevice::startup_set_t> srcC( &invalidSetBuf, Index( 0 ), Count( 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, device.startupSetWrite( srcC, &request ) );
+
+      // Construct "On_Test" setting
+      Array<const Mu2eerdDevice::startup_set_t> onTestSrc( &onTestSetBuf, Index( 0 ), Count( 1 ) );
+
+      // Set to "On_test", test that the daemon starts
+      device.startupSetWrite( onTestSrc, &request );
+      CHECK_EQUAL( true, _daemonCtlr.isRunning() );
+
+      // Verify reading is now "On_Test"
+      device.startupSetRead( destC, &request );
+      CHECK_EQUAL( Mu2eerdDevice::STARTUP_ON_TEST, destC[0] );
+
+      // Ensure that test configuration was loaded
+      SharedMemoryClient shmc( MU2EERD_SHM_NAME );
+      STRCMP_EQUAL( "../etc/mu2eer.d/reference.conf", shmc.configFileGet().c_str() );
+
+      // Setting to "On_Test" again should have no effect
+      device.startupSetWrite( onTestSrc, &request );
+      CHECK_EQUAL( true, _daemonCtlr.isRunning() );
+
+      // Setting to "Off" should have no effect
+      const Mu2eerdDevice::startup_set_t offSetBuf = { 
+        static_cast<Mu2eerdDevice::startup_set_t>( Mu2eerdDevice::STARTUP_OFF )
+      };
+      Array<const Mu2eerdDevice::startup_set_t> offSetSrc( &offSetBuf, Index( 0 ), Count( 1 ) );
+      device.startupSetWrite( offSetSrc, &request );
+      CHECK_EQUAL( true, _daemonCtlr.isRunning() );
+    }
+  catch( exception e )
+    {
+      cout << e.what() << endl;
+      FAIL( "unexpected exception" );
+    }
+}
+
+/**
+ * Test Startup Device Setting "On_Oper"
+ *
+ * Setting the Startup device to "On_Oper" should start mu2eerd with the operational configuration
+ * file.
+ */
+TEST( StartupGroup, OnOper )
+{
+  try
+    {
+      ReqInfo request;
+      
+      // Device using the "test" SystemController
+      Mu2eerdDevice device( _sysctlr, _daemonCtlr, "/mu2eer_test", "mu2eer_test" );
+      
+      // Set to "On_Prod", test that the daemon starts
+      const Mu2eerdDevice::startup_set_t onProdSetBuf = { 
+        static_cast<Mu2eerdDevice::startup_set_t>( Mu2eerdDevice::STARTUP_ON_OPER )
+      };
+      Array<const Mu2eerdDevice::startup_set_t> 
+        onProdSrc( &onProdSetBuf, Index( 0 ), Count( 1 ) );
+      device.startupSetWrite( onProdSrc, &request );
+      CHECK_EQUAL( true, _daemonCtlr.isRunning() );
+      
+      // Verify reading is now "On_Prod"
+      Mu2eerdDevice::startup_set_t readBuf;      
+      Array<Mu2eerdDevice::startup_set_t> dest( &readBuf, Index( 0 ), Count( 1 ) );
+      device.startupSetRead( dest, &request );
+      CHECK_EQUAL( Mu2eerdDevice::STARTUP_ON_OPER, dest[0] );
+      
+      // Ensure that production configuration was loaded
+      SharedMemoryClient shmc( MU2EERD_SHM_NAME );
+      STRCMP_EQUAL( "none (default configuration loaded)", shmc.configFileGet().c_str() );
+      
+      // Setting to "On_Prod" again should have no effect
+      device.startupSetWrite( onProdSrc, &request );
+      CHECK_EQUAL( true, _daemonCtlr.isRunning() );
     }
   catch( exception e )
     {
