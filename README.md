@@ -16,6 +16,18 @@ To run the Unit Test suite, move into the src/ directory and run `make tests`.  
 ### Acceptance Tests
 To run the Acceptance Test suite, move into the root directory and run `cucumber`.
 
+Tags can be used to control which tests are run.  For example, acceptance tests that test the ACNET interfaces have an @acnet tag.  These tests must be run from a console environment with ACL installed (e.g. a clx node).  To only run the ACNET tests, use the `--tags` argument and supply it the @acnet tag:
+
+`cucumber --tags @acnet`
+
+If you're on adlinux, where ACNET and ACL are not available you can run all tests except the ACNET interfaces by specifying:
+
+`cucumber --tags 'not @acnet'`
+
+Tags can be combined with `and`.  For example, the `@long` tag is used for tests that take more than a few seconds.  If you want to run all of the ACNET tests but not the really long ones, use:
+
+`cucumber --tags '@acnet and not @long'`
+
 ## Deployment
 A defconfig for Mu2eER is in the ees-buildroot project (2015.08.x branch).  A Jenkins task called Mu2eER Buildroot builds this defconfig whenever the Mu2eER has a successful build or the Achilles Baseline has a successful build.
 
