@@ -20,6 +20,11 @@ def acnet_request_read ( request )
   acl_command = "acl 'read/no_name/no_units/column #{request}'"
   @prev_result_str = @result_str
   @result_str = `#{acl_command}`
+
+  # It seems ACL has a bug where it leaves a trailing single-quote
+  # around string data when using read/no_name/no_units/column.
+  @result_str.chomp! "'\n"
+
   @prev_acl_command = acl_command
 end
 
