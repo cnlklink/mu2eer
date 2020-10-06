@@ -73,7 +73,7 @@ void Mu2eerdDevice::configRead( Array<config_read_t>& dest, ReqInfo const* reqin
       // Copy string to ACNET return buffer
       for( unsigned int i = 0; i != dest.total.getValue(); i++ )
         {
-          dest[i] = (offset + i) > cfgFileName.length() ? 0 : cfgFileName[offset + i];
+          dest[i] = (offset + i) >= cfgFileName.length() ? 0 : cfgFileName[offset + i];
         }
     }
   catch( api_error e )
