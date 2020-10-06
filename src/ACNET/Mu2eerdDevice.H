@@ -31,6 +31,11 @@ namespace Mu2eER
   {
   public:
     /**
+     * Config reading device type
+     */
+    typedef char config_read_t;
+
+    /**
      * Daemon reading device type
      */
     typedef uint32_t daemon_read_t;
@@ -52,7 +57,8 @@ namespace Mu2eER
       {
         ATTR_DAEMON_READ = 0x00,
         ATTR_DAEMON_STATUSCTRL = 0x01,
-        ATTR_STARTUP_SET = 0x02
+        ATTR_STARTUP_SET = 0x02,
+        ATTR_CONFIG_READ = 0x03
       };
 
     /**
@@ -104,6 +110,11 @@ namespace Mu2eER
       };
 
     /**
+     * Size of the config reading buffer
+     */
+    static const unsigned int CONFIG_READ_MAX = 255;
+
+    /**
      * Size of the daemon reading return buffer
      */
     static const unsigned int DAEMON_READ_MAX = 3;
@@ -117,6 +128,16 @@ namespace Mu2eER
      * Size of the startup setting device array
      */
     static const unsigned int STARTUP_SET_MAX = 1;
+
+    /**
+     * Read Config
+     *
+     * Returns the configuration file path to ACNET.
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void configRead( Array<config_read_t>& dest, ReqInfo const* reqinfo );
 
     /**
      * Daemon Device / Control property

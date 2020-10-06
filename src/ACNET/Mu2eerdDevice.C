@@ -42,6 +42,44 @@ Mu2eerdDevice::Mu2eerdDevice( ISystemController& sysCtrl,
                    &Mu2eerdDevice::startupSetRead,
                    &Mu2eerdDevice::startupSetWrite,
                    STARTUP_SET_MAX );
+
+  registerMethod( ATTR_CONFIG_READ,
+                  *this,
+                  &Mu2eerdDevice::configRead,
+                  CONFIG_READ_MAX );
+}
+
+void Mu2eerdDevice::configRead( Array<config_read_t>& dest, ReqInfo const* reqinfo )
+{
+  // Validate offset
+  unsigned int offset = dest.offset.getValue();
+  if( offset > CONFIG_READ_MAX )
+    {
+      throw Ex_BADOFF;
+    }
+
+  // Validate length
+  unsigned int length = dest.total.getValue();
+  if( (offset + length) > CONFIG_READ_MAX )
+    {
+      throw Ex_BADOFLEN;
+    }
+
+  try
+    {
+      SharedMemoryClient shmc( _shmName );
+      auto cfgFileName = shmc.configFileGet();
+      
+      // Copy string to ACNET return buffer
+      for( unsigned int i = 0; i != dest.total.getValue(); i++ )
+        {
+          dest[i] = (offset + i) > cfgFileName.length() ? 0 : cfgFileName[offset + i];
+        }
+    }
+  catch( api_error e )
+    {
+      throw Ex_DEVFAILED;
+    }
 }
 
 void Mu2eerdDevice::daemonControl( Array<const daemon_statusctrl_t>& src, ReqInfo const* reqinfo )

@@ -506,3 +506,79 @@ TEST( StartupGroup, OnOper )
       FAIL( "unexpected exception" );
     }
 }
+
+/**
+ * Tests for the Config Device
+ */
+TEST_GROUP( ConfigGroup )
+{
+  void setup()
+  {
+    Controller::testDaemonStart(); 
+
+    SharedMemoryClient shmc( Controller::TEST_DAEMON_SHM_NAME );
+    shmc.waitForState( MU2EERD_RUNNING );
+  }
+
+  void teardown()
+  {
+    ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );  
+    mqc.shutdown();
+    Controller::testDaemonCleanup();
+  }
+};
+
+/**
+ * Test Config Device Reading
+ *
+ * The config device should return the path to the active configuration file.
+ */
+TEST( ConfigGroup, Reading )
+{
+  try
+    {
+      ReqInfo request;
+      
+      // Device using the "test" SystemController
+      Mu2eerdDevice device( _sysctlr, _daemonCtlr, "/mu2eer_test", "mu2eer_test" );
+      
+      // Read configuration file
+      Mu2eerdDevice::config_read_t buf[Mu2eerdDevice::CONFIG_READ_MAX];
+      Array<Mu2eerdDevice::config_read_t> 
+        dest( buf, Index( 0 ), Count( Mu2eerdDevice::CONFIG_READ_MAX ) );
+      device.configRead( dest, &request );
+      STRCMP_EQUAL( "none (default configuration loaded)", buf );
+
+      // Handle bad offset
+      Array<Mu2eerdDevice::config_read_t> 
+        destB( buf, Index( Mu2eerdDevice::CONFIG_READ_MAX + 1 ), Count( 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.configRead( destB, &request ) );
+
+      // Handle bad length
+      Array<Mu2eerdDevice::config_read_t>
+        destC( buf, Index( 0 ), Count( Mu2eerdDevice::CONFIG_READ_MAX + 1 ) );
+      CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.configRead( destC, &request ) );
+
+      // Handle sub-string
+      Array<Mu2eerdDevice::config_read_t> destD( buf, Index( 6 ), Count( 7 ) );
+      device.configRead( destD, &request );
+      STRNCMP_EQUAL( "default", buf, destD.total.getValue() );
+
+      // Handle request for sub-string beyond length but less than max buffer size
+      Array<Mu2eerdDevice::config_read_t> destE( buf, Index( 100 ), Count( 6 ) );
+      device.configRead( destE, &request );
+      for( unsigned int i = 0; i != destE.total.getValue(); i++ )
+        {
+          CHECK_EQUAL( 0, buf[i] );
+        }
+
+      // Handle no shared memory
+      Mu2eerdDevice badDevice( _sysctlr, _daemonCtlr, "/mu2eer_test", "does_not_exist" );
+      CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, badDevice.configRead( dest, &request ) );
+    }
+  catch( exception e )
+    {
+      cout << e.what() << endl;
+      FAIL( "unexpected exception" );
+    }
+}
