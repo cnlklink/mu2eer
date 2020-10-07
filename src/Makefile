@@ -57,6 +57,7 @@ HOST_BIN_DIR    := $(BIN_DIR)/host
 DOC_DIR         := ../docs
 INC_DIR         := ../include
 ETC_DIR         := ../etc
+DB_DIR		:= ../db
 
 # Some more host utilities
 SCP             = scp -q

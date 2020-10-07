@@ -1,0 +1,118 @@
+! DABBEL V8.34 running on file dbtemp
+!
+MOD U:GRWDBD       ( "SRSD Guaranteed R/W     ", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "KSMARTIN")
+FNAME ( "ACNET", U:SYSTEM:Guaranteed:SRSD)
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+SSDNHX PRREAD (0001/0000/0000/0000)
+PRO PRREAD ( 4, 4, "p,66,true")
+PDB PRREAD ( "    ", "    ", 16, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -3.4028234664E+38, 3.4028234664E+38
+SSDNHX PRSET  (0101/0000/0000/0000)
+PRO PRSET  ( 4, 4, "p,1000,true")
+PDB PRSET  ( "    ", "    ", 10, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -2147483648, 2147483647
+!
+MOD U:VERDBD       ( "SRSD ACSys/FE version   ", SRSD,               , 01FFDBDE,
+    0, , "Instrumentation", "NICKLAUS")
+FNAME ( "ACNET", U:SYSTEM:Version:SRSD)
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+PRO PRDATX ( 00000000, 00000000, 0, 0, 0, 0, "Test Device", " ")
+SSDNHX PRREAD (0004/0000/0000/0000)
+PRO PRREAD ( 4, 4, "p,1000,true")
+PDB PRREAD ( "    ", "    ", 16, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -3.4028234664E+38, 3.4028234664E+38
+!
+MOD Z:SLWXCONFIG   ( "Mu2e Slow Ex Daemon Test", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+PRO EXTEXT ( 1, 2, 4, "NO     ", 2, "YES    ", "control queue connected",
+             1, 1, 4, "NO     ", 2, "YES    ", "shared memory connected",
+             1, 0, 4, "NOT_RUN", 2, "RUNNING", "mu2eerd process")
+SSDNHX PRREAD (03A0/0000/0000/0000)
+PRO PRREAD ( 1, 255, "p,1000,true")
+PDB PRREAD ( "    ", "    ", 68, 60, 1, 0, 1, 0, 8, 0, 0)
+! Computed extrema for above PDB:  -3.4028234664E+38, 3.4028234664E+38
+!
+MOD Z:SLWXSPILLS   ( "Mu2e Slow Ex Spills Test", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+SSDNHX PRREAD (01A1/0000/0000/0000)
+PRO PRREAD ( 4, 4, "p,1000,true")
+PDB PRREAD ( "    ", "    ", 10, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -2147483648, 2147483647
+!
+MOD Z:SLWXSSM      ( "Mu2e Slow Ex Sp St Test ", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+SSDNHX PRBCTL (02A1/0000/0000/0000)
+PRO PRBCTL ( 4, 4, "p,1000,true")
+SSDNHX PRREAD (00A1/0000/0000/0000)
+PRO PRREAD ( 2, 2, "p,66,true")
+PDB PRREAD ( "    ", "    ", 20, 0, 2, 0, 0, 0)
+! Computed extrema for above PDB:  0, 65535
+SCALEN PRDCTL ( 2)
+PRO PRDCTL ( 00000000, 0, "RESET", "Reset",
+             00000001, 1, "ON", "Start",
+             00000003, 255, "FAULT", "Fault")
+!
+MOD Z:SLWXSTARTUP  ( "Mu2e Slow Ex Startup Tst", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+PRO EXTEXT ( 1, 2, 4, "NO     ", 2, "YES    ", "control queue connected",
+             1, 1, 4, "NO     ", 2, "YES    ", "shared memory connected",
+             1, 0, 4, "NOT_RUN", 2, "RUNNING", "mu2eerd process")
+SSDNHX PRSET  (02A0/0000/0000/0000)
+PRO PRSET  ( 4, 4, "p,1000,true")
+KNOB FALSE
+PDB PRSET  ( "    ", "    ", 68, 60, 2, 0, 0, 0, 12, 0, 0)
+! Computed extrema for above PDB:  -3.4028234664E+38, 3.4028234664E+38
+ENUM PRSET  ( 0, "Off", "Off",
+              1, "On_Test", "On_Test",
+              2, "On_Oper", "On_Oper")
+!
+MOD Z:SLWXSTATUS   ( "Mu2e Slow Ex Daemon Test", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+SSDNHX PRBCTL (01A0/0000/0000/0000)
+PRO PRBCTL ( 4, 4, "p,1000,true")
+SSDNHX PRBSTS (01A0/0000/0000/0000)
+PRO PRBSTS ( 4, 4, "p,1000,true")
+PRO EXTEXT ( 1, 2, 4, "NO     ", 2, "YES    ", "control queue connected",
+             1, 1, 4, "NO     ", 2, "YES    ", "shared memory connected",
+             1, 0, 4, "NOT_RUN", 2, "RUNNING", "mu2eerd process")
+SSDNHX PRREAD (00A0/0000/0000/0000)
+PRO PRREAD ( 4, 12, "p,1000,true")
+PDB PRREAD ( "    ", "    ", 10, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -2147483648, 2147483647
+SCALEN PRDCTL ( 4)
+PRO PRDCTL ( 00000002, 0, "RESET", "Start",
+             00000000, 1, "ON", "Stop",
+             00000001, 2, "OFF", "Soft Reboot")
+SCALEN PRBSSC ( 4)
+PRO PRBSSC ( 1, 1, 0, 0, "OnOff", "On/Off", "On", GREEN:., "Off", RED:*)
+!
+MOD Z:SLWXTIS      ( "Mu2e Slow Ex T in S Test", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "JDIAMOND")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+SSDNHX PRREAD (03A1/0000/0000/0000)
+PRO PRREAD ( 4, 4, "p,1000,true")
+PDB PRREAD ( "ms  ", "ms  ", 10, 0, 4, 0, 0, 0)
+! Computed extrema for above PDB:  -2147483648, 2147483647
+!
