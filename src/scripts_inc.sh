@@ -23,6 +23,11 @@ DT_FILE="linuxDT.dtb"
 # Rootfs filename
 ROOTFS_FILE=
 
+# Dabbel files
+DABBEL_DIR=output/build/mu2eer-master/db
+DABBEL_TEST_FILE=devices_test.dabbel
+DABBEL_PROD_FILE=
+
 STABLE_BUILD=/usr/local/products/buildroot/$BR_NAME
 
 # do_remote
@@ -31,11 +36,18 @@ STABLE_BUILD=/usr/local/products/buildroot/$BR_NAME
 #
 # @param $1 Message
 # @param $2 Command
+# @param $3 Remote host (default: nova)
 #
 do_remote()
 {
+    if [ "$3" == "" ]; then
+        REMOTE_HOST="nova";
+    else
+        REMOTE_HOST=$3;
+    fi
+
     printf "  $1... ";
-    ssh -t nova "$2" 2>/tmp/ssh_stderr 1>/tmp/ssh_stdout
+    ssh -t $REMOTE_HOST "$2" 2>/tmp/ssh_stderr 1>/tmp/ssh_stdout
     if [ $? -eq 0 ]; then
         printf " success!\n";
     else

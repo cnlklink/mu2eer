@@ -54,6 +54,18 @@ if [ -n "$ROOTFS_FILE" ]; then
     do_scp $ROOTFS_SOURCE $ROOTFS_DEST
 fi
 
+if [ -n "$DABBEL_TEST_FILE" ]; then
+    DABBEL_SOURCE=$STABLE_BUILD/$DABBEL_DIR/$DABBEL_TEST_FILE
+    DABBEL_DEST=nova:$IMAGE_LOCATION/$DABBEL_TEST_FILE
+    do_scp $DABBEL_SOURCE $DABBEL_DEST
+fi
+
+if [ -n "$DABBEL_PROD_FILE" ]; then
+    DABBEL_SOURCE=$STABLE_BUILD/$DABBEL_DIR/$DABBEL_PROD_FILE
+    DABBEL_DEST=nova:$IMAGE_LOCATION/$DABBEL_PROD_FILE
+    do_scp $DABBEL_SOURCE $DABBEL_DEST
+fi
+
 printf "Done!\n";
 printf "Use './build_select.sh [test|production] $JENKINS_BUILDNUM' and reboot your nodes.\n";
 
