@@ -40,6 +40,19 @@ PRO PRREAD ( 1, 255, "p,1000,true")
 PDB PRREAD ( "    ", "    ", 68, 60, 1, 0, 1, 0, 8, 0, 0)
 ! Computed extrema for above PDB:  -3.4028234664E+38, 3.4028234664E+38
 !
+MOD Z:SLWXSPILL    ( "Mu2e Slow Ex Spill W Tes", SRSD,               , 01FFDBFE,
+    0, , "Instrumentation", "RADKINS")
+MACHINE ( "Test")
+COMPONENT ( "none")
+AAMASK ( "MCR+MCRCrewChief")
+PRO EXTEXT ( 1, 2, 4, "NO     ", 2, "YES    ", "control queue connected",
+             1, 1, 4, "NO     ", 2, "YES    ", "shared memory connected",
+             1, 0, 4, "NOT_RUN", 2, "RUNNING", "mu2eerd process")
+SSDNHX PRREAD (04A1/0000/0000/0000)
+PRO PRREAD ( 2, 32000, "p,1000,true")
+PDB PRREAD ( "    ", "    ", 10, 0, 2, 0, 0, 0)
+! Computed extrema for above PDB:  -32768, 32767
+!
 MOD Z:SLWXSPILLS   ( "Mu2e Slow Ex Spills Test", SRSD,               , 01FFDBFE,
     0, , "Instrumentation", "JDIAMOND")
 MACHINE ( "Test")
