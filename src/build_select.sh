@@ -51,13 +51,10 @@ esac
 
 do_remote "Removing existing $ENVIRONMENT link" "rm ${BOOT_LOCATION}/${ENVIRONMENT} ||true"
 do_remote "Creating $ENVIRONMENT link" "cd ${BOOT_LOCATION}; ln -s $BUILD_NUM $ENVIRONMENT"
-
-if [ "$ENVIRONMENT" = "test" ]; then
-    do_scp "nova:${BOOT_LOCATION}/${BUILD_NUM}/devices_${ENVIRONMENT}.dabbel" ".dabbel_temp"
-    do_scp ".dabbel_temp" "clx50:~/"
-    do_remote "Validating ${DABBEL_TEST_FILE}" "dabbel ~/.dabbel_temp" "clx50"
-    do_remote "Submitting ${DABBEL_TEST_FILE} to DABBEL" "dabbel ~/.dabbel_temp modify" "clx50"
-    rm .dabbel_temp
-fi
+do_scp "nova:${BOOT_LOCATION}/${BUILD_NUM}/devices_${ENVIRONMENT}.dabbel" ".dabbel_temp"
+do_scp ".dabbel_temp" "clx50:~/"
+do_remote "Validating ${DABBEL_TEST_FILE}" "dabbel ~/.dabbel_temp" "clx50"
+do_remote "Submitting ${DABBEL_TEST_FILE} to DABBEL" "dabbel ~/.dabbel_temp modify" "clx50"
+rm .dabbel_temp
 
 printf "Done!\n";
