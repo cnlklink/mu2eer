@@ -275,7 +275,7 @@ Then("I receive a value of {string} for the {string} bit") do |expected_value, b
   expect( @result_bit_hash[bit_name] ).to eq expected_value
 end
 
-Then("I receive an array of structured data like the following:") do |device|
+Then("I receive an array of linear structured data like the following:") do |device|
   acnet_request_read device
   if @result_str.match(/[E|e]rror/)
     raise @result_str
