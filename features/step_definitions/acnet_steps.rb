@@ -274,3 +274,18 @@ end
 Then("I receive a value of {string} for the {string} bit") do |expected_value, bit_name|
   expect( @result_bit_hash[bit_name] ).to eq expected_value
 end
+
+Then("I receive an array of structured data like the following:") do |device|
+  acnet_request_read device
+  if @result_str.match(/[E|e]rror/)
+    raise @result_str
+  end
+
+  arr = @result_str.split(/\n+/)
+  counter = 15999
+  arr.each do |entry|
+    contents = entry.match /(\d+)/
+    expect(contents).to eq(counter)
+    counter = counter - 1
+  end
+end
