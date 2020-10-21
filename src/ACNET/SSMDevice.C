@@ -198,16 +198,17 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
     {
       int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
       SharedMemoryClient shmc( _shmName );
-      SpillStateMachineSMB smb = SpillStateMachineSMB();
+      //SpillStateMachineSMB smb = SpillStateMachineSMB();
 
-      smb.initialize();
+      //smb.initialize();
 
-      auto idealSpillData = smb.idealSpillWaveFormGet();
+      //auto idealSpillData = smb.idealSpillWaveFormGet();
       upper_bound = lower_bound + sample_size;
 
       for ( i = lower_bound; i < upper_bound; i++ ) {
-	       dest[j] = idealSpillData[i];
-	       j++;
+	//dest[j] = idealSpillData[i];
+	dest[j] = 0;
+	j++;
       }
     }
   catch( runtime_error e )
