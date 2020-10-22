@@ -298,7 +298,7 @@ TEST( CoreGroup, TimeInSpill )
  * Ideal Spill Read Test
  *
  * Test the Ideal Spill device reading property
- */
+ *//*
 TEST( CoreGroup, IdealSpillReadInitial )
 {
   int i = 0, j = 15999, size = SSMDevice::IDEAL_SPILL_READING_MAX;
@@ -335,13 +335,13 @@ TEST( CoreGroup, IdealSpillReadInitial )
   CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.idealSpillRead( destC, &request ) );
 
   delete[] spill_buf;
-}
+  }*/
 
 /**
  * Ideal Spill Read Slice Test
  *
  * Test the Ideal Spill device reading property of a slice of the data
- */
+ *//*
 TEST( CoreGroup, IdealSpillReadSlice )
 {
   int i = 0, j = 0, size = SSMDevice::IDEAL_SPILL_READING_MAX,
@@ -366,7 +366,7 @@ TEST( CoreGroup, IdealSpillReadSlice )
   }
 
   delete[] spill_buf;
-}
+  }*/
 
 /**
  * Actual Spill Read Test
