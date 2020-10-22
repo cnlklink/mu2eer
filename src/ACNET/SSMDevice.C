@@ -196,7 +196,7 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
 
   try
     {
-      throw Ex_DEVFAILED;
+      dest[0] = 0;
       /*
       int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
       SharedMemoryClient shmc( _shmName );
