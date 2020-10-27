@@ -20,11 +20,9 @@ SpillStateMachineSMB::SpillStateMachineSMB()
 
 void SpillStateMachineSMB::initialize()
 {
-  cout << "Initializing Spill State Machine Shared Memory...";
   idealSpillWaveform();
   actualSpillWaveform();
   errorSignalWaveform();
-  cout << " done." << endl;
 }
 
 void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
