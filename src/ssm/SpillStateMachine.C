@@ -128,6 +128,7 @@ void SpillStateMachine::_smbUpdate()
   _smb.spillCounterSet( _ssmDev->spillCounterGet() );
   _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
   _smb.threadRunningSet( _thread.get() != nullptr );
+  _smb.initialize();
 }
 
 ssm_state_t SpillStateMachine::_waitForStateChange() const
