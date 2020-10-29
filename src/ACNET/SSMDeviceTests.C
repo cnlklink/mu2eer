@@ -386,7 +386,7 @@ TEST( CoreGroup, ActualSpillReadInitial )
 
   for ( j = size - 1; j >= 0; j-- )
   {
-    if ( j % 1000 == 0 )
+    if ( j % 1000 == 0 && j != 0)
     {
       j-=100;
       CHECK_EQUAL( j, (int) dest[i] );
@@ -445,7 +445,7 @@ TEST( CoreGroup, ErrorSignalReadInitial )
   i = 0, j = 0;
   for ( i = 15999; i >= 0; i-- )
   {
-    if ( i % 1000 == 0 )
+    if ( i % 1000 == 0 && i != 0 )
     {
       i-=100;
       _actual[j++] = i;
