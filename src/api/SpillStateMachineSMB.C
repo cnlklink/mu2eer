@@ -16,6 +16,7 @@ using namespace std;
 SpillStateMachineSMB::SpillStateMachineSMB()
   : _currentState( SSM_UNKNOWN )
 {
+  initialize();
 }
 
 void SpillStateMachineSMB::initialize()
