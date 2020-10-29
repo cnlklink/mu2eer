@@ -313,8 +313,7 @@ TEST( CoreGroup, IdealSpillReadInitial )
   device.idealSpillRead( dest, &request );
 
   for ( i = 0; i < size; i++ ) {
-    //CHECK_EQUAL( j, (int) dest[i] );
-    //CHECK_EQUAL( 0, (int) dest[i] );
+    CHECK_EQUAL( j, (int) dest[i] );
     j--;
   }
 
@@ -360,8 +359,7 @@ TEST( CoreGroup, IdealSpillReadSlice )
 
   j = count;
   for ( i = 0; i < count; i++ ) {
-    //CHECK_EQUAL( j, (int) dest[i] );
-    // CHECK_EQUAL( 0, (int) dest[i] );
+    CHECK_EQUAL( j, (int) dest[i] );
     j--;
   }
 
@@ -391,10 +389,10 @@ TEST( CoreGroup, ActualSpillReadInitial )
     if ( j % 1000 == 0 )
     {
       j-=100;
-      //CHECK_EQUAL( j, (int) dest[i] );
+      CHECK_EQUAL( j, (int) dest[i] );
     } else
     {
-      //CHECK_EQUAL( j, (int) dest[i] );
+      CHECK_EQUAL( j, (int) dest[i] );
     }
     i++;
   }
@@ -462,7 +460,7 @@ TEST( CoreGroup, ErrorSignalReadInitial )
   }
 
   for ( i = 0; i < size; i++ ) {
-    //CHECK_EQUAL( _error[i], (int) dest[i] );
+    CHECK_EQUAL( _error[i], (int) dest[i] );
   }
 
   // Handle no shared memory by throwing Ex_DEVFAILED
