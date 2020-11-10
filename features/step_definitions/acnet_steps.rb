@@ -271,6 +271,33 @@ Then("I receive an array of structured data like the following:") do |expected_t
   end
 end
 
+Then("I receive an array of ideal spill values like the following:") do
+  # Convert the ACL output into an array
+  result_arr = @result_str.split(/\n+/)
+  #counter for ideal spill
+  expected = 15999
+
+  # Run through the table of expected values
+  for index in 0..15999
+
+    # The result should contain data at "index"
+    expect( result_arr[index] ).not_to be nil
+
+    if result_val.match? /\d+/
+      raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
+    end
+
+    # Match the expression in the "value" column and
+    # test it against the element received from ACNET in result_arr
+    result_val = result_arr[index].to_f
+
+    expect( result_val ).to eq expected.to_f
+
+    expected -= 1
+
+  end
+end
+
 Then("I receive a value of {string} for the {string} bit") do |expected_value, bit_name|
   expect( @result_bit_hash[bit_name] ).to eq expected_value
 end
