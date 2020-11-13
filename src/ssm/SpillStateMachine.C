@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the SpillStateMachine class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <iostream>
@@ -68,7 +68,8 @@ SpillStateMachine::~SpillStateMachine()
 void SpillStateMachine::fault()
 {
   _ssmDev->fault();
-
+  // Turn LED off
+  _ssmDev->ledOff();
   _smbUpdate();
 }
 
@@ -76,6 +77,8 @@ void SpillStateMachine::initialize()
 {
   // Initialize firmware
   _ssmDev->initialize();
+  // Turn LED on
+  _ssmDev->ledOn();
   _smbUpdate();
 }
 
@@ -97,7 +100,7 @@ void SpillStateMachine::run()
         while( SSM_FAULT != _ssmDev->stateGet() )
           {
             _waitForStateChange();
-            
+
             _smbUpdate();
           }
       } ) );
@@ -119,6 +122,8 @@ void SpillStateMachine::stop()
 
   // Update the SMB to show that the thread is not running
   _thread.reset( nullptr );
+  // Turn LED off
+  _ssmDev->ledOff();
   _smbUpdate();
 }
 

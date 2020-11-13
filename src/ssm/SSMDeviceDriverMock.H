@@ -3,7 +3,7 @@
  *
  * This file contains the definition of the SSMDeviceDriverMock class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #ifndef SSMDEVICEDRIVERMOCK_H
@@ -92,6 +92,15 @@ namespace Mu2eER
 
     // Override
     virtual ssm_state_t waitForStateChange();
+
+    /**
+     * LED State
+     *
+     * Checks the state of the LED.
+     *
+     * @return The whether the LED is on or off
+     */
+    bool ledState();
 
   private:
     /**
