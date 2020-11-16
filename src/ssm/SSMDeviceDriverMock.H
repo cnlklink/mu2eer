@@ -100,7 +100,7 @@ namespace Mu2eER
      *
      * @return The whether the LED is on or off
      */
-    bool ledState();
+    bool getLedState();
 
   private:
     /**

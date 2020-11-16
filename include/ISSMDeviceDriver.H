@@ -112,28 +112,22 @@ namespace Mu2eER
     virtual ssm_state_t waitForStateChange() = 0;
 
     /**
-     * Wait for State Change
-     *
-     * Blocks until a state change occurs and notification is received from the hardware.
-     *
-     * @return New state
+     * Turns LED on.
      */
-    virtual void ledOn() = 0;
+     void ledOn();
 
     /**
-     * Wait for State Change
-     *
-     * Blocks until a state change occurs and notification is received from the hardware.
-     *
-     * @return New state
+     * Turns LED off.  
      */
-    virtual void ledOff() = 0;
+     void ledOff();
+
+  protected:
+    /**                                                                                                                                  
+     * LED variable                                                                                                                     
+     */
+    bool _led = false;
 
   private:
-    /**
-    * LED variable
-    */
-    bool _led = false;
   };
 };
 

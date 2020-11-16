@@ -36,10 +36,10 @@ unique_ptr<ISSMDeviceDriver> ISSMDeviceDriver::factory( string driverId )
   return unique_ptr<ISSMDeviceDriver>( new SSMDeviceDriverMock( { SSM_FAULT } ) );
 }
 
-void ledOn() {
+void ISSMDeviceDriver::ledOn() {
   _led = true;
 }
 
-void ledOff() {
+void ISSMDeviceDriver::ledOff() {
   _led = false;
 }
