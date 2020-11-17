@@ -105,6 +105,10 @@ When("I start mu2eerd with the {string} flags") do |flags|
   @rc = $?.exitstatus
 end
 
+When("When I query the state of the LED") do
+
+end
+
 Then("the PID for mu2eerd should be displayed") do
   expect( @result ).to eq @expectedPID
 end
@@ -228,4 +232,3 @@ Then("the contents of the shared memory are displayed") do
   # Expect the array contents of ideal, actual, and error signals to be present in the output
   expect( @result ).to match /([\d+, \d+, \d+, \d+\n]+)/
 end
-
