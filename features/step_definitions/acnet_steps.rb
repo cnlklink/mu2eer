@@ -290,8 +290,6 @@ Then("I receive an array of ideal spill values like the following:") do |arr|
 
     # Match the expression in the "value" column and
     # test it against the element received from ACNET in result_arr
-    #result_val = result_arr[index].to_f
-    puts "result_val is #{result_val} and expected is #{expected}"
     expect( result_val ).to eq expected.to_f
 
     expected -= 1
@@ -302,33 +300,34 @@ end
 Then("I receive an array of actual spill values like the following:") do |arr|
   # Convert the ACL output into an array
   result_arr = @result_str.split(/\n+/)
-  #counter for ideal spill
   expected = 15999
   arr_counter = 0
+  
   # Run through the table of expected values
   for index in 15999.downto(0) do
-    #puts "index is #{index} and expected is #{expected}"
+    
     # The result should contain data at "index"
     expect( result_arr[arr_counter] ).not_to be nil
+    
     result_val = result_arr[arr_counter].to_f
+    
     unless result_val.is_a?(Float)
       raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
     end
-    puts "expected is #{expected} and val is #{result_val}" 
+ 
     if expected % 1000 == 0 && expected > 0
       expected -= 100
-      puts "expected is now #{expected}"
     end
 
     # Match the expression in the "value" column and
     # test it against the element received from ACNET in result_arr
-    #result_val = result_arr[index].to_f
-    #puts "index is #{index} and expected is #{expected} and arr_counter is #{arr_counter}"
+
     expect( result_val ).to eq expected.to_f
 
     if expected > 0
       expected -= 1
     end
+    
     arr_counter += 1
 
   end
@@ -349,29 +348,26 @@ Then("I receive an array of error signal values like the following:") do |arr|
     # The result should contain data at "index"
     expect( result_arr[index] ).not_to be nil
     result_val = result_arr[index].to_f
-    #puts "result val is #{result_val} and index is #{index} and counter is #{error_signal_expected}"
-    #puts "actual spill is #{actual_spill_counter}"
+
     unless result_val.is_a?(Float)
       raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
     end
-    puts "show index #{index}"
+
     if actual_spill_counter > 0 && actual_spill_counter % 1000 == 0
       actual_spill_counter -= 100
-      puts "MADE IT HERE and actual spill counter is #{actual_spill_counter}"
     end
-    puts "ideal_spill_counter is #{ideal_spill_counter} and actual_spill_is #{actual_spill_counter}"
+
     error_signal_expected = ideal_spill_counter - actual_spill_counter
 
     # Match the expression in the "value" column and
     # test it against the element received from ACNET in result_arr
-    #result_val = result_arr[index].to_f
-    puts "result val is #{result_val} and error_signal_expected is #{error_signal_expected}"
     expect( result_val ).to eq error_signal_expected.to_f
-
-    ideal_spill_counter -= 1
+    
     if actual_spill_counter > 0
       actual_spill_counter -= 1
     end
+
+    ideal_spill_counter -= 1
 
   end
 end
