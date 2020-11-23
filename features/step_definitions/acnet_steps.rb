@@ -291,7 +291,7 @@ Then("I receive an array of ideal spill values like the following:") do |arr|
     # Match the expression in the "value" column and
     # test it against the element received from ACNET in result_arr
     #result_val = result_arr[index].to_f
-
+    puts "result_val is #{result_val} and expected is #{expected}"
     expect( result_val ).to eq expected.to_f
 
     expected -= 1
@@ -306,26 +306,29 @@ Then("I receive an array of actual spill values like the following:") do |arr|
   expected = 15999
   arr_counter = 0
   # Run through the table of expected values
-  for index in 15999..0
-
+  for index in 15999.downto(0) do
+    #puts "index is #{index} and expected is #{expected}"
     # The result should contain data at "index"
     expect( result_arr[arr_counter] ).not_to be nil
     result_val = result_arr[arr_counter].to_f
     unless result_val.is_a?(Float)
       raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
     end
-
-    if index % 1000 == 0 && index != 0
+    puts "expected is #{expected} and val is #{result_val}" 
+    if expected % 1000 == 0 && expected > 0
       expected -= 100
+      puts "expected is now #{expected}"
     end
 
     # Match the expression in the "value" column and
     # test it against the element received from ACNET in result_arr
     #result_val = result_arr[index].to_f
-
+    #puts "index is #{index} and expected is #{expected} and arr_counter is #{arr_counter}"
     expect( result_val ).to eq expected.to_f
 
-    expected -= 1
+    if expected > 0
+      expected -= 1
+    end
     arr_counter += 1
 
   end
@@ -352,7 +355,7 @@ Then("I receive an array of error signal values like the following:") do |arr|
       raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
     end
     puts "show index #{index}"
-    if actual_spill_counter != 0 && actual_spill_counter % 1000 == 0
+    if actual_spill_counter > 0 && actual_spill_counter % 1000 == 0
       actual_spill_counter -= 100
       puts "MADE IT HERE and actual spill counter is #{actual_spill_counter}"
     end
@@ -366,7 +369,9 @@ Then("I receive an array of error signal values like the following:") do |arr|
     expect( result_val ).to eq error_signal_expected.to_f
 
     ideal_spill_counter -= 1
-    actual_spill_counter -= 1
+    if actual_spill_counter > 0
+      actual_spill_counter -= 1
+    end
 
   end
 end
