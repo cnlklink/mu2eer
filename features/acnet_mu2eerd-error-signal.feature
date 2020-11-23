@@ -34,7 +34,7 @@ Feature: Mu2eerd ideal spill device (x:SLWXESPILL)
 
   @acnet
   @error-signal
-  Scenario: I want to read the ideal spill memory block
+  Scenario: I want to read the error spill memory block
     Given the mu2eerd daemon process is running
     When I request the reading property for the ACNET device "Z:SLWXESPILL[]"
     Then I receive an array of error signal values like the following:
