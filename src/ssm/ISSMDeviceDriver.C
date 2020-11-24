@@ -43,3 +43,8 @@ void ISSMDeviceDriver::ledOn() {
 void ISSMDeviceDriver::ledOff() {
   _led = false;
 }
+
+bool ISSMDeviceDriver::ledStateGet()
+{
+  return _led;
+}

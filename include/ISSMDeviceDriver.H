@@ -117,13 +117,20 @@ namespace Mu2eER
      void ledOn();
 
     /**
-     * Turns LED off.  
+     * Turns LED off.
      */
      void ledOff();
 
+     /**
+      * Get LED State
+      *
+      * @return The whether the LED is on or off
+      */
+     bool ledStateGet();
+
   protected:
-    /**                                                                                                                                  
-     * LED variable                                                                                                                     
+    /**
+     * LED variable
      */
     bool _led = false;
 
