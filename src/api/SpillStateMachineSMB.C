@@ -36,14 +36,14 @@ ssm_state_t SpillStateMachineSMB::currentStateGet() const
   return _currentState;
 }
 
-bool SpillStateMachineSMB::ledStateGet()
+bool SpillStateMachineSMB::ledStateGet() const
 {
   return _led;
 }
 
 void SpillStateMachineSMB::ledStateSet( bool ledState )
 {
-  _led = ledState
+  _led = ledState;
 }
 
 unsigned int SpillStateMachineSMB::spillCounterGet() const

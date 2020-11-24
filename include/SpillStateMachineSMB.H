@@ -50,7 +50,7 @@ namespace Mu2eER
      *
      * @return The whether the LED is on or off
      */
-    bool ledStateGet();
+    bool ledStateGet() const;
 
     /**
      * Set LED State
@@ -178,6 +178,11 @@ namespace Mu2eER
      * Time spent in the last spill cycle (ms)
      */
     float _timeInSpill;
+
+    /**                                                                         
+     * LED                         
+     */
+    bool _led;
 
     /**
      * Size of array
