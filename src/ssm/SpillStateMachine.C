@@ -133,6 +133,7 @@ void SpillStateMachine::_smbUpdate()
   _smb.spillCounterSet( _ssmDev->spillCounterGet() );
   _smb.timeInSpillSet( _ssmDev->timeInSpillGet() );
   _smb.threadRunningSet( _thread.get() != nullptr );
+  _smb.ledStateSet( _ssmDev->ledStateGet() );
   _smb.initialize();
 }
 
