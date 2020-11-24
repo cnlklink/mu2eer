@@ -26,6 +26,12 @@ Feature: mu2eercli show command / Spill State Machine display
     Then the SSM thread state displayed is "not running"
     And an exit code of 0 is returned
 
+  Scenario: display the LED state to the user
+    Given mu2eerd is running
+    When I pass the "show" command to mu2eercli
+    Then the LED state displayed is true
+    And an exit code of 0 is returned
+
   Scenario: Display SSM state after 5 spills
     Given mu2eerd is running with the "-c etc/mu2eer.d/reference.conf" flags
       And the spill state machine has been started
@@ -34,4 +40,5 @@ Feature: mu2eercli show command / Spill State Machine display
       And the spill counter displayed is 5
       And the time-in-spill displayed is 107
       And the SSM thread state displayed is "running"
+      And the LED state displayed is true
       And an exit code of 0 is returned
