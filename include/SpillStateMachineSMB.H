@@ -46,6 +46,20 @@ namespace Mu2eER
     ssm_state_t currentStateGet() const;
 
     /**
+     * Get LED State
+     *
+     * @return The whether the LED is on or off
+     */
+    bool ledStateGet();
+
+    /**
+     * Set LED State
+     *
+     * Sets the state of the LED.
+     */
+    void ledStateSet( bool ledState );
+
+    /**
      * Get Spill Counter
      *
      * @return Spill counter
