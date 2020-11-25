@@ -105,10 +105,6 @@ When("I start mu2eerd with the {string} flags") do |flags|
   @rc = $?.exitstatus
 end
 
-When("When I query the state of the LED") do
-
-end
-
 Then("the PID for mu2eerd should be displayed") do
   expect( @result ).to eq @expectedPID
 end
@@ -196,7 +192,7 @@ Then("the time-in-spill displayed is {int}") do |expected_tis|
   expect( @result ).to match /Time-in-spill \(from last cycle\): /
 end
 
-Then("the LED state displayed is {bool}") do |expected_led_state|
+Then("the LED state displayed is {word}") do |expected_led_state|
   # Expect the time-in-spill to be present in the output
   expect( @result ).to match /LED state: (true|false)/
 end
