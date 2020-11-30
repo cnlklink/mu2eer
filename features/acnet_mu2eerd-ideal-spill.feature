@@ -8,3 +8,4 @@ Feature: Mu2eerd ideal spill device (x:SLWXSPILL)
     Given the mu2eerd daemon process is running
     When I request the reading property for the ACNET device "Z:SLWXSPILL[]"
     Then I receive an array of ideal spill values
+
