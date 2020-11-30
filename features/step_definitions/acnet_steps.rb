@@ -271,7 +271,7 @@ Then("I receive an array of structured data like the following:") do |expected_t
   end
 end
 
-Then("I receive an array of ideal spill values") do |arr|
+Then("I receive an array of ideal spill values") do
   # Convert the ACL output into an array
   result_arr = @result_str.split(/\n+/)
   #counter for ideal spill
@@ -297,7 +297,7 @@ Then("I receive an array of ideal spill values") do |arr|
   end
 end
 
-Then("I receive an array of actual spill values") do |arr|
+Then("I receive an array of actual spill values") do
   # Convert the ACL output into an array
   result_arr = @result_str.split(/\n+/)
   expected = 15999
@@ -333,7 +333,7 @@ Then("I receive an array of actual spill values") do |arr|
   end
 end
 
-Then("I receive an array of error signal values") do |arr|
+Then("I receive an array of error signal values") do
   # Convert the ACL output into an array
   result_arr = @result_str.split(/\n+/)
   
