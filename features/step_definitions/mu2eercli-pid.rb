@@ -233,3 +233,4 @@ Then("the contents of the shared memory are displayed") do
   # Expect the array contents of ideal, actual, and error signals to be present in the output
   expect( @result ).to match /([\d+, \d+, \d+, \d+\n]+)/
 end
+
