@@ -192,9 +192,9 @@ Then("the time-in-spill displayed is {int}") do |expected_tis|
   expect( @result ).to match /Time-in-spill \(from last cycle\): /
 end
 
-Then("the LED state displayed is {word}") do |expected_led_state|
+Then("the LED state displayed is {int}") do |expected_led_state|
   # Expect the time-in-spill to be present in the output
-  expect( @result ).to match /LED state: (true|false)/
+  expect( @result ).to match /LED state: (0|1)/
 end
 
 Then("the SSM thread state displayed is {string}") do |expected_thread_state|
