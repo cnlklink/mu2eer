@@ -4,7 +4,7 @@
 #
 # The file contains the Cucumber step definitions for testing the mu2eercli "pid" command.
 #
-# @author jdiamond
+# @author jdiamond and rtadkins
 
 require 'rspec/expectations'
 

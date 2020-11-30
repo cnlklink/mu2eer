@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the ShowCommand class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <iomanip>

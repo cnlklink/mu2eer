@@ -1,4 +1,4 @@
-Feature: Green LED
+Feature: LED
 
 Verifies the state of the LED in different scenarios.
 @green-led
