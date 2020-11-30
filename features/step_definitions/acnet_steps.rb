@@ -271,6 +271,107 @@ Then("I receive an array of structured data like the following:") do |expected_t
   end
 end
 
+Then("I receive an array of ideal spill values") do |arr|
+  # Convert the ACL output into an array
+  result_arr = @result_str.split(/\n+/)
+  #counter for ideal spill
+  expected = 15999
+
+  # Run through the table of expected values
+  for index in 0..15999
+
+    # The result should contain data at "index"
+    expect( result_arr[index] ).not_to be nil
+    result_val = result_arr[index].to_f
+
+    unless result_val.is_a?(Float)
+      raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
+    end
+
+    # Match the expression in the "value" column and
+    # test it against the element received from ACNET in result_arr
+    expect( result_val ).to eq expected.to_f
+
+    expected -= 1
+
+  end
+end
+
+Then("I receive an array of actual spill values") do |arr|
+  # Convert the ACL output into an array
+  result_arr = @result_str.split(/\n+/)
+  expected = 15999
+  arr_counter = 0
+  
+  # Run through the table of expected values
+  for index in 15999.downto(0) do
+    
+    # The result should contain data at "index"
+    expect( result_arr[arr_counter] ).not_to be nil
+    
+    result_val = result_arr[arr_counter].to_f
+    
+    unless result_val.is_a?(Float)
+      raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
+    end
+ 
+    if expected % 1000 == 0 && expected > 0
+      expected -= 100
+    end
+
+    # Match the expression in the "value" column and
+    # test it against the element received from ACNET in result_arr
+
+    expect( result_val ).to eq expected.to_f
+
+    if expected > 0
+      expected -= 1
+    end
+    
+    arr_counter += 1
+
+  end
+end
+
+Then("I receive an array of error signal values") do |arr|
+  # Convert the ACL output into an array
+  result_arr = @result_str.split(/\n+/)
+  
+  #counter for ideal spill
+  ideal_spill_counter = 15999
+  actual_spill_counter = 15999
+  error_signal_expected = 0
+  
+  # Run through the table of expected values
+  for index in 0..15999
+
+    # The result should contain data at "index"
+    expect( result_arr[index] ).not_to be nil
+    result_val = result_arr[index].to_f
+
+    unless result_val.is_a?(Float)
+      raise "I don't know what to do with this value expression:\n\t#{result_arr[index]}\n"
+    end
+
+    if actual_spill_counter > 0 && actual_spill_counter % 1000 == 0
+      actual_spill_counter -= 100
+    end
+
+    error_signal_expected = ideal_spill_counter - actual_spill_counter
+
+    # Match the expression in the "value" column and
+    # test it against the element received from ACNET in result_arr
+    expect( result_val ).to eq error_signal_expected.to_f
+    
+    if actual_spill_counter > 0
+      actual_spill_counter -= 1
+    end
+
+    ideal_spill_counter -= 1
+
+  end
+end
+
 Then("I receive a value of {string} for the {string} bit") do |expected_value, bit_name|
   expect( @result_bit_hash[bit_name] ).to eq expected_value
 end

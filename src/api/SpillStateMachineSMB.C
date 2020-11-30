@@ -101,7 +101,7 @@ void SpillStateMachineSMB::actualSpillWaveform()
 
   for ( i = 15999; i >= 0; i-- )
   {
-    if ( i % 1000 == 0 && i != 0)
+    if ( i % 1000 == 0 && i > 0)
     {
       i-=100;
       _actualSpillWaveFormData[j++] = i;
