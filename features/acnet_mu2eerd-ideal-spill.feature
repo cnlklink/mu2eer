@@ -7,9 +7,4 @@ Feature: Mu2eerd ideal spill device (x:SLWXSPILL)
   Scenario: I want to read the ideal spill memory block
     Given the mu2eerd daemon process is running
     When I request the reading property for the ACNET device "Z:SLWXSPILL[]"
-    Then I receive an array of ideal spill values like the following:
-      |index|value  |
-      |0    |15999  |
-      |1    |15998  |
-      |2    |15997  |
-
+    Then I receive an array of ideal spill values
