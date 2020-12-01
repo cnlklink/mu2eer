@@ -92,7 +92,7 @@ TEST( ConstructorGroup, DefaultConstructor )
  * Test Sequence Constructor
  */
 TEST( ConstructorGroup, SequenceConstructor )
-{ 
+{
   SSMDeviceDriverMock dev( { SSM_INIT, SSM_BETWEEN_CYCLES } );
 
   CHECK_EQUAL( SSM_IDLE, dev.stateGet() );
@@ -164,7 +164,7 @@ TEST( CoreGroup, ToString )
         case SSM_ABORT: STRCMP_EQUAL( "abort", ss.str().c_str() ); break;
         case SSM_FAULT: STRCMP_EQUAL( "fault", ss.str().c_str() ); break;
         case SSM_UNKNOWN: STRCMP_EQUAL( "UNKNOWN", ss.str().c_str() ); break;
-          
+
         default: STRCMP_EQUAL( "UNDEFINED", ss.str().c_str() ); break;
         }
     }
@@ -274,7 +274,7 @@ TEST( CoreGroup, SpillCounter )
 /**
  * Test Time-in-Spill Register
  *
- * Verifies that the time-in-spill register returns 0 after initialization and 107 after 
+ * Verifies that the time-in-spill register returns 0 after initialization and 107 after
  * a spill sequence.
  */
 TEST( CoreGroup, TimeInSpill )
@@ -315,6 +315,28 @@ TEST( CoreGroup, Delay )
 }
 
 /**
+ * Test Mock LED
+ *
+ * Verifies that the LED is on at initialization and off after a fault.
+ */
+TEST( CoreGroup, Led )
+{
+  // Make a sequence with 2 spills
+  _gDriver->loadSpillSequence( 2 );
+
+  _gDriver->initialize();
+
+  while( SSM_FAULT != _gDriver->waitForStateChange() );
+  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
+
+  _gDriver->fault();
+  CHECK_EQUAL( 0, _gDriver->ledStateGet() );
+
+  _gDriver->initialize();
+  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
+}
+
+/**
 * Test Reset
 *
 * Verifies that resetting the mock returns us to the initial state.
@@ -324,6 +346,7 @@ TEST( CoreGroup, Reset )
   CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
   CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+  CHECK_EQUAL( 0, _gDriver->ledStateGet() );
 
   // Make a sequence with 2 spills
   _gDriver->loadSpillSequence( 2 );
@@ -335,16 +358,20 @@ TEST( CoreGroup, Reset )
   CHECK_EQUAL( SSM_FAULT, _gDriver->stateGet() );
   CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
+  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
 
   // Reset, check and run the entire sequence again
   _gDriver->reset();
   CHECK_EQUAL( SSM_IDLE, _gDriver->stateGet() );
   CHECK_EQUAL( 0, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 0, _gDriver->timeInSpillGet() );
+  CHECK_EQUAL( 0, _gDriver->ledStateGet() );
+
   while( SSM_FAULT != _gDriver->waitForStateChange() );
   CHECK_EQUAL( SSM_FAULT, _gDriver->stateGet() );
   CHECK_EQUAL( 2, _gDriver->spillCounterGet() );
   CHECK_EQUAL( 107, _gDriver->timeInSpillGet() );
+  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
 }
 
 /**

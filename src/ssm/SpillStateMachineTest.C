@@ -98,6 +98,9 @@ TEST( InitGroup, Initialize )
   CHECK_EQUAL( 0, smb.spillCounterGet() );
 
   CHECK_EQUAL( 0, smb.timeInSpillGet() );
+
+  CHECK_EQUAL( 0, smb.ledStateGet() );
+
 }
 
 /**
@@ -276,4 +279,60 @@ TEST( OperationGroup, TestFault )
   _ssm->fault();
 
   CHECK_EQUAL( SSM_FAULT, smb.currentStateGet() );
+}
+
+/**
+ * LED Group
+ *
+ * Tests related to the operation of the LED.
+ */
+TEST_GROUP( LEDGroup )
+{
+  void setup()
+  {
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+    _ssm = new SpillStateMachine( _cm, _shmm->ssmBlockGet() );
+  }
+
+  void teardown()
+  {
+    delete _ssm;
+    delete _shmm;
+  }
+};
+
+/**
+ * Test Initial State
+ *
+ * Verify that the LED turns on when initialized & off when stopped.
+ */
+TEST( LEDGroup, TestRunning)
+{
+  auto& smb = _shmm->ssmBlockGet();
+
+  _ssm->initialize();
+
+  CHECK_EQUAL( 1, smb.ledStateGet() );
+
+  _ssm->stop();
+
+  CHECK_EQUAL( 0, smb.ledStateGet() );
+}
+
+/**
+ * Test Fault State
+ *
+ * Verify that the LED turns off in fault state.
+ */
+TEST( LEDGroup, TestFault )
+{
+  auto& smb = _shmm->ssmBlockGet();
+
+  _ssm->initialize();
+
+  CHECK_EQUAL( 1, smb.ledStateGet() );
+
+  _ssm->fault();
+
+  CHECK_EQUAL( 0, smb.ledStateGet() );
 }
