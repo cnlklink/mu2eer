@@ -86,7 +86,8 @@ void SpillStateMachine::reset()
 {
   // Stop the thread
   stop();
-
+  //turn LED off
+  _ssmDev->ledOff();
   // Reset the SSM
   _ssmDev->reset();
 
