@@ -162,10 +162,15 @@ ssm_state_t SSMDeviceDriverMock::waitForStateChange()
       _timeInSpill = 107;
     }
 
+  if( SSM_FAULT == ret )
+    {
+      _led = false;
+    }
+
   return ret;
 }
 
-bool SSMDeviceDriverMock::getLedState()
+bool SSMDeviceDriverMock::ledStateGet()
 {
   return _led;
 }
