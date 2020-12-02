@@ -46,6 +46,20 @@ namespace Mu2eER
     ssm_state_t currentStateGet() const;
 
     /**
+     * Get LED State
+     *
+     * @return The whether the LED is on or off
+     */
+    bool ledStateGet() const;
+
+    /**
+     * Set LED State
+     *
+     * Sets the state of the LED.
+     */
+    void ledStateSet( bool ledState );
+
+    /**
      * Get Spill Counter
      *
      * @return Spill counter
@@ -164,6 +178,11 @@ namespace Mu2eER
      * Time spent in the last spill cycle (ms)
      */
     float _timeInSpill;
+
+    /**                                                                         
+     * LED                         
+     */
+    bool _led;
 
     /**
      * Size of array

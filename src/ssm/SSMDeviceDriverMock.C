@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the SSMDeviceDriverMock class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <chrono>
@@ -144,7 +144,7 @@ ssm_state_t SSMDeviceDriverMock::waitForStateChange()
   this_thread::sleep_for( chrono::milliseconds( _delay ) );
 
   auto ret = _stateNext();
-  
+
   // Increment spill counter whenever the SSM_SPILL state is returned
   if( SSM_SPILL == ret )
     {
@@ -158,4 +158,9 @@ ssm_state_t SSMDeviceDriverMock::waitForStateChange()
     }
 
   return ret;
+}
+
+bool SSMDeviceDriverMock::getLedState()
+{
+  return _led;
 }

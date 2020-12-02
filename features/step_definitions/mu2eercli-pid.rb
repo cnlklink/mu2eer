@@ -4,7 +4,7 @@
 #
 # The file contains the Cucumber step definitions for testing the mu2eercli "pid" command.
 #
-# @author jdiamond
+# @author jdiamond and rtadkins
 
 require 'rspec/expectations'
 
@@ -190,6 +190,11 @@ end
 Then("the time-in-spill displayed is {int}") do |expected_tis|
   # Expect the time-in-spill to be present in the output
   expect( @result ).to match /Time-in-spill \(from last cycle\): /
+end
+
+Then("the LED state displayed is {int}") do |expected_led_state|
+  # Expect the time-in-spill to be present in the output
+  expect( @result ).to match /LED state: (0|1)/
 end
 
 Then("the SSM thread state displayed is {string}") do |expected_thread_state|

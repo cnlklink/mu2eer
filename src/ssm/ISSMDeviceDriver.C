@@ -3,7 +3,7 @@
  *
  * This file contains the implementation of the ISSMDeviceDriver class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include "ISSMDeviceDriver.H"
@@ -25,10 +25,10 @@ unique_ptr<ISSMDeviceDriver> ISSMDeviceDriver::factory( string driverId )
   if( 0 == driverId.compare( "mock" ) )
     {
       return unique_ptr<ISSMDeviceDriver>( new SSMDeviceDriverMock( {
-          SSM_BETWEEN_CYCLES, 
-          SSM_START_CYCLE, 
-          SSM_BETWEEN_SPILLS, 
-          SSM_RAMP, 
+          SSM_BETWEEN_CYCLES,
+          SSM_START_CYCLE,
+          SSM_BETWEEN_SPILLS,
+          SSM_RAMP,
           SSM_FAULT
       } ) );
     }
@@ -36,3 +36,15 @@ unique_ptr<ISSMDeviceDriver> ISSMDeviceDriver::factory( string driverId )
   return unique_ptr<ISSMDeviceDriver>( new SSMDeviceDriverMock( { SSM_FAULT } ) );
 }
 
+void ISSMDeviceDriver::ledOn() {
+  _led = true;
+}
+
+void ISSMDeviceDriver::ledOff() {
+  _led = false;
+}
+
+bool ISSMDeviceDriver::ledStateGet()
+{
+  return _led;
+}

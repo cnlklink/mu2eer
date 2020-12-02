@@ -3,7 +3,7 @@
  *
  * This file contains the definition of the ISSMDeviceDriver interface.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #ifndef ISSMDEVICEDRIVER_H
@@ -110,6 +110,29 @@ namespace Mu2eER
      * @return New state
      */
     virtual ssm_state_t waitForStateChange() = 0;
+
+    /**
+     * Turns LED on.
+     */
+     void ledOn();
+
+    /**
+     * Turns LED off.
+     */
+     void ledOff();
+
+     /**
+      * Get LED State
+      *
+      * @return The whether the LED is on or off
+      */
+     bool ledStateGet();
+
+  protected:
+    /**
+     * LED variable
+     */
+    bool _led = false;
 
   private:
   };
