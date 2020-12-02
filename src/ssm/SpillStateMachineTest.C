@@ -3,7 +3,7 @@
  *
  * This file contains unit tests (CppUTest) for the SpillStateMachine class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <chrono>
@@ -99,8 +99,7 @@ TEST( InitGroup, Initialize )
 
   CHECK_EQUAL( 0, smb.timeInSpillGet() );
 
-  CHECK_EQUAL( 0, smb.ledStateGet() );
-
+  CHECK_EQUAL( true, smb.ledStateGet() );
 }
 
 /**
@@ -312,11 +311,12 @@ TEST( LEDGroup, TestRunning)
 
   _ssm->initialize();
 
-  CHECK_EQUAL( 1, smb.ledStateGet() );
+  CHECK_EQUAL( true, smb.ledStateGet() );
 
+  _ssm->run();
   _ssm->stop();
 
-  CHECK_EQUAL( 0, smb.ledStateGet() );
+  CHECK_EQUAL( false, smb.ledStateGet() );
 }
 
 /**

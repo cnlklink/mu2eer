@@ -3,7 +3,7 @@
  *
  * This file contains unit tests (CppUTest) for the SSMDeviceDriverMock class.
  *
- * @author jdiamond
+ * @author jdiamond and rtadkins
  */
 
 #include <chrono>
@@ -327,13 +327,13 @@ TEST( CoreGroup, Led )
   _gDriver->initialize();
 
   while( SSM_FAULT != _gDriver->waitForStateChange() );
-  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
+  CHECK_EQUAL( false, _gDriver->ledStateGet() );
 
   _gDriver->fault();
-  CHECK_EQUAL( 0, _gDriver->ledStateGet() );
+  CHECK_EQUAL( false, _gDriver->ledStateGet() );
 
   _gDriver->initialize();
-  CHECK_EQUAL( 1, _gDriver->ledStateGet() );
+  CHECK_EQUAL( true, _gDriver->ledStateGet() );
 }
 
 /**
