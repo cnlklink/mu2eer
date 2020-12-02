@@ -8,3 +8,4 @@ Feature: Mu2eerd error signal device (x:SLWXESPILL)
     Given the mu2eerd daemon process is running
     When I request the reading property for the ACNET device "Z:SLWXESPILL[]"
     Then I receive an array of error signal values
+
