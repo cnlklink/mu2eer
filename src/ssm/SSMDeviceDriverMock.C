@@ -32,6 +32,7 @@ void SSMDeviceDriverMock::delaySet( unsigned int delay )
 void SSMDeviceDriverMock::fault()
 {
   _state = SSM_FAULT;
+  _led = false;
   _stateSequence.clear();
 }
 
@@ -42,6 +43,9 @@ void SSMDeviceDriverMock::initialize()
 
   // Reset the time-in-spill register
   _timeInSpill = 0;
+
+  //turn on LED
+  _led = true;
 
   // Reset the state sequence
   _resetSequence();
@@ -76,6 +80,7 @@ void SSMDeviceDriverMock::reset()
   _spillCount = 0;
   _state = SSM_IDLE;
   _timeInSpill = 0;
+  _led = false;
   _resetSequence();
 }
 
@@ -157,10 +162,15 @@ ssm_state_t SSMDeviceDriverMock::waitForStateChange()
       _timeInSpill = 107;
     }
 
+  if( SSM_FAULT == ret )
+    {
+      _led = false;
+    }
+
   return ret;
 }
 
-bool SSMDeviceDriverMock::getLedState()
+bool SSMDeviceDriverMock::ledStateGet()
 {
   return _led;
 }
