@@ -196,14 +196,14 @@ namespace Mu2eER
      * @param dest ACNET response buffer
      * @param reqinfo ACNET request object
      */
-    void readFast( Array<error_signal_read_t>& dest, ReqInfo const* reqinfo );
+    void readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo );
 
     /**
      * Cleanup Collection Property
      *
      * @param reqinfo ACNET request object
      */
-    void cleanupCollection( ReqInfo const* reqinfo )
+    void cleanupCollection( ReqInfo const* reqinfo );
 
   private:
     /**
@@ -231,8 +231,8 @@ namespace Mu2eER
      */
     struct ftp_request
     {
-      unit32_t acsys_fe_request_id;
-      unit32_t dataRate;
+      uint32_t acsys_fe_request_id;
+      uint32_t dataRate;
     } _active_ftp[MAX_FTP];
   };
 };

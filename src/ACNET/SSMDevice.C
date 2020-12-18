@@ -26,7 +26,7 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _active_ftp[i].acsys_fe_request_id = 0;
   }
 
-  _readfast_error_count = 0
+  _readfast_error_count = 0;
 
   registerMethod( ATTR_SPILL_COUNTER_READING,
                   *this,
@@ -66,7 +66,7 @@ SSMDevice::SSMDevice( string mqName, string shmName )
 
   registerMethod( ATTR_IDEAL_SPILL_READING,
                   *this,
-                  &SSMDevice::fastRead,
+                  &SSMDevice::readFast,
                   IDEAL_SPILL_READING_MAX );
 }
 
@@ -330,16 +330,16 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
   for ( i = 0; i < MAX_FTP; i++ )
   {
-    if ( ftp_request[i].acsys_fe_request_id == 0 )
+    if ( _active_ftp[i].acsys_fe_request_id == 0 )
     {
-      request_id = when->get_requestid();
+      request_id = reqinfo->get_requestid();
       break;
     }
   }
 
   if ( request_id == 0 )
   {
-    ees_printf( LOG_INFO, "SSMDevice::initCollection(): ERROR - All ftp_requests are in use." );
+    syslog( LOG_INFO, "SSMDevice::initCollection(): ERROR - All ftp_requests are in use." );
     throw Ex_FTPLIMIT;
   }
 
@@ -347,7 +347,7 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
   dataRate = (uint32_t)( 1000000.0 / ((float)evVal) );
 
-  _active_ftp[request_index].acsys_fe_request_id = when->get_requestid();
+  _active_ftp[request_index].acsys_fe_request_id = reqinfo->get_requestid();
   _active_ftp[request_index].dataRate = dataRate;
 }
 
@@ -362,7 +362,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
-  uint32_t num_chans = 1;
+  //uint32_t num_chans = 1;
   uint32_t num_read_pts = 16000;
   uint32_t i;
 
@@ -379,7 +379,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
     _readfast_error_count++;
     if ( _readfast_error_count <= 8 )
     {
-      ees_printf( LOG_INFO, "SSMDevice::readFast(): request_id(%d) not found,\n", request_id );
+      syslog( LOG_INFO, "SSMDevice::readFast(): request_id(%d) not found,\n", request_id );
     }
     throw Ex_FTPLIMIT;
     return;
@@ -390,10 +390,10 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   // previous buffer had 16000 elements
   for ( i = 0; i < num_read_pts; i++ )
   {
-    v[i] = 1;
+    dest[i] = 1;
   }
 
-  v[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
+  dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
 }
 
 /**
@@ -406,7 +406,7 @@ void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t i;
-  uint32_t request_id = when->get_requestid();
+  uint32_t request_id = reqinfo->get_requestid();
 
   for ( i = 0; i < MAX_FTP; i++ )
   {
@@ -418,7 +418,7 @@ void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
 
   if ( i == MAX_FTP )
   {
-    ees_printf( LOG_INFO, "SSMDevice::cleanupCollection(): request_id(%d) not found,\n", request_id );
+    syslog( LOG_INFO, "SSMDevice::cleanupCollection(): request_id(%d) not found,\n", request_id );
     return;
   }
 
