@@ -64,7 +64,7 @@ SSMDevice::SSMDevice( string mqName, string shmName )
                   &SSMDevice::errorSignalRead,
                   IDEAL_SPILL_READING_MAX );
 
-  registerMethod( ATTR_IDEAL_SPILL_READING,
+  registerMethodFast( ATTR_IDEAL_SPILL_READING,
                   *this,
                   &SSMDevice::readFast,
                   IDEAL_SPILL_READING_MAX );
