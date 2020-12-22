@@ -101,8 +101,8 @@ namespace Mu2eER
      * @param interval How long to wait in ms
      * @param tries Number of tries before giving up (0: try forever, timeout = interval * tries)
      */
-    void waitForState( mu2eerd_state_t waitForState, 
-                       unsigned int interval = 5, 
+    void waitForState( mu2eerd_state_t waitForState,
+                       unsigned int interval = 5,
                        unsigned int tries = 0 ) const;
 
     /**
@@ -114,8 +114,8 @@ namespace Mu2eER
      * @param interval How long to wait in ms
      * @param tries Number of tries before giving up (0: try forever, timeout = interval * tries)
      */
-    void waitForSSMState( ssm_state_t waitForState, 
-                          unsigned int interval = 5, 
+    void waitForSSMState( ssm_state_t waitForState,
+                          unsigned int interval = 5,
                           unsigned int tries = 0 ) const;
 
   private:
@@ -128,7 +128,7 @@ namespace Mu2eER
      * Shared memory region's name
      */
     string _name;
-    
+
     /**
      * Pointer to the shared memory region
      */
@@ -138,7 +138,7 @@ namespace Mu2eER
      * _ptr cast to a SharedMemoryInterface*
      */
     SharedMemoryInterface* _shmi;
-    
+
     /**
      * The size of the shared memory region
      */

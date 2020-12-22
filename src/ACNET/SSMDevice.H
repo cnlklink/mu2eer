@@ -183,6 +183,28 @@ namespace Mu2eER
      */
     void errorSignalRead( Array<error_signal_read_t>& dest, ReqInfo const* reqinfo );
 
+    /**
+     * Init Collection Property
+     *
+     * @param reqinfo ACNET request object
+     */
+    void initCollection( ReqInfo const* reqinfo );
+
+    /**
+     * Fast Reading Property
+     *
+     * @param dest ACNET response buffer
+     * @param reqinfo ACNET request object
+     */
+    void readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo );
+
+    /**
+     * Cleanup Collection Property
+     *
+     * @param reqinfo ACNET request object
+     */
+    void cleanupCollection( ReqInfo const* reqinfo );
+
   private:
     /**
      * Name of the mu2eerd control message queue
@@ -193,6 +215,25 @@ namespace Mu2eER
      * Name of the mu2eerd shared memory region
      */
     string _shmName;
+
+    /**
+     * Counter to limit the number of error messages sent to the log by readFast() for any one issue
+     */
+    int _readfast_error_count;
+
+    /**
+     * Maximum FTP requests
+     */
+    static const uint32_t MAX_FTP = 4;
+
+    /**
+     * FTP Request/Active Struct
+     */
+    struct ftp_request
+    {
+      uint32_t acsys_fe_request_id;
+      uint32_t dataRate;
+    } _active_ftp[MAX_FTP];
   };
 };
 

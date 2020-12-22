@@ -20,6 +20,14 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
+
+  for( uint32_t i = 0; i != MAX_FTP; i++ )
+  {
+    _active_ftp[i].acsys_fe_request_id = 0;
+  }
+
+  _readfast_error_count = 0;
+
   registerMethod( ATTR_SPILL_COUNTER_READING,
                   *this,
                   &SSMDevice::spillCounterRead,
@@ -54,6 +62,11 @@ SSMDevice::SSMDevice( string mqName, string shmName )
   registerMethod( ATTR_ERROR_SIGNAL_READING,
                   *this,
                   &SSMDevice::errorSignalRead,
+                  IDEAL_SPILL_READING_MAX );
+
+  registerMethodFast( ATTR_IDEAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::readFast,
                   IDEAL_SPILL_READING_MAX );
 }
 
@@ -195,7 +208,7 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
     }
 
   try
-    {           
+    {
       int i = 0, j = 0, upper_bound = 0, lower_bound = dest.offset.getValue(), sample_size = dest.total.getValue();
       SharedMemoryClient shmc( _shmName );
 
@@ -280,4 +293,135 @@ void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::errorSignalRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
+}
+
+/**
+ * Init Collection Property
+ * Code is by kmartin and adapted by rtadkins
+
+ * @param reqinfo ACNET request object
+ */
+void SSMDevice::initCollection( ReqInfo const* reqinfo )
+{
+  uint32_t evType, evVal;
+  uint32_t request_index = 0;
+  uint32_t request_id = 0;
+  uint32_t i;
+  uint32_t dataRate = 0;
+
+  reqinfo->get_evTypeVal(&evType, &evVal);
+
+  if ( evType == EV_PERIODIC )
+  {
+    if ( (evVal >= 66000) && (evVal != 66600) && (evVal != 6670) )
+    {
+      return;
+    }
+  }
+  else
+  {
+    if ( evVal >= 66000 )
+      return;
+    if ( evVal < 694 ) //use 694us instead
+      return;
+  }
+
+  _readfast_error_count = 0;
+
+  for ( i = 0; i < MAX_FTP; i++ )
+  {
+    if ( _active_ftp[i].acsys_fe_request_id == 0 )
+    {
+      request_id = reqinfo->get_requestid();
+      break;
+    }
+  }
+
+  if ( request_id == 0 )
+  {
+    syslog( LOG_INFO, "SSMDevice::initCollection(): ERROR - All ftp_requests are in use." );
+    throw Ex_FTPLIMIT;
+  }
+
+  request_index = i;
+
+  dataRate = (uint32_t)( 1000000.0 / ((float)evVal) );
+
+  _active_ftp[request_index].acsys_fe_request_id = reqinfo->get_requestid();
+  _active_ftp[request_index].dataRate = dataRate;
+}
+
+/**
+ * Fast Reading Property
+ * Code is by kmartin and adapted by rtadkins
+ *
+ * @param dest return buffer
+ * @param reqinfo ACNET request object
+ */
+void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
+{
+  uint32_t request_index = 0;
+  uint32_t request_id = reqinfo->get_requestid();
+  //uint32_t num_chans = 1;
+  uint32_t num_read_pts = 16000;
+  uint32_t i;
+
+  for ( i = 0; i < MAX_FTP; i++ )
+  {
+    if ( _active_ftp[i].acsys_fe_request_id == request_id )
+    {
+      break;
+    }
+  }
+
+  if ( i == MAX_FTP )
+  {
+    _readfast_error_count++;
+    if ( _readfast_error_count <= 8 )
+    {
+      syslog( LOG_INFO, "SSMDevice::readFast(): request_id(%d) not found,\n", request_id );
+    }
+    throw Ex_FTPLIMIT;
+    return;
+  }
+
+  request_index = i;
+
+  // previous buffer had 16000 elements
+  for ( i = 0; i < num_read_pts; i++ )
+  {
+    dest[i] = 1;
+  }
+
+  dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
+}
+
+/**
+ * Cleanup Collection Property
+ * Code is by kmartin and adapted by rtadkins
+
+ * @param reqinfo ACNET request object
+ */
+void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
+{
+  uint32_t request_index = 0;
+  uint32_t i;
+  uint32_t request_id = reqinfo->get_requestid();
+
+  for ( i = 0; i < MAX_FTP; i++ )
+  {
+    if ( _active_ftp[i].acsys_fe_request_id == request_id )
+    {
+      break;
+    }
+  }
+
+  if ( i == MAX_FTP )
+  {
+    syslog( LOG_INFO, "SSMDevice::cleanupCollection(): request_id(%d) not found,\n", request_id );
+    return;
+  }
+
+  request_index = i;
+  _active_ftp[request_id].acsys_fe_request_id = 0;
 }
