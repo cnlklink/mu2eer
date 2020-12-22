@@ -309,6 +309,8 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
   uint32_t i;
   uint32_t dataRate = 0;
 
+  syslog( LOG_INFO, "Entered into SSMDevice::initCollection() \n" );
+
   reqinfo->get_evTypeVal(&evType, &evVal);
 
   if ( evType == EV_PERIODIC )
@@ -349,6 +351,8 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
   _active_ftp[request_index].acsys_fe_request_id = reqinfo->get_requestid();
   _active_ftp[request_index].dataRate = dataRate;
+
+  syslog( LOG_INFO, "Exiting SSMDevice::initCollection() \n" );
 }
 
 /**
@@ -365,6 +369,8 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   //uint32_t num_chans = 1;
   uint32_t num_read_pts = 16000;
   uint32_t i;
+
+  syslog( LOG_INFO, "Entered into SSMDevice::readFast() \n");
 
   for ( i = 0; i < MAX_FTP; i++ )
   {
@@ -394,6 +400,8 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   }
 
   dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
+
+  syslog( LOG_INFO, "Finished in SSMDevice::readFast() \n" );
 }
 
 /**
@@ -407,6 +415,8 @@ void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
   uint32_t request_index = 0;
   uint32_t i;
   uint32_t request_id = reqinfo->get_requestid();
+
+  syslog( LOG_INFO, "Entered into SSMDevice::cleanupCollection() \n");
 
   for ( i = 0; i < MAX_FTP; i++ )
   {
@@ -424,4 +434,6 @@ void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
 
   request_index = i;
   _active_ftp[request_id].acsys_fe_request_id = 0;
+
+  syslog( LOG_INFO, "Finished SSMDevice::cleanupCollection() \n");
 }
