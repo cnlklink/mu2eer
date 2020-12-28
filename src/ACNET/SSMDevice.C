@@ -394,7 +394,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   // previous buffer had 16000 elements
-  for ( i = 0; i < num_read_pts; i++ )
+  for ( i = 1; i < num_read_pts; i++ )
   {
     dest[i] = 1;
   }
