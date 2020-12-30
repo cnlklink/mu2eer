@@ -367,7 +367,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
   //uint32_t num_chans = 1;
-  uint32_t num_read_pts = 16000;
+  uint32_t num_read_pts = 1200;
   uint32_t i;
 
   syslog( LOG_INFO, "Entered into SSMDevice::readFast() \n");
