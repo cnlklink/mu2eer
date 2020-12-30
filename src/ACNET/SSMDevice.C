@@ -393,6 +393,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 
   request_index = i;
 
+  syslog( LOG_INFO, "Show length %d and offset %d\n", dest.total, dest.offset);
   // previous buffer had 16000 elements
   for ( i = 1; i < num_read_pts; i++ )
   {
