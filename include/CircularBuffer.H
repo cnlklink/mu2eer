@@ -27,6 +27,7 @@ namespace Mu2eER
 
   public:
 
+    CircularBuffer(T capacity);
     T dequeue();
     void enqueue(T item);
     bool empty() const;
@@ -39,7 +40,6 @@ namespace Mu2eER
   private:
 
     T _buffer[BUFFER_SIZE];
-    T _capacity;
 
     T _head;
     T _tail;
