@@ -30,7 +30,7 @@ namespace Mu2eER
     /**
      * Constructor
      *
-     * @param name The capacity of the circular buffer
+     * @param capacity The capacity of the circular buffer
      */
     CircularBuffer(T capacity);
 
@@ -44,7 +44,7 @@ namespace Mu2eER
     /**
      * Add an element to the buffer
      *
-     * @param The element to be added
+     * @param item The element to be added to the buffer
      */
     void enqueue(T item);
 
