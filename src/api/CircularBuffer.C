@@ -53,7 +53,9 @@ void CircularBuffer<T>::enqueue( T element )
   //set element to index
   _buffer[_tail] = element;
   //increment size
-  _size++;
+  if (!full()){
+    _size++;
+  }
 }
 
 template <class T>
