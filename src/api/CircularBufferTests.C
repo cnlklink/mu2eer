@@ -6,6 +6,7 @@
  * @author rtadkins
  */
 
+#include <iostream>
 #include "CppUTest/TestHarness.h"
 
 #include "CircularBuffer.H"
@@ -39,7 +40,7 @@ TEST( CircularBuffConstruction, InitialValues )
   CHECK_EQUAL( BUFFER_SIZE, circular_buffer.capacityGet() );
   CHECK_EQUAL( 0, circular_buffer.sizeGet() );
   CHECK_EQUAL( 0, circular_buffer.headGet() );
-  CHECK_EQUAL( 0, circular_buffer.tailGet() );
+  CHECK_EQUAL( -1, circular_buffer.tailGet() );
 }
 
 /**
@@ -69,10 +70,16 @@ TEST( CircularBuffEnqueue, Enqueue )
   CHECK_EQUAL( BUFFER_SIZE, circular_buffer.capacityGet() );
   CHECK_EQUAL( 0, circular_buffer.sizeGet() );
   CHECK_EQUAL( 0, head );
-  CHECK_EQUAL( 0, tail );
+  CHECK_EQUAL( -1, tail );
 
   circular_buffer.enqueue(20);
 
+  head = circular_buffer.headGet();
+  tail = circular_buffer.tailGet();
+  printf("_head is %d and tail is %d", head, tail);
+
+
   CHECK_EQUAL( 20, circular_buffer.dataGet( head ) );
   CHECK_EQUAL( 20, circular_buffer.dataGet( tail ) );
+  CHECK_EQUAL( 1, circular_buffer.sizeGet() );
 }
