@@ -138,3 +138,39 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
     CHECK_EQUAL(i, circular_buffer.dataGet(i));
   }
 }
+
+TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
+{
+  int head, tail, capacity, i;
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+
+  capacity = circular_buffer.capacityGet();
+  for (i = 0; i < capacity; i++) {
+    circular_buffer.enqueue(i);
+  }
+
+  circular_buffer.enqueue(9800);
+  circular_buffer.enqueue(9801);
+  circular_buffer.enqueue(9802);
+
+  for (i = 0; i < capacity - 3; i++) {
+    circular_buffer.enqueue(i);
+  }
+
+  head = circular_buffer.headGet();
+  tail = circular_buffer.tailGet();
+  printf("head is %d and tail is %d", head, tail);
+
+  CHECK_EQUAL( 0, circular_buffer.headGet() );
+  CHECK_EQUAL( 9799, circular_buffer.tailGet() );
+  CHECK_EQUAL( 9800, circular_buffer.sizeGet() );
+
+  // check the first three elements
+  CHECK_EQUAL( 9800, circular_buffer.dataGet(0) );
+  CHECK_EQUAL( 9801, circular_buffer.dataGet(1) );
+  CHECK_EQUAL( 9802, circular_buffer.dataGet(2) );
+
+  for (i = 3; i < capacity - 3; i++) {
+    CHECK_EQUAL((i - 3), circular_buffer.dataGet(i));
+  }
+}
