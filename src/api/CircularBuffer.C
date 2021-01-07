@@ -7,6 +7,7 @@
  */
 
 #include <cstddef>
+#include <cstdint>
 #include "CircularBuffer.H"
 
 using namespace Mu2eER;
@@ -14,10 +15,10 @@ using namespace std;
 
 template <class T>
 CircularBuffer<T>::CircularBuffer( T capacity )
-  : _capacity( capacity ),
-    _head( 0 ),
-    _size( 0 ),
-    _tail( 0 )
+  : _head( 0 ),
+    _tail( 0 ),
+    _capacity( capacity ),
+    _size( 0 )
 {
 }
 
@@ -27,7 +28,7 @@ T CircularBuffer<T>::dequeue()
   int element;
 
   if ( _buffer == NULL ) {
-    return -1;
+    // add this in
   }
 
   element = _buffer[_head];
@@ -45,7 +46,7 @@ void CircularBuffer<T>::enqueue( T element )
   int element_index;
 
   if ( _buffer == NULL ) {
-    return -1;
+    //add this in
   }
 
   element_index = ( _head + 1 ) % _capacity;
@@ -90,3 +91,5 @@ T CircularBuffer<T>::sizeGet() const
 {
   return _size;
 }
+
+template class CircularBuffer<int16_t>;
