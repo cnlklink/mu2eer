@@ -90,6 +90,13 @@ namespace Mu2eER
      */
     T sizeGet() const;
 
+    /**
+     * Get data at index
+     *
+     * @return Element at index
+     */
+    T dataGet( T index ) const;
+
   private:
     /**
      * Buffer array to store contents

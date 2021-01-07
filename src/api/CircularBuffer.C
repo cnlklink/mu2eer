@@ -92,4 +92,10 @@ T CircularBuffer<T>::sizeGet() const
   return _size;
 }
 
+template <class T>
+T CircularBuffer<T>::dataGet( T index ) const
+{
+  return _buffer[index];
+}
+
 template class CircularBuffer<int16_t>;
