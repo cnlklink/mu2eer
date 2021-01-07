@@ -135,6 +135,6 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
   CHECK_EQUAL( 9802, circular_buffer.dataGet(2) );
 
   for (i = 3; i < capacity; i++) {
-    CHECK_EQUAL((i - 3), circular_buffer.dataGet(i));
+    CHECK_EQUAL(i, circular_buffer.dataGet(i));
   }
 }
