@@ -16,7 +16,7 @@ using namespace std;
 template <class T>
 CircularBuffer<T>::CircularBuffer( T capacity )
   : _head( 0 ),
-    _tail( 0 ),
+    _tail( -1 ),
     _capacity( capacity ),
     _size( 0 )
 {
@@ -27,14 +27,14 @@ T CircularBuffer<T>::dequeue()
 {
   int element;
 
-  if ( _buffer == NULL ) {
-    // add this in
+  if ( _buffer == NULL || empty()) {
+    //add this in
   }
-
+  //grab element
   element = _buffer[_head];
-
+  //increment _head
   _head = ( _head + 1 ) % _capacity;
-
+  //decrease size
   _size--;
 
   return element;
@@ -48,11 +48,11 @@ void CircularBuffer<T>::enqueue( T element )
   if ( _buffer == NULL ) {
     //add this in
   }
-
-  element_index = ( _head + 1 ) % _capacity;
-
-  _buffer[element_index] = element;
-
+  //designate index for element
+  _tail = ( _tail + 1 ) % _capacity;
+  //set element to index
+  _buffer[_tail] = element;
+  //increment size
   _size++;
 }
 
