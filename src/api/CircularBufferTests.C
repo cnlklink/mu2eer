@@ -7,17 +7,20 @@
  */
 
 #include "CppUTest/TestHarness.h"
+
 #include "CircularBuffer.H"
 
 #define BUFFER_SIZE 9800
 
+using namespace Mu2eER;
+using namespace std;
 
 /**
  * Construction Group
  *
  * Tests related to constructing & destructing the CircularBuffer.
  */
-TEST_GROUP( ConstructionGroup )
+TEST_GROUP( CircularBuffConstruction )
 {
   void setup()
   {
@@ -29,7 +32,7 @@ TEST_GROUP( ConstructionGroup )
   }
 };
 
-TEST( ConstructionGroup, InitialValues )
+TEST( CircularBuffConstruction, InitialValues )
 {
   CircularBuffer<int16_t> circular_buffer(BUFFER_SIZE);
 
