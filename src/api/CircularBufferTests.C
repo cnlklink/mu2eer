@@ -41,3 +41,38 @@ TEST( CircularBuffConstruction, InitialValues )
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 0, circular_buffer.tailGet() );
 }
+
+/**
+ * CircularBuffEnqueue Group
+ *
+ * Tests related to the CircularBuffer enqueue function.
+ */
+TEST_GROUP( CircularBuffEnqueue )
+{
+  void setup()
+  {
+    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  }
+
+  void teardown()
+  {
+  }
+};
+
+TEST( CircularBuffEnqueue, Enqueue )
+{
+  int head, tail;
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+
+  head = circular_buffer.headGet();
+  tail = circular_buffer.tailGet();
+  CHECK_EQUAL( BUFFER_SIZE, circular_buffer.capacityGet() );
+  CHECK_EQUAL( 0, circular_buffer.sizeGet() );
+  CHECK_EQUAL( 0, head );
+  CHECK_EQUAL( 0, tail );
+
+  circular_buffer.enqueue(20);
+
+  CHECK_EQUAL( 20, circular_buffer.dataGet( head ) );
+  CHECK_EQUAL( 20, circular_buffer.dataGet( tail ) );
+}
