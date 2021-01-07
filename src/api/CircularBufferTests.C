@@ -60,7 +60,7 @@ TEST_GROUP( CircularBuffEnqueue )
   }
 };
 
-TEST( CircularBuffEnqueue, Enqueue )
+TEST( CircularBuffEnqueue, EnqueueOneElement )
 {
   int head, tail;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
@@ -82,4 +82,27 @@ TEST( CircularBuffEnqueue, Enqueue )
   CHECK_EQUAL( 20, circular_buffer.dataGet( head ) );
   CHECK_EQUAL( 20, circular_buffer.dataGet( tail ) );
   CHECK_EQUAL( 1, circular_buffer.sizeGet() );
+}
+
+TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
+{
+  int head, tail, capacity, i;
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+
+  capacity = circular_buffer.capacityGet();
+  for (i = 0; i < capacity; i++) {
+    circular_buffer.enqueue(i);
+  }
+
+  head = circular_buffer.headGet();
+  tail = circular_buffer.tailGet();
+  printf("_head is %d and tail is %d", head, tail);
+
+  CHECK_EQUAL( 0, circular_buffer.headGet() );
+  CHECK_EQUAL( 9799, circular_buffer.tailGet() );
+  CHECK_EQUAL( 9800, circular_buffer.sizeGet() );
+
+  for (i = 0; i < capacity; i++) {
+    CHECK_EQUAL(i, circular_buffer.dataGet(i));
+  }
 }
