@@ -24,7 +24,7 @@ TEST_GROUP( CircularBuffConstruction )
 {
   void setup()
   {
-    CircularBuffer<int16_t> circular_buffer(BUFFER_SIZE);
+    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
   }
 
   void teardown()
@@ -34,10 +34,10 @@ TEST_GROUP( CircularBuffConstruction )
 
 TEST( CircularBuffConstruction, InitialValues )
 {
-  CircularBuffer<int16_t> circular_buffer(BUFFER_SIZE);
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
-  CHECK_EQUAL(BUFFER_SIZE, circular_buffer.capacityGet());
-  CHECK_EQUAL(0, circular_buffer.sizeGet());
-  CHECK_EQUAL(0, circular_buffer.headGet());
-  CHECK_EQUAL(0, circular_buffer.tailGet());
+  CHECK_EQUAL( BUFFER_SIZE, circular_buffer.capacityGet() );
+  CHECK_EQUAL( 0, circular_buffer.sizeGet() );
+  CHECK_EQUAL( 0, circular_buffer.headGet() );
+  CHECK_EQUAL( 0, circular_buffer.tailGet() );
 }

@@ -32,7 +32,7 @@ namespace Mu2eER
      *
      * @param capacity The capacity of the circular buffer
      */
-    CircularBuffer(T capacity);
+    CircularBuffer( T capacity );
 
     /**
      * Remove an element of the buffer
@@ -46,7 +46,7 @@ namespace Mu2eER
      *
      * @param item The element to be added to the buffer
      */
-    void enqueue(T item);
+    void enqueue( T item );
 
     /**
      * Checks if buffer is empty
@@ -110,7 +110,7 @@ namespace Mu2eER
      * Capacity of buffer
      */
     T _capacity;
-    
+
     /**
      * Count of elements currently stored in buffer
      */
