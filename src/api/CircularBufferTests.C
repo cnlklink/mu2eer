@@ -206,5 +206,28 @@ TEST( CircularBuffDequeue, DequeueSimple )
   circular_buffer.dequeue();
 
   CHECK_EQUAL( 2, circular_buffer.sizeGet() );
+}
 
+TEST( CircularBuffDequeue, DequeueAllSimple )
+{
+  int head, tail, capacity, i;
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+
+  circular_buffer.enqueue(10);
+  circular_buffer.enqueue(11);
+  circular_buffer.enqueue(12);
+
+  CHECK_EQUAL( 3, circular_buffer.sizeGet() );
+
+  circular_buffer.dequeue();
+
+  CHECK_EQUAL( 2, circular_buffer.sizeGet() );
+
+  circular_buffer.dequeue();
+
+  CHECK_EQUAL( 1, circular_buffer.sizeGet() );
+
+  circular_buffer.dequeue();
+
+  CHECK_EQUAL( 1, circular_buffer.empty() );
 }
