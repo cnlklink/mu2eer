@@ -194,7 +194,6 @@ TEST_GROUP( CircularBuffDequeue )
 
 TEST( CircularBuffDequeue, DequeueSimple )
 {
-  int head, tail, capacity, i;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
   circular_buffer.enqueue(10);
@@ -210,7 +209,6 @@ TEST( CircularBuffDequeue, DequeueSimple )
 
 TEST( CircularBuffDequeue, DequeueAllSimple )
 {
-  int head, tail, capacity, i;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
   circular_buffer.enqueue(10);
