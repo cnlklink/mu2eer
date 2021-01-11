@@ -174,3 +174,37 @@ TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
     CHECK_EQUAL((i - 3), circular_buffer.dataGet(i));
   }
 }
+
+/**
+ * CircularBuffDequeue Group
+ *
+ * Tests related to the CircularBuffer dequeue function.
+ */
+TEST_GROUP( CircularBuffDequeue )
+{
+  void setup()
+  {
+    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  }
+
+  void teardown()
+  {
+  }
+};
+
+TEST( CircularBuffDequeue, DequeueSimple )
+{
+  int head, tail, capacity, i;
+  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+
+  circular_buffer.enqueue(10);
+  circular_buffer.enqueue(11);
+  circular_buffer.enqueue(12);
+
+  CHECK_EQUAL( 3, circular_buffer.sizeGet() );
+
+  circular_buffer.dequeue();
+
+  CHECK_EQUAL( 2, circular_buffer.sizeGet() );
+
+}
