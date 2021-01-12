@@ -26,8 +26,6 @@ template <class T>
 void CircularBuffer<T>::dequeue()
 {
   if ( !empty() ) {
-    //grab element
-    element = _buffer[_head];
     //increment _head
     _head = ( _head + 1 ) % _capacity;
     //decrease size
@@ -38,8 +36,6 @@ void CircularBuffer<T>::dequeue()
 template <class T>
 void CircularBuffer<T>::enqueue( T element )
 {
-  int element_index;
-
   //designate index for element
   _tail = ( _tail + 1 ) % _capacity;
   //set element to index

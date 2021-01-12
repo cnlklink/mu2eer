@@ -36,10 +36,8 @@ namespace Mu2eER
 
     /**
      * Remove an element of the buffer
-     *
-     * @return The element at the head of the buffer
      */
-    T dequeue();
+    void dequeue();
 
     /**
      * Add an element to the buffer
