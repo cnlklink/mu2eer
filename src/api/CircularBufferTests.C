@@ -76,8 +76,6 @@ TEST( CircularBuffEnqueue, EnqueueOneElement )
 
   head = circular_buffer.headGet();
   tail = circular_buffer.tailGet();
-  printf("_head is %d and tail is %d", head, tail);
-
 
   CHECK_EQUAL( 20, circular_buffer.dataGet( head ) );
   CHECK_EQUAL( 20, circular_buffer.dataGet( tail ) );
@@ -96,7 +94,6 @@ TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
 
   head = circular_buffer.headGet();
   tail = circular_buffer.tailGet();
-  printf("_head is %d and tail is %d", head, tail);
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 9799, circular_buffer.tailGet() );
@@ -123,7 +120,6 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
 
   head = circular_buffer.headGet();
   tail = circular_buffer.tailGet();
-  printf("head is %d and tail is %d", head, tail);
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 2, circular_buffer.tailGet() );
@@ -159,7 +155,6 @@ TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
 
   head = circular_buffer.headGet();
   tail = circular_buffer.tailGet();
-  printf("head is %d and tail is %d", head, tail);
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 9799, circular_buffer.tailGet() );
