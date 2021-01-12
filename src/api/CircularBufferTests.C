@@ -84,16 +84,13 @@ TEST( CircularBuffEnqueue, EnqueueOneElement )
 
 TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
 {
-  int head, tail, capacity, i;
+  int capacity, i;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for (i = 0; i < capacity; i++) {
     circular_buffer.enqueue(i);
   }
-
-  head = circular_buffer.headGet();
-  tail = circular_buffer.tailGet();
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 9799, circular_buffer.tailGet() );
@@ -106,7 +103,7 @@ TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
 
 TEST( CircularBuffEnqueue, EnqueueWrapAround )
 {
-  int head, tail, capacity, i;
+  int capacity, i;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
@@ -117,9 +114,6 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
   circular_buffer.enqueue(9800);
   circular_buffer.enqueue(9801);
   circular_buffer.enqueue(9802);
-
-  head = circular_buffer.headGet();
-  tail = circular_buffer.tailGet();
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 2, circular_buffer.tailGet() );
@@ -137,7 +131,7 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
 
 TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
 {
-  int head, tail, capacity, i;
+  int capacity, i;
   CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
@@ -152,9 +146,6 @@ TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
   for (i = 0; i < capacity - 3; i++) {
     circular_buffer.enqueue(i);
   }
-
-  head = circular_buffer.headGet();
-  tail = circular_buffer.tailGet();
 
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( 9799, circular_buffer.tailGet() );
