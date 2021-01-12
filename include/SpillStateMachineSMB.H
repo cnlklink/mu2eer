@@ -10,6 +10,7 @@
 #define SPILLSTATEMACHINESMB_H
 
 #include "ssm.H"
+#include "CircularBuffer.H"
 
 namespace Mu2eER
 {
@@ -162,7 +163,7 @@ namespace Mu2eER
     /**
     * Circular buffer
     */
-    CircularBuffer<int16_t> circular_buffer(9800);
+    CircularBuffer<int16_t> circular_buffer {9800};
 
     /**
      * Current state
