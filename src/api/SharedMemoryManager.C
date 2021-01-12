@@ -138,8 +138,6 @@ SharedMemoryManager::SharedMemoryManager( const string& name )
 
   // Initialize
   _shmPtr = new (_ptr) SharedMemoryInterface();
-  // Check if this is the correct format
-  _circBuff = new (_ptr) CircularBuffer();
 }
 
 SharedMemoryManager::~SharedMemoryManager()

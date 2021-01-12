@@ -83,11 +83,6 @@ namespace Mu2eER
 
   private:
     /**
-     * Circular buffer
-     */
-    CircularBuffer<int16_t> circular_buffer(9800);
-
-    /**
      * Shared memory file descriptor
      */
     int _fd;
