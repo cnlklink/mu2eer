@@ -160,6 +160,11 @@ namespace Mu2eER
 
   private:
     /**
+    * Circular buffer
+    */
+    CircularBuffer<int16_t> circular_buffer(9800);
+
+    /**
      * Current state
      */
     ssm_state_t _currentState;
@@ -179,8 +184,8 @@ namespace Mu2eER
      */
     float _timeInSpill;
 
-    /**                                                                         
-     * LED                         
+    /**
+     * LED
      */
     bool _led;
 
