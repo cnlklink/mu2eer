@@ -170,7 +170,7 @@ namespace Mu2eER
     /**
     * Circular buffer
     */
-    CircularBuffer<int16_t> circular_buffer {9800};
+    CircularBuffer<int16_t> _circular_buffer{9800};
 
     /**
      * Current state
