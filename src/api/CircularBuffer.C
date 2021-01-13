@@ -37,10 +37,13 @@ void CircularBuffer<T>::dequeue()
 template <class T>
 void CircularBuffer<T>::enqueue( T element )
 {
+  printf("Made it here\n");
   //designate index for element
   _tail = ( _tail + 1 ) % _capacity;
   //set element to index
   _buffer[_tail] = element;
+
+  printf("We've now got %d in _buffer %d\n", element, _buffer[_tail]);
   //increment size
   if ( !full() )
   {
