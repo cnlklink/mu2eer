@@ -155,13 +155,13 @@ void SpillStateMachineSMB::fillCircularBuffer()
 
   printf("Show fillCircularBuffer() capacity %d", degrees);
 
-  for ( i = 0; i < degrees; i++ )
+  for ( i = 0; i < 5; i++ )
   {
-    x = ( degrees * 3.14159 ) / 180;
+    x = ( i * 3.14159 ) / 180;
     result = sin( x );
     _circular_buffer.enqueue(result);
   }
-  for ( i = 0; i < degrees; i++ ) {
-    printf("index: %d, data: %f\n", i, _circular_buffer[i]);
+  for ( i = 0; i < 5; i++ ) {
+    printf("index: %d, data: %f\n", i, _circular_buffer.dataGet(i));
   }
 }
