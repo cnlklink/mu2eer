@@ -33,6 +33,13 @@ namespace Mu2eER
     void initialize();
 
     /**
+     * Get Circular Buffer
+     *
+     * @return Circular buffer of the spill state machine
+     */
+    CircularBuffer<int16_t> circularBufferGet() const;
+
+    /**
      * Set Current State
      *
      * @param state Current spill state machine state

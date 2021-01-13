@@ -26,6 +26,11 @@ void SpillStateMachineSMB::initialize()
   errorSignalWaveform();
 }
 
+CircularBuffer<int16_t> SpillStateMachineSMB::circularBufferGet() const
+{
+  return _circular_buffer;
+}
+
 void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
 {
   _currentState = state;
