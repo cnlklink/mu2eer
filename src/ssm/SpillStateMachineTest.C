@@ -250,7 +250,7 @@ TEST( ThreadGroup, TestRunning )
  */
 TEST( ThreadGroup, TestCircularBuffer )
 {
-  int capacity, x;
+  int capacity, x, i;
 
   auto& smb = _shmm->ssmBlockGet();
 
@@ -276,7 +276,7 @@ TEST( ThreadGroup, TestCircularBuffer )
 
   for ( i = 0; i < capacity; i++ )
   {
-    x = ( degrees * 3.14159 ) / 180;
+    x = ( i * 3.14159 ) / 180;
     CHECK_EQUAL( sin(x), circBuff.dataGet(i) );
   }
 }
