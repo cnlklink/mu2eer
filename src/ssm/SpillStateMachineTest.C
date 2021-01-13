@@ -274,8 +274,11 @@ TEST( ThreadGroup, TestCircularBuffer )
   CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
   capacity = circBuff.capacityGet();
 
+  printf("test - show capacity %d", capacity);
+
   for ( i = 0; i < capacity; i++ )
   {
+    printf("test - show circular buff data %d", circBuff.dataGet(i));
     x = ( i * 3.14159 ) / 180;
     CHECK_EQUAL( sin(x), circBuff.dataGet(i) );
   }

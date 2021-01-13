@@ -153,6 +153,8 @@ void SpillStateMachineSMB::fillCircularBuffer()
 
   degrees = _circular_buffer.capacityGet();
 
+  printf("Show fillCircularBuffer() capacity %d", degrees);
+
   for ( i = 0; i < degrees; i++ )
   {
     x = ( degrees * 3.14159 ) / 180;
