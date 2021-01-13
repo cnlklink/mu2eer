@@ -161,4 +161,7 @@ void SpillStateMachineSMB::fillCircularBuffer()
     result = sin( x );
     _circular_buffer.enqueue(result);
   }
+  for ( i = 0; i < degrees; i++ ) {
+    printf("index: %d, data: %f\n", i, _circular_buffer[i]);
+  }
 }
