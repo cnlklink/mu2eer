@@ -149,7 +149,7 @@ void SpillStateMachineSMB::errorSignalWaveform()
 
 void SpillStateMachineSMB::fillCircularBuffer()
 {
-  int i = 0, degrees = 0;
+  int i, degrees, result, x;
 
   degrees = _circular_buffer.capacityGet();
 

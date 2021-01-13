@@ -169,7 +169,7 @@ namespace Mu2eER
     /**
      * Fill Circular Buffer
      */
-    void circularBufferFill();
+    void fillCircularBuffer();
 
   private:
     /**
