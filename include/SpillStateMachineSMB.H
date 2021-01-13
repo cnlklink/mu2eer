@@ -166,6 +166,11 @@ namespace Mu2eER
      */
     void errorSignalWaveform();
 
+    /**
+     * Fill Circular Buffer
+     */
+    void circularBufferFill();
+
   private:
     /**
     * Circular buffer
