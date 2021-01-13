@@ -9,6 +9,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <cmath>
 
 #include "CppUTest/TestHarness.h"
 
@@ -240,6 +241,44 @@ TEST( ThreadGroup, TestRunning )
 
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
+}
+
+/**
+ * Test Circular Buffer Fill
+ *
+ * Verify that the thread and filling the circular buffer.
+ */
+TEST( ThreadGroup, TestCircularBuffer )
+{
+  int capacity, x;
+
+  auto& smb = _shmm->ssmBlockGet();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
+
+  // Start the SSM thread
+  _ssm->run();
+
+  // Verify that the thread is running
+  CHECK_EQUAL( true, smb.threadRunningGet() );
+
+  smb.fillCircularBuffer();
+
+  // Wait for the SSM thread to stop
+  _ssm->stop();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
+
+  CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
+  capacity = circBuff.capacityGet();
+
+  for ( i = 0; i < capacity; i++ )
+  {
+    x = ( degrees * 3.14159 ) / 180;
+    CHECK_EQUAL( sin(x), circBuff.dataGet(i) );
+  }
 }
 
 /**
