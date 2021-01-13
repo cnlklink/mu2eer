@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <cmath>
 
 #include "SpillStateMachineSMB.H"
 
@@ -143,5 +144,19 @@ void SpillStateMachineSMB::errorSignalWaveform()
 
   for ( i = 0; i < _idealSpillWaveFormSize; i++ ) {
     _errorSignalWaveFormData[i] = _idealSpillWaveFormData[i] - _actualSpillWaveFormData[i];
+  }
+}
+
+void SpillStateMachineSMB::fillCircularBuffer()
+{
+  int i = 0, degrees = 0;
+
+  degrees = _circular_buffer.capacityGet();
+
+  for ( i = 0; i < degrees; i++ )
+  {
+    x = ( degrees * 3.14159 ) / 180;
+    result = sin( x );
+    _circular_buffer.enqueue(result);
   }
 }
