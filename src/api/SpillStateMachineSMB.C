@@ -150,15 +150,17 @@ void SpillStateMachineSMB::errorSignalWaveform()
 void SpillStateMachineSMB::fillCircularBuffer()
 {
   int i, degrees;
-  double x, result;
-
+  double x, result, y;
+  double y = 0.439203;
   degrees = _circular_buffer.capacityGet();
+
+  printf("test out sinx - %a", sin(y));
 
   printf("Show fillCircularBuffer() capacity %d", degrees);
 
   for ( i = 0; i < 5; i++ )
   {
-    x = ( i * 3.14159 * 90 ) / 180;
+    x = ( i * 3.14159 * 90.0 ) / 180;
     printf("Show x in fillCircularBuffer - x: %d", x);
 
     result = sin(x);
