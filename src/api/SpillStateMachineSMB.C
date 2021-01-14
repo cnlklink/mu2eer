@@ -158,7 +158,9 @@ void SpillStateMachineSMB::fillCircularBuffer()
   for ( i = 0; i < 5; i++ )
   {
     x = ( i * 3.14159 * 90 ) / 180;
-    result = sin( x );
+    printf("Show x in fillCircularBuffer - x: %d", x);
+
+    result = sin(x);
     printf("Show result in fillCircularBuffer - result: %d", result);
     _circular_buffer.enqueue(result);
   }
