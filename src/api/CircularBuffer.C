@@ -8,6 +8,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include "CircularBuffer.H"
 
 using namespace Mu2eER;
