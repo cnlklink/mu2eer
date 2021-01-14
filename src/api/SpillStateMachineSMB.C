@@ -6,9 +6,6 @@
  * @author jdiamond and rtadkins
  */
 
-#include <iostream>
-#include <cmath>
-
 #include "SpillStateMachineSMB.H"
 
 using namespace Mu2eER;
@@ -150,24 +147,12 @@ void SpillStateMachineSMB::errorSignalWaveform()
 void SpillStateMachineSMB::fillCircularBuffer()
 {
   int i, degrees;
-  double x, result, y;
-  double y = 0.439203;
+  int sine_wave[] = {0, 1, 0, -1};
+
   degrees = _circular_buffer.capacityGet();
 
-  printf("test out sinx - %a", sin(y));
-
-  printf("Show fillCircularBuffer() capacity %d", degrees);
-
-  for ( i = 0; i < 5; i++ )
+  for ( i = 0; i < degrees; i++ )
   {
-    x = ( i * 3.14159 * 90.0 ) / 180;
-    printf("Show x in fillCircularBuffer - x: %d", x);
-
-    result = sin(x);
-    printf("Show result in fillCircularBuffer - result: %d", result);
-    _circular_buffer.enqueue(result);
-  }
-  for ( i = 0; i < 5; i++ ) {
-    printf("index: %d, data: %f\n", i, _circular_buffer.dataGet(i));
+    _circular_buffer.enqueue(sine_wave[i % 4]);
   }
 }

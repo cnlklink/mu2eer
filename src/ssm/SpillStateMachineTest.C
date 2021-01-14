@@ -8,8 +8,6 @@
 
 #include <chrono>
 #include <thread>
-#include <iostream>
-#include <cmath>
 
 #include "CppUTest/TestHarness.h"
 
@@ -250,7 +248,8 @@ TEST( ThreadGroup, TestRunning )
  */
 TEST( ThreadGroup, TestCircularBuffer )
 {
-  int capacity, x, i;
+  int capacity, i;
+  int sine_wave[] = {0, 1, 0, -1};
 
   auto& smb = _shmm->ssmBlockGet();
 
@@ -274,13 +273,9 @@ TEST( ThreadGroup, TestCircularBuffer )
   CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
   capacity = circBuff.capacityGet();
 
-  printf("test - show capacity %d", capacity);
-
   for ( i = 0; i < capacity; i++ )
   {
-    printf("test - show circular buff data %d", circBuff.dataGet(i));
-    x = ( i * 3.14159 ) / 180;
-    CHECK_EQUAL( sin(x), circBuff.dataGet(i) );
+    CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
   }
 }
 
