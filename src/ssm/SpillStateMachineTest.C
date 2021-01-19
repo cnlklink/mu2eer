@@ -244,7 +244,31 @@ TEST( ThreadGroup, TestRunning )
 /**
  * Test Circular Buffer Fill
  *
- * Verify that the thread and filling the circular buffer.
+ * Create thread & verify that the circular buffer is filled.
+ */
+TEST( ThreadGroup, TestCircularBufferThread )
+{
+  int capacity, i;
+  int sine_wave[] = {0, 1, 0, -1};
+
+  auto& smb = _shmm->ssmBlockGet();
+
+  std::thread threadObj(smb->fillCircularBuffer());
+  threadObj.join();
+
+  CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
+  capacity = circBuff.capacityGet();
+
+  for ( i = 0; i < capacity; i++ )
+  {
+    CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
+  }
+}
+
+/**
+ * Test Circular Buffer Fill
+ *
+ * Verify the thread is running & the circular buffer is filled.
  */
 TEST( ThreadGroup, TestCircularBuffer )
 {
