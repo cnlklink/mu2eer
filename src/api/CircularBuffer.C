@@ -8,7 +8,7 @@
 
 #include <cstddef>
 #include <cstdint>
-
+#include <iostream>
 #include "CircularBuffer.H"
 
 using namespace Mu2eER;
@@ -89,6 +89,7 @@ T CircularBuffer<T>::sizeGet() const
 template <class T>
 T CircularBuffer<T>::dataGet( T index ) const
 {
+  printf("show _buffer[index] = %d\n", _buffer[index]);
   return _buffer[index];
 }
 

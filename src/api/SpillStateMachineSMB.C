@@ -5,7 +5,7 @@
  *
  * @author jdiamond and rtadkins
  */
-
+#include <iostream>
 #include "SpillStateMachineSMB.H"
 
 using namespace Mu2eER;
@@ -154,5 +154,6 @@ void SpillStateMachineSMB::fillCircularBuffer()
   for ( i = 0; i < degrees; i++ )
   {
     _circular_buffer.enqueue(sine_wave[i % 4]);
+    printf("show ele %d\n", _circular_buffer.dataGet(i));
   }
 }
