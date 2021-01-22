@@ -89,7 +89,6 @@ T CircularBuffer<T>::sizeGet() const
 template <class T>
 T CircularBuffer<T>::dataGet( T index ) const
 {
-  printf("show _buffer[index] = %d\n", _buffer[index]);
   return _buffer[index];
 }
 
