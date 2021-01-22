@@ -9,7 +9,7 @@
 #include <chrono>
 #include <thread>
 #include <functional>
-
+#include <cmath>
 #include "CppUTest/TestHarness.h"
 
 #include "SharedMemoryManager.H"
@@ -251,6 +251,17 @@ TEST( ThreadGroup, TestCircularBufferThread )
 {
   int capacity, i;
   int sine_wave[] = {0, 1, 0, -1};
+
+  // testing sin(x) function
+  double x = 0.439203, result;
+  double xDegrees = 90.0;
+
+  // converting degrees to radians
+  x = xDegrees*3.14159/180;
+  result = sin(x);
+
+  cout << "sin(x) = " << result << endl;
+  // end test
 
   auto& smb = _shmm->ssmBlockGet();
 

@@ -6,6 +6,7 @@
  * @author jdiamond and rtadkins
  */
 #include <iostream>
+#include <cmath>
 #include "SpillStateMachineSMB.H"
 
 using namespace Mu2eER;
@@ -148,6 +149,16 @@ void SpillStateMachineSMB::fillCircularBuffer()
 {
   int i, degrees;
   int sine_wave[] = {0, 1, 0, -1};
+
+  // testing sin(x) function
+  double x = 0.439203, result;
+  double xDegrees = 90.0;
+
+  x = xDegrees*3.14159/180;
+  result = sin(x);
+
+  cout << "sin(x) = " << result << endl;
+  // end test
 
   degrees = _circular_buffer.capacityGet();
 
