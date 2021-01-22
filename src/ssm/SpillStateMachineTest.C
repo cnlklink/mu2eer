@@ -254,7 +254,7 @@ TEST( ThreadGroup, TestCircularBufferThread )
 
   auto& smb = _shmm->ssmBlockGet();
 
-  std::thread threadObj(std::bind(&SpillStateMachineSMB::fillCircularBuffer, smb));
+  std::thread threadObj(&SpillStateMachineSMB::fillCircularBuffer, &smb);
   threadObj.join();
 
   CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
@@ -262,8 +262,7 @@ TEST( ThreadGroup, TestCircularBufferThread )
 
   for ( i = 0; i < capacity; i++ )
   {
-    printf("Show sin wave x = %d and data = %d\n", sine_wave[i % 4], circBuff.dataGet(i));
-    // CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
+    CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
   }
 }
 
