@@ -10,7 +10,7 @@
 #define CIRCULARBUFFER_H
 
 // Assume a frequency of 1440Hz and a need to capture 7 seconds of data
-#define BUFFER_SIZE 9800
+#define BUFFER_SIZE 9800.0
 
 using namespace std;
 
@@ -99,7 +99,7 @@ namespace Mu2eER
     /**
      * Buffer array to store contents
      */
-    T _buffer[BUFFER_SIZE];
+    T _buffer[(int) BUFFER_SIZE];
 
     /**
      * Index of the head of buffer
@@ -114,7 +114,7 @@ namespace Mu2eER
     /**
      * Capacity of buffer
      */
-    T _capacity;
+    T _capacity = BUFFER_SIZE;
 
     /**
      * Count of elements currently stored in buffer
