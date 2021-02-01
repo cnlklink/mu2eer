@@ -10,6 +10,7 @@
 #include <thread>
 #include <functional>
 #include <cmath>
+#include <iostream>
 #include "CppUTest/TestHarness.h"
 
 #include "SharedMemoryManager.H"
@@ -249,31 +250,24 @@ TEST( ThreadGroup, TestRunning )
  */
 TEST( ThreadGroup, TestCircularBufferThread )
 {
-  int capacity, i;
-  int sine_wave[] = {0, 1, 0, -1};
-
-  // testing sin(x) function
-  double x = 0.439203, result;
-  double xDegrees = 90.0;
-
-  // converting degrees to radians
-  x = xDegrees*3.14159/180;
-  result = sin(x);
-
-  cout << "sin(x) = " << result << endl;
-  // end test
+  int capacity, i, degrees = 0;
+  double res;
 
   auto& smb = _shmm->ssmBlockGet();
 
   std::thread threadObj(&SpillStateMachineSMB::fillCircularBuffer, &smb);
   threadObj.join();
 
-  CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
+  CircularBuffer<double> circBuff = smb.circularBufferGet();
   capacity = circBuff.capacityGet();
 
   for ( i = 0; i < capacity; i++ )
   {
-    CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
+    res = ( degrees % 360 ) * 3.14159 / 180;
+
+    DOUBLES_EQUAL( sin(res), circBuff.dataGet(i), 0.01 );
+
+    degrees += 15;
   }
 }
 
@@ -284,8 +278,8 @@ TEST( ThreadGroup, TestCircularBufferThread )
  */
 TEST( ThreadGroup, TestCircularBuffer )
 {
-  int capacity, i;
-  int sine_wave[] = {0, 1, 0, -1};
+  int capacity, i, degrees = 0;
+  double res;
 
   auto& smb = _shmm->ssmBlockGet();
 
@@ -306,12 +300,16 @@ TEST( ThreadGroup, TestCircularBuffer )
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
 
-  CircularBuffer<int16_t> circBuff = smb.circularBufferGet();
+  CircularBuffer<double> circBuff = smb.circularBufferGet();
   capacity = circBuff.capacityGet();
 
   for ( i = 0; i < capacity; i++ )
   {
-    CHECK_EQUAL( sine_wave[i % 4], circBuff.dataGet(i) );
+    res = ( degrees % 360 ) * 3.14159 / 180;
+
+    CHECK_EQUAL( sin(res), circBuff.dataGet(i) );
+    
+    degrees += 15;
   }
 }
 
