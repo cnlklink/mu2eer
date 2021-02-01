@@ -8,11 +8,14 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <mutex>
 
 #include "CircularBuffer.H"
 
 using namespace Mu2eER;
 using namespace std;
+
+std::mutex _circular_buffer_lock;
 
 template <class T>
 CircularBuffer<T>::CircularBuffer( T capacity )
@@ -26,6 +29,8 @@ CircularBuffer<T>::CircularBuffer( T capacity )
 template <class T>
 void CircularBuffer<T>::dequeue()
 {
+  _circular_buffer_lock.lock();
+
   if ( !empty() )
   {
     //increment _head
@@ -33,11 +38,15 @@ void CircularBuffer<T>::dequeue()
     //decrease size
     _size--;
   }
+
+  _circular_buffer_lock.unlock();
 }
 
 template <class T>
 void CircularBuffer<T>::enqueue( T element )
 {
+  _circular_buffer_lock.lock();
+
   //designate index for element
   _tail = ( (int)_tail + 1 ) % (int)_capacity;
   //set element to index
@@ -47,6 +56,8 @@ void CircularBuffer<T>::enqueue( T element )
   {
     _size++;
   }
+
+  _circular_buffer_lock.unlock();
 }
 
 template <class T>
@@ -76,7 +87,7 @@ T CircularBuffer<T>::tailGet() const
 template <class T>
 T CircularBuffer<T>::capacityGet() const
 {
-  return BUFFER_SIZE;
+  return _capacity;
 }
 
 template <class T>
@@ -88,7 +99,13 @@ T CircularBuffer<T>::sizeGet() const
 template <class T>
 T CircularBuffer<T>::dataGet( T index ) const
 {
-  return _buffer[(int) index];
+  _circular_buffer_lock.lock();
+
+  T data = _buffer[(int) index];
+
+  _circular_buffer_lock.unlock();
+
+  return data;
 }
 
 template class CircularBuffer<double>;
