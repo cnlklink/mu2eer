@@ -7,14 +7,23 @@
  */
 
 #include <iostream>
+#include <ctime>
 #include "CppUTest/TestHarness.h"
 
 #include "CircularBuffer.H"
 
-#define BUFFER_SIZE 9800
+#define BUFFER_SIZE 9800.0
 
 using namespace Mu2eER;
 using namespace std;
+
+/*
+struct struct_test
+{
+  double data;
+  std::time_t timestamp
+} testing;
+*/
 
 /**
  * Construction Group
@@ -267,3 +276,16 @@ TEST( CircularBuffDequeue, DequeueSingle )
 
   circular_buffer.dequeue();
 }
+
+TEST_GROUP( CircularBuffStructInitialization )
+{
+  void setup()
+  {
+    CircularBuffer<struct_test> circular_buffer( BUFFER_SIZE );
+  }
+
+  void teardown()
+  {
+  }
+};
+
