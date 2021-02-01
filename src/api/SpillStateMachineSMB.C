@@ -25,7 +25,7 @@ void SpillStateMachineSMB::initialize()
   errorSignalWaveform();
 }
 
-CircularBuffer<int16_t> SpillStateMachineSMB::circularBufferGet() const
+CircularBuffer<double> SpillStateMachineSMB::circularBufferGet() const
 {
   return _circular_buffer;
 }
@@ -147,23 +147,15 @@ void SpillStateMachineSMB::errorSignalWaveform()
 
 void SpillStateMachineSMB::fillCircularBuffer()
 {
-  int i, degrees;
-  int sine_wave[] = {0, 1, 0, -1};
+  int i, capacity, degrees = 0;
+  double res;
 
-  // testing sin(x) function
-  double x = 0.439203, result;
-  double xDegrees = 90.0;
+  capacity = _circular_buffer.capacityGet();
 
-  x = xDegrees*3.14159/180;
-  result = sin(x);
-
-  cout << "sin(x) = " << result << endl;
-  // end test
-
-  degrees = _circular_buffer.capacityGet();
-
-  for ( i = 0; i < degrees; i++ )
+  for ( i = 0; i < capacity; i++ )
   {
-    _circular_buffer.enqueue(sine_wave[i % 4]);
+    res = ( degrees % 360 ) * 3.14159 / 180;
+    _circular_buffer.enqueue( sin( res ) );
+    degrees += 15;
   }
 }
