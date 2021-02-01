@@ -9,10 +9,20 @@
 #ifndef CIRCULARBUFFER_H
 #define CIRCULARBUFFER_H
 
+#include <ctime>
+
 // Assume a frequency of 1440Hz and a need to capture 7 seconds of data
 #define BUFFER_SIZE 9800.0
 
 using namespace std;
+
+/*
+struct struct_test
+{
+  double data;
+  std::time_t timestamp;
+} testing;
+*/
 
 namespace Mu2eER
 {
@@ -94,6 +104,14 @@ namespace Mu2eER
      * @return Element at index
      */
     T dataGet( T index ) const;
+
+    /**                                                                         
+     * Set data at index                                                       
+     *                       
+     * @param index to set data
+     * @param data to set at index                                             
+     */
+    void dataSet( T index, T data ) const;
 
   private:
     /**
