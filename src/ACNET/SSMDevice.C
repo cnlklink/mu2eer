@@ -297,7 +297,7 @@ void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
 
 /**
  * Init Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */
@@ -353,7 +353,7 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
 /**
  * Fast Reading Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
  *
  * @param dest return buffer
  * @param reqinfo ACNET request object
@@ -362,7 +362,6 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
-  //uint32_t num_chans = 1;
   uint32_t num_read_pts = 16000;
   uint32_t i;
 
@@ -398,7 +397,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 
 /**
  * Cleanup Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */
