@@ -18,7 +18,7 @@ using namespace std;
 std::mutex _circular_buffer_lock;
 
 template <class T>
-CircularBuffer<T>::CircularBuffer( T capacity )
+CircularBuffer<T>::CircularBuffer( uint16_t capacity )
   : _head( 0 ),
     _tail( -1 ),
     _capacity( capacity ),
@@ -73,31 +73,31 @@ bool CircularBuffer<T>::full() const
 }
 
 template <class T>
-T CircularBuffer<T>::headGet() const
+uint16_t CircularBuffer<T>::headGet() const
 {
   return _head;
 }
 
 template <class T>
-T CircularBuffer<T>::tailGet() const
+uint16_t CircularBuffer<T>::tailGet() const
 {
   return _tail;
 }
 
 template <class T>
-T CircularBuffer<T>::capacityGet() const
+uint16_t CircularBuffer<T>::capacityGet() const
 {
   return _capacity;
 }
 
 template <class T>
-T CircularBuffer<T>::sizeGet() const
+uint16_t CircularBuffer<T>::sizeGet() const
 {
   return _size;
 }
 
 template <class T>
-T CircularBuffer<T>::dataGet( T index ) const
+T CircularBuffer<T>::dataGet( uint16_t index ) const
 {
   _circular_buffer_lock.lock();
 

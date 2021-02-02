@@ -42,7 +42,7 @@ namespace Mu2eER
      *
      * @param capacity The capacity of the circular buffer
      */
-    CircularBuffer( T capacity );
+    CircularBuffer( uint16_t capacity );
 
     /**
      * Remove an element of the buffer
@@ -75,43 +75,43 @@ namespace Mu2eER
      *
      * @return Head index of buffer
      */
-    T headGet() const;
+    uint16_t headGet() const;
 
     /**
      * Get tail of buffer
      *
      * @return Tail index of buffer
      */
-    T tailGet() const;
+    uint16_t tailGet() const;
 
     /**
      * Get capacity of buffer
      *
      * @return Capacity of buffer
      */
-    T capacityGet() const;
+    uint16_t capacityGet() const;
 
     /**
      * Get size of buffer
      *
      * @return Size of buffer
      */
-    T sizeGet() const;
+    uint16_t sizeGet() const;
 
     /**
      * Get data at index
      *
      * @return Element at index
      */
-    T dataGet( T index ) const;
+    T dataGet( uint16_t index ) const;
 
-    /**                                                                         
-     * Set data at index                                                       
-     *                       
+    /**
+     * Set data at index
+     *
      * @param index to set data
-     * @param data to set at index                                             
+     * @param data to set at index
      */
-    void dataSet( T index, T data ) const;
+    void dataSet( uint16_t index, T data ) const;
 
   private:
     /**
@@ -122,22 +122,22 @@ namespace Mu2eER
     /**
      * Index of the head of buffer
      */
-    T _head;
+    uint16_t _head;
 
     /**
      * Index of the tail of buffer
      */
-    T _tail;
+    uint16_t _tail;
 
     /**
      * Capacity of buffer
      */
-    T _capacity = BUFFER_SIZE;
+    uint16_t _capacity = BUFFER_SIZE;
 
     /**
      * Count of elements currently stored in buffer
      */
-    T _size;
+    uint16_t _size;
   };
 };
 
