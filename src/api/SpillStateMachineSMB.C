@@ -25,7 +25,7 @@ void SpillStateMachineSMB::initialize()
   errorSignalWaveform();
 }
 
-CircularBuffer<double> SpillStateMachineSMB::circularBufferGet() const
+CircularBuffer<double>& SpillStateMachineSMB::circularBufferGet()
 {
   return _circular_buffer;
 }

@@ -300,14 +300,14 @@ TEST( ThreadGroup, TestCircularBuffer )
   // Verify that the thread is not running
   CHECK_EQUAL( false, smb.threadRunningGet() );
 
-  CircularBuffer<double> circBuff = smb.circularBufferGet();
+  CircularBuffer<double>& circBuff = smb.circularBufferGet();
   capacity = circBuff.capacityGet();
 
   for ( i = 0; i < capacity; i++ )
   {
     res = ( degrees % 360 ) * 3.14159 / 180;
 
-    CHECK_EQUAL( sin(res), circBuff.dataGet(i) );
+    DOUBLES_EQUAL( sin(res), circBuff.dataGet(i), 0.01 );
     
     degrees += 15;
   }
