@@ -105,11 +105,11 @@ namespace Mu2eER
      */
     T dataGet( uint16_t index ) const;
 
-    /**                                                                         
-     * Set data at index                                                       
-     *                       
+    /**
+     * Set data at index
+     *
      * @param index to set data
-     * @param data to set at index                                             
+     * @param data to set at index
      */
     void dataSet( uint16_t index, T data ) const;
 

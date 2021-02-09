@@ -35,6 +35,7 @@ void CircularBuffer<T>::dequeue()
   {
     //increment _head
     _head = (_head + 1 ) % _capacity;
+  
     //decrease size
     _size--;
   }
@@ -51,7 +52,8 @@ void CircularBuffer<T>::enqueue( T element )
   _tail = ( _tail + 1 ) % _capacity;
 
   //set element to index
-  _buffer[(int)_tail] = element;
+  _buffer[_tail] = element;
+  
   //increment size
   if ( !full() )
   {
