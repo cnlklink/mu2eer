@@ -24,8 +24,13 @@ void SpillStateMachineSMB::initialize()
   actualSpillWaveform();
   errorSignalWaveform();
 }
-
+/*
 CircularBuffer<double>& SpillStateMachineSMB::circularBufferGet()
+{
+  return _circular_buffer;
+  }*/
+
+CircularBuffer<CircBuffer>& SpillStateMachineSMB::circularBufferStructGet()
 {
   return _circular_buffer;
 }
@@ -144,7 +149,7 @@ void SpillStateMachineSMB::errorSignalWaveform()
     _errorSignalWaveFormData[i] = _idealSpillWaveFormData[i] - _actualSpillWaveFormData[i];
   }
 }
-
+/*
 void SpillStateMachineSMB::fillCircularBuffer()
 {
   int i, capacity, degrees = 0;
@@ -159,3 +164,5 @@ void SpillStateMachineSMB::fillCircularBuffer()
     degrees += 15;
   }
 }
+
+*/

@@ -16,8 +16,7 @@
 
 using namespace std;
 
-
-struct struct_test
+struct CircBuffer
 {
   double data;
   std::time_t timestamp;

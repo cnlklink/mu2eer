@@ -37,8 +37,10 @@ namespace Mu2eER
      *
      * @return Circular buffer of the spill state machine
      */
-    CircularBuffer<double>& circularBufferGet();
-
+    //CircularBuffer<double>& circularBufferGet();
+    
+    CircularBuffer<CircBuffer>& circularBufferStructGet();
+    
     /**
      * Set Current State
      *
@@ -175,7 +177,7 @@ namespace Mu2eER
     /**
     * Circular buffer
     */
-    CircularBuffer<double> _circular_buffer{9800};
+    CircularBuffer<CircBuffer> _circular_buffer{9800};
 
     /**
      * Current state

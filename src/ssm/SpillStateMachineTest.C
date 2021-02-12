@@ -247,7 +247,7 @@ TEST( ThreadGroup, TestRunning )
  * Test Circular Buffer Fill
  *
  * Create thread & verify that the circular buffer is filled.
- */
+ *//*
 TEST( ThreadGroup, TestCircularBufferThread )
 {
   int capacity, i, degrees = 0;
@@ -269,13 +269,13 @@ TEST( ThreadGroup, TestCircularBufferThread )
 
     degrees += 15;
   }
-}
+}*/
 
 /**
  * Test Circular Buffer Fill
  *
  * Verify the thread is running & the circular buffer is filled.
- */
+ *//*
 TEST( ThreadGroup, TestCircularBuffer )
 {
   int capacity, i, degrees = 0;
@@ -312,7 +312,7 @@ TEST( ThreadGroup, TestCircularBuffer )
     degrees += 15;
   }
 }
-
+*/
 /**
  * Operation Group
  *

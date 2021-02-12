@@ -12,24 +12,16 @@
 
 #include "CircularBuffer.H"
 
-#define BUFFER_SIZE 9800.0
+#define BUFFER_SIZE 9800
 
 using namespace Mu2eER;
 using namespace std;
-
-/*
-struct struct_test
-{
-  double data;
-  std::time_t timestamp
-} testing;
-*/
 
 /**
  * Construction Group
  *
  * Tests related to constructing & destructing the CircularBuffer.
- */
+ *//*
 TEST_GROUP( CircularBuffConstruction )
 {
   void setup()
@@ -51,12 +43,12 @@ TEST( CircularBuffConstruction, InitialValues )
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( -1, circular_buffer.tailGet() );
 }
-
+*/
 /**
  * CircularBuffEnqueue Group
  *
  * Tests related to the CircularBuffer enqueue function.
- */
+ *//*
 TEST_GROUP( CircularBuffEnqueue )
 {
   void setup()
@@ -176,12 +168,12 @@ TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
     CHECK_EQUAL((i - 3), circular_buffer.dataGet(i));
   }
 }
-
+*/
 /**
  * CircularBuffDequeue Group
  *
  * Tests related to the CircularBuffer dequeue function.
- */
+ *//*
 TEST_GROUP( CircularBuffDequeue )
 {
   void setup()
@@ -277,15 +269,101 @@ TEST( CircularBuffDequeue, DequeueSingle )
   circular_buffer.dequeue();
 }
 
+*/
 TEST_GROUP( CircularBuffStructInitialization )
 {
   void setup()
   {
-    CircularBuffer<struct_test> circular_buffer( BUFFER_SIZE );
+    CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
   }
 
   void teardown()
   {
   }
 };
+
+TEST( CircularBuffStructInitialization, DequeueSingle )
+{
+  CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
+  std::time_t t = std::time(nullptr);
+  CircBuffer c1 = { 10 , t }; //std::localtime(&t)};
+
+  circular_buffer.enqueue(c1);
+
+  CHECK_EQUAL( 1, circular_buffer.sizeGet() );
+  c1 = circular_buffer.dataGet(0);
+  cout << "data: " << c1.data << " and timestamp: " << c1.timestamp << endl; 
+  circular_buffer.dequeue();
+
+  CHECK_EQUAL( 0, circular_buffer.sizeGet() );
+}
+
+TEST( CircularBuffStructInitialization, DequeueMultiple )
+{
+  CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
+  std::time_t t = std::time(nullptr);
+  CircBuffer c1 = { 10 , t };
+  CircBuffer c2 = { 20 , t };
+  CircBuffer c3 = { 30 , t };
+
+  circular_buffer.enqueue(c1);
+  circular_buffer.enqueue(c2);
+  circular_buffer.enqueue(c3);
+
+  CHECK_EQUAL( 3, circular_buffer.sizeGet() );
+  c1 = circular_buffer.dataGet(0);
+  CHECK_EQUAL( 10, c1.data );
+
+  cout << "data: " << c1.data << " and timestamp: " << c1.timestamp << endl;
+  c2 = circular_buffer.dataGet(1);
+  cout << "data: " << c2.data << " and timestamp: " << c2.timestamp << endl;
+  c3 = circular_buffer.dataGet(2);
+  cout << "data: " << c3.data << " and timestamp: " << c3.timestamp << endl;
+  circular_buffer.dequeue();
+  CHECK_EQUAL( 2, circular_buffer.sizeGet() );
+  circular_buffer.dequeue();
+  CHECK_EQUAL( 1, circular_buffer.sizeGet() );
+  circular_buffer.dequeue();
+  CHECK_EQUAL( 0, circular_buffer.sizeGet() );
+}
+
+TEST( CircularBuffStructInitialization, EnqueueAll )
+{
+  int i = 0, capacity;
+  CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
+  std::time_t t = std::time(nullptr);
+  CircBuffer c1 = { 10 , t };
+  CircBuffer c2 = { 20 , t };
+  CircBuffer c3 = { 30 , t };
+
+  capacity = circular_buffer.capacityGet();
+  for( i = 0; i < capacity; i++) {
+    circular_buffer.enqueue( CircBuffer { i, t } );
+  }
+
+  CHECK_EQUAL( 9800, circular_buffer.sizeGet() );
+}
+
+TEST( CircularBuffStructInitialization, EnqueueAllDequeueAll )
+{
+  int i = 0, capacity;
+  CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
+  std::time_t t = std::time(nullptr);
+  CircBuffer c1 = { 10 , t };
+  CircBuffer c2 = { 20 , t };
+  CircBuffer c3 = { 30 , t };
+
+  capacity = circular_buffer.capacityGet();
+  for ( i = 0; i < capacity; i++) {
+    circular_buffer.enqueue( CircBuffer { i, t } );
+  }
+
+  CHECK_EQUAL( 9800, circular_buffer.sizeGet() );
+
+  for ( i = 0; i < capacity; i++ ) {
+    circular_buffer.dequeue();
+  }
+
+  CHECK_EQUAL( 0, circular_buffer.sizeGet() );
+}
 
