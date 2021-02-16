@@ -270,6 +270,7 @@ TEST( CircularBuffDequeue, DequeueSingle )
 }
 
 */
+
 TEST_GROUP( CircularBuffStructInitialization )
 {
   void setup()
@@ -286,13 +287,12 @@ TEST( CircularBuffStructInitialization, DequeueSingle )
 {
   CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
   std::time_t t = std::time(nullptr);
-  CircBuffer c1 = { 10 , t }; //std::localtime(&t)};
+  CircBuffer c1 = { 10 , t };
 
   circular_buffer.enqueue(c1);
 
   CHECK_EQUAL( 1, circular_buffer.sizeGet() );
-  c1 = circular_buffer.dataGet(0);
-  cout << "data: " << c1.data << " and timestamp: " << c1.timestamp << endl; 
+  c1 = circular_buffer.dataGet(0); 
   circular_buffer.dequeue();
 
   CHECK_EQUAL( 0, circular_buffer.sizeGet() );
@@ -314,11 +314,8 @@ TEST( CircularBuffStructInitialization, DequeueMultiple )
   c1 = circular_buffer.dataGet(0);
   CHECK_EQUAL( 10, c1.data );
 
-  cout << "data: " << c1.data << " and timestamp: " << c1.timestamp << endl;
   c2 = circular_buffer.dataGet(1);
-  cout << "data: " << c2.data << " and timestamp: " << c2.timestamp << endl;
   c3 = circular_buffer.dataGet(2);
-  cout << "data: " << c3.data << " and timestamp: " << c3.timestamp << endl;
   circular_buffer.dequeue();
   CHECK_EQUAL( 2, circular_buffer.sizeGet() );
   circular_buffer.dequeue();
@@ -329,12 +326,9 @@ TEST( CircularBuffStructInitialization, DequeueMultiple )
 
 TEST( CircularBuffStructInitialization, EnqueueAll )
 {
-  int i = 0, capacity;
+  double i = 0, capacity;
   CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
   std::time_t t = std::time(nullptr);
-  CircBuffer c1 = { 10 , t };
-  CircBuffer c2 = { 20 , t };
-  CircBuffer c3 = { 30 , t };
 
   capacity = circular_buffer.capacityGet();
   for( i = 0; i < capacity; i++) {
@@ -346,12 +340,9 @@ TEST( CircularBuffStructInitialization, EnqueueAll )
 
 TEST( CircularBuffStructInitialization, EnqueueAllDequeueAll )
 {
-  int i = 0, capacity;
+  double i = 0, capacity;
   CircularBuffer<CircBuffer> circular_buffer( BUFFER_SIZE );
   std::time_t t = std::time(nullptr);
-  CircBuffer c1 = { 10 , t };
-  CircBuffer c2 = { 20 , t };
-  CircBuffer c3 = { 30 , t };
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++) {
