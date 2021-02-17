@@ -6,8 +6,7 @@
  * @author jdiamond and rtadkins
  */
 
-#include <iostream>
-
+#include <cmath>
 #include "SpillStateMachineSMB.H"
 
 using namespace Mu2eER;
@@ -25,6 +24,18 @@ void SpillStateMachineSMB::initialize()
   actualSpillWaveform();
   errorSignalWaveform();
 }
+
+const CircularBuffer<double>& SpillStateMachineSMB::circularBufferGet() const
+{
+  return _circular_buffer;
+}
+
+/*
+CircularBuffer<CircBuffer>& SpillStateMachineSMB::circularBufferStructGet()
+{
+  return _circular_buffer;
+}
+*/
 
 void SpillStateMachineSMB::currentStateSet( ssm_state_t state )
 {
@@ -138,5 +149,20 @@ void SpillStateMachineSMB::errorSignalWaveform()
 
   for ( i = 0; i < _idealSpillWaveFormSize; i++ ) {
     _errorSignalWaveFormData[i] = _idealSpillWaveFormData[i] - _actualSpillWaveFormData[i];
+  }
+}
+
+void SpillStateMachineSMB::fillCircularBuffer()
+{
+  int i, capacity, degrees = 0;
+  double res;
+
+  capacity = _circular_buffer.capacityGet();
+
+  for ( i = 0; i < capacity; i++ )
+  {
+    res = ( degrees % 360 ) * 3.14159 / 180;
+    _circular_buffer.enqueue( sin( res ) );
+    degrees += 15;
   }
 }

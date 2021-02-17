@@ -15,6 +15,7 @@ API_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(API_LIBS))
 API_OBJS        = Error.o \
 	SharedMemoryManager.o \
 	SpillStateMachineSMB.o \
+	CircularBuffer.o \
 	SharedMemoryClient.o \
 	ControlMQClient.o \
 	errors.o
@@ -22,7 +23,7 @@ API_OBJS_PREFIX = $(addprefix api/,$(API_OBJS))
 API_OBJS_HOST   = $(addprefix $(API_HOST_OUT)/,$(API_OBJS))
 API_OBJS_TARGET = $(addprefix $(API_TARGET_OUT)/,$(API_OBJS))
 
-API_TEST_OBJS   = AllTests.o SharedMemoryManagerTests.o SharedMemoryClientTests.o
+API_TEST_OBJS   = AllTests.o SharedMemoryManagerTests.o SharedMemoryClientTests.o CircularBufferTests.o
 API_TEST_OBJS_PREFIX = $(addprefix api/,$(API_TEST_OBJS))
 API_TEST_OBJS_HOST = $(addprefix $(API_HOST_OUT)/,$(API_TEST_OBJS))
 
@@ -31,7 +32,7 @@ ALL_COVERAGE    += $(API_OBJS_HOST)
 $(API_TARGET_OUT):
 	$(EES_OUT) mkdir -p $(API_TARGET_OUT)
 
-$(API_HOST_OUT): 
+$(API_HOST_OUT):
 	$(EES_OUT) mkdir -p $(API_HOST_OUT)
 
 api_clean:

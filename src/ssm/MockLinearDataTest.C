@@ -71,6 +71,4 @@ TEST( MockLinearGroup, Initialize )
     CHECK_EQUAL( j , arr[i] );
     j--;
    }
-
-   cout << "Mock linear test done" << endl;
 }

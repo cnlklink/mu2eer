@@ -297,7 +297,7 @@ void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
 
 /**
  * Init Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */
@@ -357,7 +357,7 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
 /**
  * Fast Reading Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
  *
  * @param dest return buffer
  * @param reqinfo ACNET request object
@@ -366,8 +366,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
-  //uint32_t num_chans = 1;
-  uint32_t num_read_pts = 1200;
+  uint32_t num_read_pts = 16000;
   uint32_t i;
 
   syslog( LOG_INFO, "Entered into SSMDevice::readFast() \n");
@@ -394,11 +393,22 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   syslog( LOG_INFO, "Show length %d and offset %d\n", dest.total, dest.offset);
-  // previous buffer had 16000 elements
-  for ( i = 1; i < num_read_pts; i++ )
-  {
-    dest[i] = 1;
+
+  try {
+    SharedMemoryClient shmc( _shmName );
+    auto spil = shmc.ssmBlockGet();
+    spil.fillCircularBuffer();
+    auto circularBufferData = shmc.ssmBlockGet().circularBufferGet();
+    for ( i = 0; i < num_read_pts; i++ )
+      {
+	dest[i] = (int) circularBufferData.dataGet(i);
+      }
   }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::fastRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
 
   dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
 
@@ -407,7 +417,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 
 /**
  * Cleanup Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */
