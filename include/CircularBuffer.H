@@ -16,6 +16,12 @@
 
 using namespace std;
 
+/**
+ * CircBuffer
+ *
+ * @param data Data element
+ * @param timestamp Timestamp for ftp
+ */
 struct CircBuffer
 {
   double data;
