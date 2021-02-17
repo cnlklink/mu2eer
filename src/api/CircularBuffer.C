@@ -111,5 +111,5 @@ T CircularBuffer<T>::dataGet( uint16_t index ) const
   return data;
 }
 
-//template class CircularBuffer<double>;
-template class CircularBuffer<CircBuffer>;
+template class CircularBuffer<double>;
+//template class CircularBuffer<CircBuffer>;

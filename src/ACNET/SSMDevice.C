@@ -387,10 +387,21 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   // previous buffer had 16000 elements
-  for ( i = 0; i < num_read_pts; i++ )
-  {
-    dest[i] = 1;
+  try {
+    SharedMemoryClient shmc( _shmName );
+    auto spil = shmc.ssmBlockGet();
+    spil.fillCircularBuffer();
+    auto circularBufferData = shmc.ssmBlockGet().circularBufferGet();
+    for ( i = 0; i < num_read_pts; i++ )
+      {
+	dest[i] = (int) circularBufferData.dataGet(i);
+      }
   }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::fastRead(..) - %s", e.what() );
+      throw Ex_DEVFAILED;
+    }
 
   dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
 }

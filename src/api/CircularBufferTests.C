@@ -6,7 +6,6 @@
  * @author rtadkins
  */
 
-#include <iostream>
 #include <ctime>
 #include "CppUTest/TestHarness.h"
 
@@ -21,12 +20,12 @@ using namespace std;
  * Construction Group
  *
  * Tests related to constructing & destructing the CircularBuffer.
- *//*
+ */
 TEST_GROUP( CircularBuffConstruction )
 {
   void setup()
   {
-    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+    CircularBuffer<double> circular_buffer( BUFFER_SIZE );
   }
 
   void teardown()
@@ -34,26 +33,31 @@ TEST_GROUP( CircularBuffConstruction )
   }
 };
 
+/**
+ * Test Initial Values
+ *
+ * Verify the initial values of the elements of the circular buffer
+ */
 TEST( CircularBuffConstruction, InitialValues )
 {
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   CHECK_EQUAL( BUFFER_SIZE, circular_buffer.capacityGet() );
   CHECK_EQUAL( 0, circular_buffer.sizeGet() );
   CHECK_EQUAL( 0, circular_buffer.headGet() );
   CHECK_EQUAL( -1, circular_buffer.tailGet() );
 }
-*/
+
 /**
  * CircularBuffEnqueue Group
  *
  * Tests related to the CircularBuffer enqueue function.
- *//*
+ */
 TEST_GROUP( CircularBuffEnqueue )
 {
   void setup()
   {
-    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+    CircularBuffer<double> circular_buffer( BUFFER_SIZE );
   }
 
   void teardown()
@@ -61,10 +65,15 @@ TEST_GROUP( CircularBuffEnqueue )
   }
 };
 
+/**
+ * Test Circular Buffer Enqueue
+ *                                                                                                                    
+ * Test that the circular buffer can properly enqueue one element.
+ */
 TEST( CircularBuffEnqueue, EnqueueOneElement )
 {
   int head, tail;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   head = circular_buffer.headGet();
   tail = circular_buffer.tailGet();
@@ -83,10 +92,15 @@ TEST( CircularBuffEnqueue, EnqueueOneElement )
   CHECK_EQUAL( 1, circular_buffer.sizeGet() );
 }
 
+/**
+ * Test Circular Buffer Enqueue
+ *
+ * Test that the circular buffer can properly enqueue the number of elements equal to the capacity.
+ */
 TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
 {
   int capacity, i;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++ )
@@ -104,10 +118,15 @@ TEST( CircularBuffEnqueue, EnqueueEntireBuffer )
   }
 }
 
+/**
+ * Test Circular Buffer Enqueue Wrap Around
+ *
+ * Test that elements will properly wrap around
+ */
 TEST( CircularBuffEnqueue, EnqueueWrapAround )
 {
   int capacity, i;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++ )
@@ -134,10 +153,15 @@ TEST( CircularBuffEnqueue, EnqueueWrapAround )
   }
 }
 
+/**
+ * Test Circular Buffer Enqueue Entire Wrap Around
+ *
+ * Test the continous adding of elements correctly wrap around.
+ */
 TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
 {
   int capacity, i;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++ )
@@ -168,17 +192,17 @@ TEST( CircularBuffEnqueue, EnqueueEntireWrapAround )
     CHECK_EQUAL((i - 3), circular_buffer.dataGet(i));
   }
 }
-*/
+
 /**
  * CircularBuffDequeue Group
  *
  * Tests related to the CircularBuffer dequeue function.
- *//*
+ */
 TEST_GROUP( CircularBuffDequeue )
 {
   void setup()
   {
-    CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+    CircularBuffer<double> circular_buffer( BUFFER_SIZE );
   }
 
   void teardown()
@@ -186,9 +210,14 @@ TEST_GROUP( CircularBuffDequeue )
   }
 };
 
+/**
+ * Test Dequeue Simple
+ *
+ * Test enqueuing and dequeuing one element
+ */
 TEST( CircularBuffDequeue, DequeueSimple )
 {
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   circular_buffer.enqueue(10);
   circular_buffer.enqueue(11);
@@ -201,9 +230,14 @@ TEST( CircularBuffDequeue, DequeueSimple )
   CHECK_EQUAL( 2, circular_buffer.sizeGet() );
 }
 
+/**
+ * Test Dequeue Three Elements
+ *
+ * Test enqueuing and dequeuing three elements
+ */
 TEST( CircularBuffDequeue, DequeueAllSimple )
 {
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   circular_buffer.enqueue(10);
   circular_buffer.enqueue(11);
@@ -224,10 +258,15 @@ TEST( CircularBuffDequeue, DequeueAllSimple )
   CHECK_EQUAL( 1, circular_buffer.empty() );
 }
 
+/**
+ * Test Enqueue and Dequeue All Simple
+ *
+ * Test enqueing and dequeing the entire capacity of elements
+ */
 TEST( CircularBuffDequeue, DequeueAndEnqueueAllSimple )
 {
   int capacity, i;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++ )
@@ -241,10 +280,15 @@ TEST( CircularBuffDequeue, DequeueAndEnqueueAllSimple )
   }
 }
 
+/**
+ * Test Dequeue Empty
+ *
+ * Test dequeuing from an empty circular buffer
+ */
 TEST( CircularBuffDequeue, DequeueEmpty )
 {
   int capacity, i;
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   capacity = circular_buffer.capacityGet();
   for ( i = 0; i < capacity; i++ )
@@ -260,17 +304,22 @@ TEST( CircularBuffDequeue, DequeueEmpty )
   circular_buffer.dequeue();
 }
 
+/**
+ * Test Dequeue Single
+ *
+ * Test dequeing a single element
+ */
 TEST( CircularBuffDequeue, DequeueSingle )
 {
-  CircularBuffer<int16_t> circular_buffer( BUFFER_SIZE );
+  CircularBuffer<double> circular_buffer( BUFFER_SIZE );
 
   circular_buffer.enqueue(100);
 
   circular_buffer.dequeue();
 }
 
-*/
 
+/*
 TEST_GROUP( CircularBuffStructInitialization )
 {
   void setup()
@@ -357,4 +406,4 @@ TEST( CircularBuffStructInitialization, EnqueueAllDequeueAll )
 
   CHECK_EQUAL( 0, circular_buffer.sizeGet() );
 }
-
+*/
