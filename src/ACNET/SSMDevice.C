@@ -366,7 +366,8 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
-  uint32_t num_read_pts = 16000;
+  //uint32_t num_read_pts = 16000;
+  uint32_t num_read_pts = 2666; 
   uint32_t i;
 
   syslog( LOG_INFO, "Entered into SSMDevice::readFast() \n");
@@ -393,7 +394,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   syslog( LOG_INFO, "Show length %d and offset %d\n", dest.total, dest.offset);
-
+  syslog( LOG_INFO, "Show length of num_read_pts %d", num_read_pts);
   try {
     SharedMemoryClient shmc( _shmName );
     auto spil = shmc.ssmBlockGet();
