@@ -36,12 +36,12 @@ STABLE_BUILD=/usr/local/products/buildroot/$BR_NAME
 #
 # @param $1 Message
 # @param $2 Command
-# @param $3 Remote host (default: nova)
+# @param $3 Remote host (default: vxbuild1)
 #
 do_remote()
 {
     if [ "$3" == "" ]; then
-        REMOTE_HOST="nova";
+        REMOTE_HOST="vxbuild1";
     else
         REMOTE_HOST=$3;
     fi
