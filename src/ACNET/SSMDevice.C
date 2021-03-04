@@ -196,6 +196,8 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
 				ReqInfo const* reqinfo )
 {
+  syslog( LOG_INFO, "Entered into SSMDevice::idealSpillRead() \n" );
+
   if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
     {
       throw Ex_BADOFF;
@@ -225,6 +227,8 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
+
+  syslog( LOG_INFO, "Finished in SSMDevice::idealSpillRead() \n" );
 }
 
 void SSMDevice::actualSpillRead( Array<SSMDevice::actual_spill_read_t>& dest,
@@ -408,6 +412,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   catch( runtime_error e )
     {
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::fastRead(..) - %s", e.what() );
+      cleanupCollection (reqinfo);
       throw Ex_DEVFAILED;
     }
 
