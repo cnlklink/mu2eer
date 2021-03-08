@@ -406,6 +406,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
     auto circularBufferData = shmc.ssmBlockGet().circularBufferGet();
     for ( i = 0; i < num_read_pts; i++ )
       {
+	syslog (LOG_INFO, "data is: %f", circularBufferData.dataGet(i));
 	dest[i] = (int) circularBufferData.dataGet(i);
 	syslog (LOG_INFO, "dest[i] = %d", dest[i]);
       }
