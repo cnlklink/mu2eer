@@ -5,7 +5,7 @@
  *
  * @author jdiamond and rtadkins
  */
-
+#include <syslog.h>
 #include <cmath>
 #include "SpillStateMachineSMB.H"
 
@@ -164,5 +164,6 @@ void SpillStateMachineSMB::fillCircularBuffer()
     res = ( degrees % 360 ) * 3.14159 / 180;
     _circular_buffer.enqueue( sin( res ) );
     degrees += 15;
+    syslog (LOG_INFO, "_circular_buffer[i] = %f\n", _circular_buffer.dataGet(i));
   }
 }

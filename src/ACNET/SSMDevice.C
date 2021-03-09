@@ -403,12 +403,13 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
     SharedMemoryClient shmc( _shmName );
     auto spil = shmc.ssmBlockGet();
     spil.fillCircularBuffer();
-    auto circularBufferData = shmc.ssmBlockGet().circularBufferGet();
+    auto circ = spil.circularBufferGet();
+
     for ( i = 0; i < num_read_pts; i++ )
       {
-	syslog (LOG_INFO, "data is: %f", circularBufferData.dataGet(i));
-	dest[i] = (int) circularBufferData.dataGet(i);
-	syslog (LOG_INFO, "dest[i] = %d", dest[i]);
+	syslog (LOG_INFO, "data is: %f", circ.dataGet(i));
+	dest[i] = (int) circ.dataGet(i) * 100;
+	//syslog (LOG_INFO, "dest[i] = %d", dest[i]);
       }
   }
   catch( runtime_error e )
