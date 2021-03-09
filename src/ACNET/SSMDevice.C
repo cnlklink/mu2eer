@@ -409,7 +409,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
       {
 	syslog (LOG_INFO, "data is: %f", spil.circularBufferGet().dataGet(i));
 	dest[i] = (int) spil.circularBufferGet().dataGet(i) * 100;
-	//syslog (LOG_INFO, "dest[i] = %d", dest[i]);
+	syslog (LOG_INFO, "dest[i] = %d", dest[i]);
       }
   }
   catch( runtime_error e )
