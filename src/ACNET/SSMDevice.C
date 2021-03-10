@@ -402,12 +402,14 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   try {
     SharedMemoryClient shmc( _shmName );
     auto spil = shmc.ssmBlockGet();
+    int val = 0;
     spil.fillCircularBuffer();
 
     for ( i = 0; i < num_read_pts; i++ )
       {
 	syslog (LOG_INFO, "data is: %f\n", spil.circularBufferGet().dataGet(i));
-	dest[i] = (int) spil.circularBufferGet().dataGet(i) * 100;
+	val = spil.circularBufferGet().dataGet(i) * 100;
+	dest[i] = val;
 	syslog (LOG_INFO, "dest[i] = %d\n", dest[i]);
       }
   }
