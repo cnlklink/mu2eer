@@ -398,18 +398,17 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   syslog( LOG_INFO, "Show length %d and offset %d\n", dest.total, dest.offset);
-  syslog( LOG_INFO, "Show length of num_read_pts %d", num_read_pts);
+  syslog( LOG_INFO, "Show length of num_read_pts %d\n", num_read_pts);
   try {
     SharedMemoryClient shmc( _shmName );
     auto spil = shmc.ssmBlockGet();
     spil.fillCircularBuffer();
-    auto circ = spil.circularBufferGet();
 
     for ( i = 0; i < num_read_pts; i++ )
       {
-	syslog (LOG_INFO, "data is: %f", spil.circularBufferGet().dataGet(i));
+	syslog (LOG_INFO, "data is: %f\n", spil.circularBufferGet().dataGet(i));
 	dest[i] = (int) spil.circularBufferGet().dataGet(i) * 100;
-	syslog (LOG_INFO, "dest[i] = %d", dest[i]);
+	syslog (LOG_INFO, "dest[i] = %d\n", dest[i]);
       }
   }
   catch( runtime_error e )
