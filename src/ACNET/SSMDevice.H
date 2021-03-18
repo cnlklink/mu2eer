@@ -234,6 +234,16 @@ namespace Mu2eER
       uint32_t acsys_fe_request_id;
       uint32_t dataRate;
     } _active_ftp[MAX_FTP];
+
+    /**
+     * Initialize Active FTP Request Table
+     */
+    void _initializeActiveFTPTable();
+
+    /**
+     * Register ACNET Read/Set Methods w/ cdev driver
+     */
+    void _registerCDevMethods();
   };
 };
 

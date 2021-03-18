@@ -20,54 +20,9 @@ SSMDevice::SSMDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
+  _initializeActiveFTPTable();
 
-  for( uint32_t i = 0; i != MAX_FTP; i++ )
-  {
-    _active_ftp[i].acsys_fe_request_id = 0;
-  }
-
-  _readfast_error_count = 0;
-
-  registerMethod( ATTR_SPILL_COUNTER_READING,
-                  *this,
-                  &SSMDevice::spillCounterRead,
-                  SPILL_COUNTER_READING_MAX );
-
-  registerMethod( ATTR_STATE_READING,
-                  *this,
-                  &SSMDevice::stateRead,
-                  STATE_READING_MAX );
-
-  registerMethods( ATTR_STATUS_CONTROL,
-                   *this,
-                   &SSMDevice::statusCtrlRead,
-                   &SSMDevice::statusCtrlWrite,
-                   1 );
-
-  registerMethod( ATTR_TIS_READING,
-                  *this,
-                  &SSMDevice::timeInSpillRead,
-                  TIS_READING_MAX );
-
-  registerMethod( ATTR_IDEAL_SPILL_READING,
-                  *this,
-                  &SSMDevice::idealSpillRead,
-                  IDEAL_SPILL_READING_MAX );
-
-  registerMethod( ATTR_ACTUAL_SPILL_READING,
-                  *this,
-                  &SSMDevice::actualSpillRead,
-                  IDEAL_SPILL_READING_MAX );
-
-  registerMethod( ATTR_ERROR_SIGNAL_READING,
-                  *this,
-                  &SSMDevice::errorSignalRead,
-                  IDEAL_SPILL_READING_MAX );
-
-  registerMethodFast( ATTR_IDEAL_SPILL_READING,
-                  *this,
-                  &SSMDevice::readFast,
-                  IDEAL_SPILL_READING_MAX );
+  _registerCDevMethods();
 }
 
 void SSMDevice::spillCounterRead( Array<SSMDevice::spill_counter_read_t>& dest,
@@ -437,4 +392,58 @@ void SSMDevice::cleanupCollection( ReqInfo const* reqinfo )
   _active_ftp[request_id].acsys_fe_request_id = 0;
 
   syslog( LOG_INFO, "Finished SSMDevice::cleanupCollection() \n");
+}
+
+void SSMDevice::_initializeActiveFTPTable()
+{
+  for( uint32_t i = 0; i != MAX_FTP; i++ )
+    {
+      _active_ftp[i].acsys_fe_request_id = 0;
+    }
+  
+  _readfast_error_count = 0;
+}
+
+void SSMDevice::_registerCDevMethods()
+{
+  registerMethod( ATTR_SPILL_COUNTER_READING,
+                  *this,
+                  &SSMDevice::spillCounterRead,
+                  SPILL_COUNTER_READING_MAX );
+  
+  registerMethod( ATTR_STATE_READING,
+                  *this,
+                  &SSMDevice::stateRead,
+                  STATE_READING_MAX );
+
+  registerMethods( ATTR_STATUS_CONTROL,
+                   *this,
+                   &SSMDevice::statusCtrlRead,
+                   &SSMDevice::statusCtrlWrite,
+                   1 );
+
+  registerMethod( ATTR_TIS_READING,
+                  *this,
+                  &SSMDevice::timeInSpillRead,
+                  TIS_READING_MAX );
+
+  registerMethod( ATTR_IDEAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::idealSpillRead,
+                  IDEAL_SPILL_READING_MAX );
+
+  registerMethod( ATTR_ACTUAL_SPILL_READING,
+                  *this,
+                  &SSMDevice::actualSpillRead,
+                  IDEAL_SPILL_READING_MAX );
+  
+  registerMethod( ATTR_ERROR_SIGNAL_READING,
+                  *this,
+                  &SSMDevice::errorSignalRead,
+                  IDEAL_SPILL_READING_MAX );
+
+  registerMethodFast( ATTR_IDEAL_SPILL_READING,
+                      *this,
+                      &SSMDevice::readFast,
+                      IDEAL_SPILL_READING_MAX );
 }
