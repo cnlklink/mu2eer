@@ -105,14 +105,14 @@ SharedMemoryManager::SharedMemoryManager( const string& name )
           throw API_SHM_GENERIC;
 	  break;
 	}
-    }  
+    }
 
   // Resize accordingly
   if( -1 == ftruncate( _fd, _size ) )
     {
       close( _fd );
       shm_unlink( _name.c_str() );
-      
+
       throw API_SHM_TRUNCFAIL;
     }
 

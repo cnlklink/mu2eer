@@ -10,6 +10,7 @@
 #define SPILLSTATEMACHINESMB_H
 
 #include "ssm.H"
+#include "CircularBuffer.H"
 
 namespace Mu2eER
 {
@@ -31,6 +32,15 @@ namespace Mu2eER
      */
     void initialize();
 
+    /**
+     * Get Circular Buffer
+     *
+     * @return Circular buffer of the spill state machine
+     */
+    const CircularBuffer<double>& circularBufferGet() const;
+    
+    // CircularBuffer<CircBuffer>& circularBufferStructGet();
+    
     /**
      * Set Current State
      *
@@ -158,7 +168,17 @@ namespace Mu2eER
      */
     void errorSignalWaveform();
 
+    /**
+     * Fill Circular Buffer
+     */
+    void fillCircularBuffer();
+
   private:
+    /**
+    * Circular buffer
+    */
+    CircularBuffer<double> _circular_buffer{9800};
+
     /**
      * Current state
      */
@@ -179,8 +199,8 @@ namespace Mu2eER
      */
     float _timeInSpill;
 
-    /**                                                                         
-     * LED                         
+    /**
+     * LED
      */
     bool _led;
 

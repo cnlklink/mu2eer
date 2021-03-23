@@ -36,7 +36,7 @@ STABLE_BUILD=/usr/local/products/buildroot/$BR_NAME
 #
 # @param $1 Message
 # @param $2 Command
-# @param $3 Remote host (default: nova)
+# @param $3 Remote host (default: vxbuild1)
 #
 do_remote()
 {

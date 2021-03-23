@@ -152,6 +152,8 @@ void SSMDevice::timeInSpillRead( Array<SSMDevice::tis_read_t>& dest,
 void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
 				ReqInfo const* reqinfo )
 {
+  syslog( LOG_INFO, "Entered into SSMDevice::idealSpillRead() \n" );
+
   if( dest.offset.getValue() > static_cast<int>( IDEAL_SPILL_READING_MAX ) )
     {
       throw Ex_BADOFF;
@@ -181,6 +183,8 @@ void SSMDevice::idealSpillRead( Array<SSMDevice::ideal_spill_read_t>& dest,
       syslog( LOG_ERR, "runtime_error caught in SSMDevice::idealSpillRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
+
+  syslog( LOG_INFO, "Finished in SSMDevice::idealSpillRead() \n" );
 }
 
 void SSMDevice::actualSpillRead( Array<SSMDevice::actual_spill_read_t>& dest,
@@ -253,7 +257,7 @@ void SSMDevice::errorSignalRead( Array<SSMDevice::error_signal_read_t>& dest,
 
 /**
  * Init Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */
@@ -313,7 +317,7 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
 
 /**
  * Fast Reading Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
  *
  * @param dest return buffer
  * @param reqinfo ACNET request object
@@ -322,8 +326,8 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 {
   uint32_t request_index = 0;
   uint32_t request_id = reqinfo->get_requestid();
-  //uint32_t num_chans = 1;
-  uint32_t num_read_pts = 1200;
+  //uint32_t num_read_pts = 16000;
+  uint32_t num_read_pts = 2666; 
   uint32_t i;
 
   syslog( LOG_INFO, "Entered into SSMDevice::readFast() \n");
@@ -350,11 +354,28 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
   request_index = i;
 
   syslog( LOG_INFO, "Show length %d and offset %d\n", dest.total, dest.offset);
-  // previous buffer had 16000 elements
-  for ( i = 1; i < num_read_pts; i++ )
-  {
-    dest[i] = 1;
+  syslog( LOG_INFO, "Show length of num_read_pts %d\n", num_read_pts);
+  try {
+    SharedMemoryClient shmc( _shmName );
+    auto spil = shmc.ssmBlockGet();
+    int val = 0;
+    spil.fillCircularBuffer();
+
+    for ( i = 0; i < num_read_pts; i++ )
+      {
+	//syslog (LOG_INFO, "data is: %f\n", spil.circularBufferGet().dataGet(i));
+	val = (spil.circularBufferGet().dataGet(i) + 1) * 100;
+	//syslog (LOG_INFO, "val is %d\n", val);
+	dest[i] = val;
+	syslog (LOG_INFO, "dest[i] = %d\n", dest[i]);
+      }
   }
+  catch( runtime_error e )
+    {
+      syslog( LOG_ERR, "runtime_error caught in SSMDevice::fastRead(..) - %s", e.what() );
+      cleanupCollection (reqinfo);
+      throw Ex_DEVFAILED;
+    }
 
   dest[0] = (uint32_t)(num_read_pts * sizeof(SafeFloat)); // write the number of bytes being returned in the buffer into the first 2 bytes of the first element
 
@@ -363,7 +384,7 @@ void SSMDevice::readFast( Array<SafeFloat>& dest, ReqInfo const* reqinfo )
 
 /**
  * Cleanup Collection Property
- * Code is by kmartin and adapted by rtadkins
+ * Code by kmartin and adapted by rtadkins
 
  * @param reqinfo ACNET request object
  */

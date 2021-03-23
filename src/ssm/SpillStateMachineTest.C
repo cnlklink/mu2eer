@@ -8,8 +8,9 @@
 
 #include <chrono>
 #include <thread>
+#include <functional>
+#include <cmath>
 #include <iostream>
-
 #include "CppUTest/TestHarness.h"
 
 #include "SharedMemoryManager.H"
@@ -242,6 +243,76 @@ TEST( ThreadGroup, TestRunning )
   CHECK_EQUAL( false, smb.threadRunningGet() );
 }
 
+/**
+ * Test Circular Buffer Fill
+ *
+ * Create thread & verify that the circular buffer is filled.
+ *//*
+TEST( ThreadGroup, TestCircularBufferThread )
+{
+  int capacity, i, degrees = 0;
+  double res;
+
+  auto& smb = _shmm->ssmBlockGet();
+
+  std::thread threadObj(&SpillStateMachineSMB::fillCircularBuffer, &smb);
+  threadObj.join();
+
+  CircularBuffer<double> circBuff = smb.circularBufferGet();
+  capacity = circBuff.capacityGet();
+
+  for ( i = 0; i < capacity; i++ )
+  {
+    res = ( degrees % 360 ) * 3.14159 / 180;
+
+    DOUBLES_EQUAL( sin(res), circBuff.dataGet(i), 0.01 );
+
+    degrees += 15;
+  }
+}*/
+
+/**
+ * Test Circular Buffer Fill
+ *
+ * Verify the thread is running & the circular buffer is filled.
+ *//*
+TEST( ThreadGroup, TestCircularBuffer )
+{
+  int capacity, i, degrees = 0;
+  double res;
+
+  auto& smb = _shmm->ssmBlockGet();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
+
+  // Start the SSM thread
+  _ssm->run();
+
+  // Verify that the thread is running
+  CHECK_EQUAL( true, smb.threadRunningGet() );
+
+  smb.fillCircularBuffer();
+
+  // Wait for the SSM thread to stop
+  _ssm->stop();
+
+  // Verify that the thread is not running
+  CHECK_EQUAL( false, smb.threadRunningGet() );
+
+  CircularBuffer<double>& circBuff = smb.circularBufferGet();
+  capacity = circBuff.capacityGet();
+
+  for ( i = 0; i < capacity; i++ )
+  {
+    res = ( degrees % 360 ) * 3.14159 / 180;
+
+    DOUBLES_EQUAL( sin(res), circBuff.dataGet(i), 0.01 );
+    
+    degrees += 15;
+  }
+}
+*/
 /**
  * Operation Group
  *
