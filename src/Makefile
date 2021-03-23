@@ -39,7 +39,12 @@ TEST_RUN_FLAGS  ?= -c
 DEV_LIBS        = -lconfig++ -lrt
 TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt
 
-EES_HOST_CPPFLAGS = -I$(INC_DIR) -fno-strict-aliasing -std=c++0x $(DEV_LIBS) $(TEST_FLAGS) 
+EES_HOST_CPPFLAGS = -I/usr/local/products/include \
+	-I$(INC_DIR) \
+	-fno-strict-aliasing \
+	-std=c++0x \
+	$(DEV_LIBS) \
+	$(TEST_FLAGS) 
 
 # List of all C++ source files
 ALL_SOURCES     := $(wildcard *.C) 
