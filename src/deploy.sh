@@ -34,35 +34,35 @@ IMAGE_LOCATION=$BOOT_LOCATION/$JENKINS_BUILDNUM
 printf "Deploying mu2eer build number $JENKINS_BUILDNUM...\n"
 printf "  Boot location is $BOOT_LOCATION\n"
 
-do_remote "Creating destination directory on nova", "mkdir -p $IMAGE_LOCATION"
+do_remote "Creating destination directory on vxbuild1", "mkdir -p $IMAGE_LOCATION"
 
 if [ -n "$IMAGE_FILE" ]; then
     IMAGE_SOURCE=$STABLE_BUILD/output/images/$IMAGE_FILE
-    IMAGE_DEST=nova:$IMAGE_LOCATION/$IMAGE_FILE
+    IMAGE_DEST=vxbuild1:$IMAGE_LOCATION/$IMAGE_FILE
     do_scp $IMAGE_SOURCE $IMAGE_DEST
 fi
 
 if [ -n "$DT_FILE" ]; then
     DT_SOURCE=$STABLE_BUILD/output/images/$DT_FILE
-    DT_DEST=nova:$IMAGE_LOCATION/$DT_FILE
+    DT_DEST=vxbuild1:$IMAGE_LOCATION/$DT_FILE
     do_scp $DT_SOURCE $DT_DEST
 fi
 
 if [ -n "$ROOTFS_FILE" ]; then
     ROOTFS_SOURCE=$STABLE_BUILD/output/images/$ROOTFS_FILE
-    ROOTFS_DEST=nova:$IMAGE_LOCATION/$ROOTFS_FILE
+    ROOTFS_DEST=vxbuild1:$IMAGE_LOCATION/$ROOTFS_FILE
     do_scp $ROOTFS_SOURCE $ROOTFS_DEST
 fi
 
 if [ -n "$DABBEL_TEST_FILE" ]; then
     DABBEL_SOURCE=$STABLE_BUILD/$DABBEL_DIR/$DABBEL_TEST_FILE
-    DABBEL_DEST=nova:$IMAGE_LOCATION/$DABBEL_TEST_FILE
+    DABBEL_DEST=vxbuild1:$IMAGE_LOCATION/$DABBEL_TEST_FILE
     do_scp $DABBEL_SOURCE $DABBEL_DEST
 fi
 
 if [ -n "$DABBEL_PROD_FILE" ]; then
     DABBEL_SOURCE=$STABLE_BUILD/$DABBEL_DIR/$DABBEL_PROD_FILE
-    DABBEL_DEST=nova:$IMAGE_LOCATION/$DABBEL_PROD_FILE
+    DABBEL_DEST=vxbuild1:$IMAGE_LOCATION/$DABBEL_PROD_FILE
     do_scp $DABBEL_SOURCE $DABBEL_DEST
 fi
 

@@ -41,7 +41,7 @@ STABLE_BUILD=/usr/local/products/buildroot/$BR_NAME
 do_remote()
 {
     if [ "$3" == "" ]; then
-        REMOTE_HOST="nova";
+        REMOTE_HOST="vxbuild1";
     else
         REMOTE_HOST=$3;
     fi
