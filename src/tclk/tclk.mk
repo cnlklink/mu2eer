@@ -8,7 +8,7 @@ ALL_OUT         += $(TCLK_HOST_OUT) $(TCLK_TARGET_OUT)
 ALL_SOURCES     += $(wildcard tclk/*.C)
 ALL_HEADERS     += $(wildcard tclk/*.H)
 
-TCLK_OBJS        = ITCLKDecoderDriver.o TCLKDecoderDriverMock.o 
+TCLK_OBJS        = ITCLKDecoderDriver.o TCLKDecoderDriverMock.o MulticastTCLKDecoderDriver.o
 TCLK_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_OBJS))
 TCLK_OBJS_HOST   = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_OBJS))
 TCLK_OBJS_TARGET = $(addprefix $(TCLK_TARGET_OUT)/,$(TCLK_OBJS))

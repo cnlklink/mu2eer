@@ -33,6 +33,14 @@ void ShowCommand::_outputSSMSection() const
        << "  LED state: " << ssm.ledStateGet() << endl;
 }
 
+void ShowCommand::_outputTCLKSection() const
+{
+  cout << "TCLK Decoder" << endl
+       << "============" << endl
+       << "  TCLK device: Mock" << endl
+       << "  TCLK signal status: Present" << endl;
+}
+
 void ShowCommand::run( unsigned int argc, const char* argv[] )
 {
   // Get the start time
@@ -48,5 +56,9 @@ void ShowCommand::run( unsigned int argc, const char* argv[] )
        << "  with configuration: " << _shmc.configFileGet() << endl
        << endl;
 
+  cout << endl;
   _outputSSMSection();
+
+  cout << endl;
+  _outputTCLKSection();
 }

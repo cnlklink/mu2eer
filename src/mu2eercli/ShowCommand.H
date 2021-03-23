@@ -38,6 +38,11 @@ namespace Mu2eER
      * Output the Spill State Machine Section
      */
     void _outputSSMSection() const;
+
+    /**
+     * Output TCLK Section
+     */
+    void _outputTCLKSection() const;
   };
 };
 

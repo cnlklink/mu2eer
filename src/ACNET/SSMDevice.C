@@ -8,7 +8,6 @@
 
 #include <syslog.h>
 #include <iostream>
-#include <mcastrecv.h>
 
 #include "errors.H"
 #include "SSMDevice.H"
