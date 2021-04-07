@@ -35,9 +35,11 @@ void ShowCommand::_outputSSMSection() const
 
 void ShowCommand::_outputTCLKSection() const
 {
+  auto& tclk = _shmc.tclkBlockGet();
+
   cout << "TCLK Decoder" << endl
        << "============" << endl
-       << "  TCLK device: Mock" << endl
+       << "  Device driver: " << tclk.driverNameGet() << endl
        << "  TCLK signal status: Present" << endl;
 }
 

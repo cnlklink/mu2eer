@@ -169,3 +169,8 @@ string SharedMemoryManager::versionGet() const
 {
   return _shmPtr->versionGet();
 }
+
+TCLKSMB& SharedMemoryManager::tclkBlockGet()
+{
+  return _shmPtr->tclkBlockGet();
+}

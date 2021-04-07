@@ -75,6 +75,13 @@ namespace Mu2eER
     void startTimeSetToNow();
 
     /**
+     * Get TCLK Block
+     *
+     * @return Reference to the TCLK block.
+     */
+    TCLKSMB& tclkBlockGet();
+
+    /**
      * Get Version
      *
      * @return Shared memory API version

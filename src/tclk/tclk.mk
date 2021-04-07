@@ -8,7 +8,11 @@ ALL_OUT         += $(TCLK_HOST_OUT) $(TCLK_TARGET_OUT)
 ALL_SOURCES     += $(wildcard tclk/*.C)
 ALL_HEADERS     += $(wildcard tclk/*.H)
 
-TCLK_OBJS        = ITCLKDecoderDriver.o TCLKDecoderDriverMock.o MulticastTCLKDecoderDriver.o
+TCLK_LIBS        = tclk.a api.a
+TCLK_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(TCLK_LIBS))
+TCLK_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(TCLK_LIBS))
+
+TCLK_OBJS        = TCLKDecoderFactory.o ITCLKDecoderDriver.o TCLKDecoderDriverMock.o MulticastTCLKDecoderDriver.o
 TCLK_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_OBJS))
 TCLK_OBJS_HOST   = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_OBJS))
 TCLK_OBJS_TARGET = $(addprefix $(TCLK_TARGET_OUT)/,$(TCLK_OBJS))
@@ -41,11 +45,11 @@ $(TARGET_BIN_DIR)/tclk.a: $(TCLK_OBJS_PREFIX)
 	$(EES_OUT) $(RANLIB) $@
 
 # Unit test suite
-tclk_tests: $(HOST_BIN_DIR)/tclk.a $(TCLK_TEST_OBJS_PREFIX)
+tclk_tests: $(TCLK_LIBS_HOST) $(TCLK_TEST_OBJS_PREFIX)
 	@echo "-m-> Linking $@ (host)..."
 	$(EES_OUT) $(HOST_CXX) -o $(TCLK_HOST_OUT)/tclk_tests \
 		$(TCLK_TEST_OBJS_HOST) \
-		$(HOST_BIN_DIR)/tclk.a \
+		$(TCLK_LIBS_HOST) \
 		$(DEV_LIBS) $(TEST_FLAGS)
 	@echo "-m-> Running $@..."
 	@./$(TCLK_HOST_OUT)/tclk_tests $(TEST_RUN_FLAGS)

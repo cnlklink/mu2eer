@@ -12,6 +12,7 @@
 #include <queue>
 
 #include "ITCLKDecoderDriver.H"
+#include "TCLKSMB.H"
 
 namespace Mu2eER
 {
@@ -23,6 +24,13 @@ namespace Mu2eER
   class TCLKDecoderDriverMock : public ITCLKDecoderDriver
   {
   public:
+    /**
+     * Constructor
+     *
+     * @param tclkSharedMemoryBlock A reference to the shared memory block where TCLK status is published
+     */
+    TCLKDecoderDriverMock( TCLKSMB& tclkSharedMemoryBlock );
+
     /**
      * Destructor
      */

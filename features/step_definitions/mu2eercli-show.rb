@@ -9,7 +9,7 @@
 require 'rspec/expectations'
 
 Then("{string} is displayed as the TCLK Driver") do |expectedDriver|
-  driver = @result.match(/TCLK device: (.*)/)
+  driver = @result.match(/Device driver: (.*)/)
   expect( driver[1] ).to eq expectedDriver
 end
 

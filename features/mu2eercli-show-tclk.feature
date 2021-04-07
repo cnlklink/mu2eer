@@ -5,5 +5,5 @@ Feature: mu2eercli show command / tclk status display
   Scenario: display the TCLK decoder status when using the mock driver
     Given mu2eerd is running
     When I pass the "show" command to mu2eercli
-    Then "Mock" is displayed as the TCLK Driver
+    Then "mock" is displayed as the TCLK Driver
      And "Present" is displayed as the TCLK signal status

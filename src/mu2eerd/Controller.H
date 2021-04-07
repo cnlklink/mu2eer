@@ -15,6 +15,7 @@
 #include "ConfigurationManager.H"
 #include "SharedMemoryManager.H"
 #include "SpillStateMachine.H"
+#include "tclk.H"
 
 using namespace std;
 
@@ -110,6 +111,11 @@ namespace Mu2eER
      * Interface to the spill state machine
      */
     SpillStateMachine _ssm;
+
+    /**
+     * Interace to the TCLK decoder
+     */
+    unique_ptr<ITCLKDecoderDriver> _tclkDecoder;
 
     /**
      * Test Daemon Configuration

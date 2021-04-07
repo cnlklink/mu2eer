@@ -12,6 +12,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "TCLKSMB.H"
+
 using namespace std;
 
 namespace Mu2eER

@@ -76,6 +76,13 @@ namespace Mu2eER
     time_t startTimeGet() const;
 
     /**
+     * Get Read-only TCLK Block
+     *
+     * @return Const reference to the TCLK block.
+     */
+    const TCLKSMB& tclkBlockGet() const;
+
+    /**
      * Get Uptime
      *
      * Using the start time recorded in the shared memory block, calculates and returns the

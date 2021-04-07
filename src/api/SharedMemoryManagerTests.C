@@ -55,6 +55,24 @@ TEST_GROUP( SMMGroup )
 };
 
 /**
+ * TCLK Group
+ *
+ * Tests related to the TCLK shared memory block.
+ */
+TEST_GROUP( TCLKGroup )
+{
+  void setup()
+  {
+    _shmm = new SharedMemoryManager( "mu2eer_test" );
+  }
+
+  void teardown()
+  {
+    delete _shmm;
+  }
+};
+
+/**
  * Test Construction
  *
  * Verify that the shared memory interface is constructed properly.
@@ -102,4 +120,15 @@ TEST( SMMGroup, Construction )
       cerr << "Exception: " << e.what() << endl;
       FAIL( "Failed to get SSM shared memory block" );
     }
+}
+
+/**
+ * Test TCLK Block Construction
+ *
+ * Verify that the TCLK block is constructed.
+ */
+TEST( TCLKGroup, Construction )
+{
+  TCLKSMB& tclk = _shmm->tclkBlockGet();
+  STRCMP_EQUAL( "none", tclk.driverNameGet().c_str() );
 }

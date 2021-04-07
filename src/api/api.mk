@@ -8,12 +8,13 @@ ALL_OUT         += $(API_HOST_OUT) $(API_TARGET_OUT)
 ALL_SOURCES     += $(wildcard api/*.C)
 ALL_HEADERS     += $(wildcard api/*.H)
 
-API_LIBS        = api.a ssm.a config.a
+API_LIBS        = api.a ssm.a config.a tclk.a
 API_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(API_LIBS))
 API_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(API_LIBS))
 
 API_OBJS        = Error.o \
 	SharedMemoryManager.o \
+	TCLKSMB.o \
 	SpillStateMachineSMB.o \
 	CircularBuffer.o \
 	SharedMemoryClient.o \

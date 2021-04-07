@@ -94,6 +94,11 @@ time_t SharedMemoryClient::startTimeGet() const
   return _shmi->startTimeGet();
 }
 
+const TCLKSMB& SharedMemoryClient::tclkBlockGet() const
+{
+  return _shmi->tclkBlockGet();
+}
+
 time_t SharedMemoryClient::uptimeGet() const
 {
   // Get the current time

@@ -1,7 +1,7 @@
 MU2EERCLI_HOST_OUT   = $(HOST_BIN_DIR)/mu2eercli
 MU2EERCLI_TARGET_OUT = $(TARGET_BIN_DIR)/mu2eercli
 
-MU2EERCLI_LIBS        = api.a adc.a ssm.a config.a
+MU2EERCLI_LIBS        = api.a adc.a ssm.a config.a tclk.a
 MU2EERCLI_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(MU2EERCLI_LIBS))
 MU2EERCLI_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(MU2EERCLI_LIBS))
 

@@ -14,6 +14,11 @@
 using namespace Mu2eER;
 using namespace std;
 
+TCLKDecoderDriverMock::TCLKDecoderDriverMock( TCLKSMB& tclkSharedMemoryBlock )
+{
+  tclkSharedMemoryBlock.driverNameSet( "mock" );
+}
+
 TCLKDecoderDriverMock::~TCLKDecoderDriverMock()
 {
   // Do nothing

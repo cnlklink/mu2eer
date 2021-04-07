@@ -16,6 +16,7 @@
 #include "mu2eerd.H"
 #include "ssm.H"
 #include "SpillStateMachineSMB.H"
+#include "TCLKSMB.H"
 
 using namespace std;
 
@@ -140,6 +141,26 @@ namespace Mu2eER
     }
 
     /**
+     * Get TCLK Block
+     *
+     * @return TCLKSMB Reference to the TCLK block
+     */
+    inline TCLKSMB& tclkBlockGet()
+    {
+      return _tclkBlock;
+    }
+
+    /**
+     * Get TCLK Block
+     *
+     * @return TCLKSMB Read-only reference to the TCLK block
+     */
+    inline const TCLKSMB& tclkBlockGet() const
+    {
+      return _tclkBlock;
+    }
+
+    /**
      * Get Version
      *
      * @return API version string
@@ -179,6 +200,11 @@ namespace Mu2eER
      * mu2eerd state
      */
     mu2eerd_state_t _state;
+
+    /**
+     * TCLK block
+     */
+    TCLKSMB _tclkBlock;
   };
 };
 

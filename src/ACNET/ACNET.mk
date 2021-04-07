@@ -8,7 +8,7 @@ ALL_OUT          += $(ACNET_HOST_OUT) $(ACNET_TARGET_OUT)
 ALL_SOURCES      += $(wildcard ACNET/*.C)
 ALL_HEADERS      += $(wildcard ACNET/*.H)
 
-ACNET_LIBS        = api.a adc.a ssm.a config.a
+ACNET_LIBS        = api.a adc.a ssm.a config.a tclk.a
 ACNET_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(ACNET_LIBS))
 ACNET_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(ACNET_LIBS))
 
