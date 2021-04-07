@@ -31,6 +31,11 @@ ACNET_SSM_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_SSM_OBJS))
 ACNET_SSM_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_SSM_OBJS))
 ACNET_SSM_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_SSM_OBJS))
 
+ACNET_TCLK_OBJS        = TCLKDevice.o tclk_fef_init.o
+ACNET_TCLK_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_TCLK_OBJS))
+ACNET_TCLK_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_TCLK_OBJS))
+ACNET_TCLK_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_TCLK_OBJS))
+
 ACNET_TEST_OBJS        = ADCDevice.o \
 	ADCDeviceTest.o \
 	DaemonController.o \
@@ -39,6 +44,8 @@ ACNET_TEST_OBJS        = ADCDevice.o \
 	SSMDevice.o \
 	SSMDeviceTests.o \
 	SystemController.o \
+	TCLKDevice.o \
+	TCLKDeviceTests.o \
 	TestSystemController.o \
 	AllTests.o 
 ACNET_TEST_OBJS_PREFIX = $(addprefix ACNET/,$(ACNET_TEST_OBJS))
@@ -55,7 +62,7 @@ $(ACNET_HOST_OUT):
 acnet_clean:
 	$(EES_OUT) -rm -f ACNET/*.o
 
-acnet: acnet_adc acnet_mu2eerd acnet_ssm
+acnet: acnet_adc acnet_mu2eerd acnet_ssm acnet_tclk
 
 acnet_adc: $(ACNET_LIBS_TARGET) $(ACNET_ADC_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
@@ -78,6 +85,14 @@ acnet_ssm: $(ACNET_LIBS_TARGET) $(ACNET_SSM_OBJS_PREFIX)
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_ssm \
 		$(EES_ERL_LIBS)/cdev-1.3/priv/fef_driver_lib.o \
 		$(ACNET_SSM_OBJS_TARGET) \
+		$(ACNET_LIBS_TARGET) \
+		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
+
+acnet_tclk: $(ACNET_LIBS_TARGET) $(ACNET_TCLK_OBJS_PREFIX) 
+	@echo "-m-> Linking $@ (target)..."
+	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_tclk \
+		$(EES_ERL_LIBS)/cdev-1.3/priv/fef_driver_lib.o \
+		$(ACNET_TCLK_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
 

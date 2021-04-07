@@ -7,6 +7,8 @@
  */
 
 #include "tclk.H"
+
+#include "MulticastTCLKDecoderDriver.H"
 #include "TCLKDecoderDriverMock.H"
 
 namespace Mu2eER
