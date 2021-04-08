@@ -26,15 +26,13 @@ TCLKDevice::TCLKDevice( string mqName, string shmName )
 void TCLKDevice::eventCounterRead( Array<TCLKDevice::event_counter_read_t>& dest,
                                    ReqInfo const* reqinfo )
 {
-  dest[0] = 0;
-  /*
-  if( dest.offset.getValue() > static_cast<int>( SPILL_COUNTER_READING_MAX ) )
+  if( dest.offset.getValue() > static_cast<int>( EVENT_COUNTER_READING_MAX ) )
     {
       throw Ex_BADOFF;
     }
 
   if( (dest.offset.getValue() + dest.total.getValue()) >
-      static_cast<int>( SPILL_COUNTER_READING_MAX ) )
+      static_cast<int>( EVENT_COUNTER_READING_MAX ) )
     {
       throw Ex_BADOFLEN;
     }
@@ -42,12 +40,11 @@ void TCLKDevice::eventCounterRead( Array<TCLKDevice::event_counter_read_t>& dest
   try
     {
       SharedMemoryClient shmc( _shmName );
-      dest[0] = shmc.ssmBlockGet().spillCounterGet();
+      dest[0] = shmc.tclkBlockGet().eventCounterGet();
     }
   catch( runtime_error e )
     {
-      syslog( LOG_ERR, "runtime_error caught in SSMDevice::spillCounterRead(..) - %s", e.what() );
+      syslog( LOG_ERR, "runtime_error caught in TCLKDevice::evemtCounterRead(..) - %s", e.what() );
       throw Ex_DEVFAILED;
     }
-  */
 }

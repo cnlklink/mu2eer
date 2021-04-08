@@ -30,19 +30,35 @@ namespace Mu2eER
 
     /**
      * Get TCLK Decoder Drive Name
+     *
+     * @return TCLK decoder driver name
      */
     string driverNameGet() const;
 
     /**
      * Set TCLK Decoder Driver Name
+     *
+     * @param driverName TCLK decoder driver name
      */
     void driverNameSet( string driverName );
+
+    /**
+     * Get Event Counter
+     *
+     * @return A count of FTP reset events
+     */
+    unsigned int eventCounterGet() const;
 
   private:
     /**
      * TCLK decoder driver name
      */
     char _driverName[64];
+
+    /**
+     * TCLK event counter
+     */
+    unsigned int _eventCounter;
   };
 };
 

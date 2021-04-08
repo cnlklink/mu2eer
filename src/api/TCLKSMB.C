@@ -13,6 +13,7 @@ using namespace Mu2eER;
 using namespace std;
 
 TCLKSMB::TCLKSMB()
+  : _eventCounter( 0 )
 {
   driverNameSet( "none" );
 }
@@ -26,4 +27,9 @@ void TCLKSMB::driverNameSet( string driverName )
 {
   driverName.copy( _driverName, driverName.length(), 0 );
   _driverName[driverName.length()] = 0;
+}
+
+unsigned int TCLKSMB::eventCounterGet() const
+{
+  return _eventCounter;
 }

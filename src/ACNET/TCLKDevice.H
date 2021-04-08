@@ -34,6 +34,11 @@ namespace Mu2eER
     typedef uint32_t event_counter_read_t;
 
     /**
+     * Size of the event counter device / reading property return buffer
+     */
+    static const unsigned int EVENT_COUNTER_READING_MAX = 1;
+
+    /**
      * Event Counter / Reading Property
      *
      * @param dest ACNET response buffer

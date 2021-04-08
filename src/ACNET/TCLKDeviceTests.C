@@ -63,23 +63,23 @@ TEST( TCLKCoreGroup, EventCountRead )
   device.eventCounterRead( dest, &request );
   CHECK_EQUAL( 0, buf );
 
-  /*
   // Handle no shared memory by throwing Ex_DEVFAILED
-  SSMDevice deviceB( "/mu2eer_test", "does_not_exist" );
-  CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.spillCounterRead( dest, &request ) );
+  TCLKDevice deviceB( "/mu2eer_test", "does_not_exist" );
+  CHECK_THROWS_ACNETERROR( Ex_DEVFAILED, deviceB.eventCounterRead( dest, &request ) );
 
   // Handle bad offset
-  Array<SSMDevice::spill_counter_read_t> destB( &buf,
-                                                Index( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ),
-                                                Count( 1 ) );
-  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.spillCounterRead( destB, &request ) );
+  Array<TCLKDevice::event_counter_read_t> destB( &buf,
+                                                 Index( TCLKDevice::EVENT_COUNTER_READING_MAX + 1 ),
+                                                 Count( 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFF, device.eventCounterRead( destB, &request ) );
 
   // Handle bad length
-  Array<SSMDevice::spill_counter_read_t> destC( &buf,
-                                                Index( 0 ),
-                                                Count( SSMDevice::SPILL_COUNTER_READING_MAX + 1 ) );
-  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.spillCounterRead( destC, &request ) );
+  Array<TCLKDevice::event_counter_read_t> destC( &buf,
+                                                 Index( 0 ),
+                                                 Count( TCLKDevice::EVENT_COUNTER_READING_MAX + 1 ) );
+  CHECK_THROWS_ACNETERROR( Ex_BADOFLEN, device.eventCounterRead( destC, &request ) );
 
+  /*
   // Run a few cycles...
   ControlMQClient cmq( "/mu2eer_test" );
   SharedMemoryClient shmc( "mu2eer_test" );
