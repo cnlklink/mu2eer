@@ -137,6 +137,7 @@ install_buildroot_target: install_buildroot_pkginfo
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_adc $(EES_CDEV_PRIV)/
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_mu2eerd $(EES_CDEV_PRIV)/
 	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_ssm $(EES_CDEV_PRIV)/
+	install -D -m 0755 $(@D)/$(ACNET_TARGET_OUT)/acnet_tclk $(EES_CDEV_PRIV)/
 	install -D -m 0755 $(@D)/ACNET/startacsys $(EES_PREFIX)/usr/local/products/acsysfe/bin/startacsys
 	install -D -m 0755 $(@D)/$(MU2EERD_TARGET_OUT)/mu2eerd $(EES_PREFIX)/usr/local/products/bin/mu2eerd
 	install -D -m 0755 $(@D)/$(MU2EERCLI_TARGET_OUT)/mu2eercli $(EES_PREFIX)/usr/local/products/bin/mu2eercli

@@ -20,7 +20,11 @@ TCLKDevice::TCLKDevice( string mqName, string shmName )
     _mqName( mqName ),
     _shmName( shmName )
 {
-  //_registerCDevMethods();
+  registerMethod( ATTR_EVENT_COUNTER_READING,
+                  *this,
+                  &TCLKDevice::eventCounterRead,
+                  EVENT_COUNTER_READING_MAX );
+  
 }
 
 void TCLKDevice::eventCounterRead( Array<TCLKDevice::event_counter_read_t>& dest,

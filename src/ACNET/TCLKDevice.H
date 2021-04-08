@@ -34,6 +34,14 @@ namespace Mu2eER
     typedef uint32_t event_counter_read_t;
 
     /**
+     * SSDN Attribute IDs
+     */
+    enum
+      {
+        ATTR_EVENT_COUNTER_READING = 0x00
+      };
+
+    /**
      * Size of the event counter device / reading property return buffer
      */
     static const unsigned int EVENT_COUNTER_READING_MAX = 1;
