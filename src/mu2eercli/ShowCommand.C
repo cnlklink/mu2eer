@@ -40,7 +40,8 @@ void ShowCommand::_outputTCLKSection() const
   cout << "TCLK Decoder" << endl
        << "============" << endl
        << "  Device driver: " << tclk.driverNameGet() << endl
-       << "  TCLK signal status: Present" << endl;
+       << "  TCLK signal status: Present" << endl
+       << "  FTP reset event counter: " << tclk.eventCounterGet() << endl;
 }
 
 void ShowCommand::run( unsigned int argc, const char* argv[] )
