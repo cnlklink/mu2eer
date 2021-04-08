@@ -36,6 +36,7 @@ namespace Mu2eER
      */
     enum TCLK
       {
+        TCLK_FTP_RESET_EVENT = 0x02,
         TCLK_720HZ_EVENT = 0x07,
         TCLK_15HZ_EVENT = 0x0f,
         TCLK_1HZ_EVENT = 0x8f,

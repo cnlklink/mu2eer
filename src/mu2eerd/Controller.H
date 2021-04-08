@@ -113,9 +113,9 @@ namespace Mu2eER
     SpillStateMachine _ssm;
 
     /**
-     * Interace to the TCLK decoder
+     * TCLK sub-system
      */
-    unique_ptr<ITCLKDecoderDriver> _tclkDecoder;
+    TCLKSubsystem _tclk;
 
     /**
      * Test Daemon Configuration

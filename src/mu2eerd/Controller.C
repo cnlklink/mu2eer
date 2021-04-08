@@ -11,8 +11,6 @@
 #include <unistd.h>
 #include <syslog.h>
 
-#include "../tclk/TCLKDecoderDriverMock.H"
-
 #include "Controller.H"
 
 using namespace Mu2eER;
@@ -68,7 +66,7 @@ Controller::Controller( ConfigurationManager& cm, string mqName, string shmName 
     _mqName( mqName ),
     _shmm( shmName ),
     _ssm( _cm, _shmm.ssmBlockGet() ),
-    _tclkDecoder( TCLKDecoderFactory( "mock", _shmm.tclkBlockGet() ) )
+    _tclk( _cm, _shmm.tclkBlockGet() )
 {
   _shmm.configFileSet( _cm.configFileGet() );
 

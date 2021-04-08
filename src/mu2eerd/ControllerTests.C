@@ -297,22 +297,6 @@ TEST( StartupGroup, InitializeSSM )
   t.join();
 }
 
-TEST( OperationGroup, TCLKDecoderFactoryThrowsUnknown )
-{
-  TCLKSMB tclkBlock;
-  CHECK_THROWS( runtime_error, TCLKDecoderFactory( "unknown", tclkBlock ) );
-}
-
-TEST( OperationGroup, TCLKDecoderFactoryReturnsMock )
-{
-  TCLKSMB tclkBlock;
-  unique_ptr<ITCLKDecoderDriver> tclkDecoder = TCLKDecoderFactory( "mock", tclkBlock );
-
-  CHECK( nullptr != tclkDecoder.get() );
-
-  STRCMP_EQUAL( "mock", tclkBlock.driverNameGet().c_str() );
-}
-
 TEST( OperationGroup, VerifyPID )
 {
   CHECK( _shmc->pidGet() > 1 );

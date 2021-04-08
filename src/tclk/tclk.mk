@@ -8,16 +8,21 @@ ALL_OUT         += $(TCLK_HOST_OUT) $(TCLK_TARGET_OUT)
 ALL_SOURCES     += $(wildcard tclk/*.C)
 ALL_HEADERS     += $(wildcard tclk/*.H)
 
-TCLK_LIBS        = tclk.a api.a
+TCLK_LIBS        = tclk.a config.a api.a
 TCLK_LIBS_HOST   = $(addprefix $(HOST_BIN_DIR)/,$(TCLK_LIBS))
 TCLK_LIBS_TARGET = $(addprefix $(TARGET_BIN_DIR)/,$(TCLK_LIBS))
 
-TCLK_OBJS        = TCLKDecoderFactory.o ITCLKDecoderDriver.o TCLKDecoderDriverMock.o MulticastTCLKDecoderDriver.o
+TCLK_OBJS        = \
+	TCLKDecoderFactory.o \
+	ITCLKDecoderDriver.o \
+	TCLKDecoderDriverMock.o \
+	MulticastTCLKDecoderDriver.o \
+	TCLKSubsystem.o
 TCLK_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_OBJS))
 TCLK_OBJS_HOST   = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_OBJS))
 TCLK_OBJS_TARGET = $(addprefix $(TCLK_TARGET_OUT)/,$(TCLK_OBJS))
 
-TCLK_TEST_OBJS   = AllTests.o TCLKDecoderDriverMockTest.o
+TCLK_TEST_OBJS   = AllTests.o TCLKDecoderDriverMockTest.o TCLKSubsystemTest.o TCLKFactoryTest.o
 TCLK_TEST_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_TEST_OBJS))
 TCLK_TEST_OBJS_HOST = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_TEST_OBJS))
 
