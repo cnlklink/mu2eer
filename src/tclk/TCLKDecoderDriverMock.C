@@ -14,9 +14,8 @@
 using namespace Mu2eER;
 using namespace std;
 
-TCLKDecoderDriverMock::TCLKDecoderDriverMock( TCLKSMB& tclkSharedMemoryBlock )
+TCLKDecoderDriverMock::TCLKDecoderDriverMock()
 {
-  tclkSharedMemoryBlock.driverNameSet( "mock" );
 }
 
 TCLKDecoderDriverMock::~TCLKDecoderDriverMock()
@@ -59,6 +58,11 @@ TCLKDecoderDriverMock::eventSequenceSet( const vector<ITCLKDecoderDriver::tclk_e
     {
       _eventSequence.push_back( event );
     }
+}
+
+string TCLKDecoderDriverMock::nameGet() const
+{
+  return "mock";
 }
 
 ITCLKDecoderDriver::tclk_event_t TCLKDecoderDriverMock::waitForEvents()

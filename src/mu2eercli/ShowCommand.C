@@ -41,7 +41,7 @@ void ShowCommand::_outputTCLKSection() const
        << "============" << endl
        << "  Device driver: " << tclk.driverNameGet() << endl
        << "  TCLK signal status: Present" << endl
-       << "  FTP reset event counter: " << tclk.eventCounterGet() << endl;
+       << "  FTP reset event ($02) counter: " << tclk.eventCounterGet( 0x02 ) << endl;
 }
 
 void ShowCommand::run( unsigned int argc, const char* argv[] )

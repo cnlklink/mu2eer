@@ -23,11 +23,10 @@ namespace Mu2eER
    * TCLKDecoderFactory
    *
    * @param driverName The name of a driver to instantiate a TCLK decoder from
-   * @param tclkBlock Shared memory block that the TCLK decoder will write status to
    *
    * @return TCLK decoder
    */
-  unique_ptr<ITCLKDecoderDriver> TCLKDecoderFactory( string driverName, TCLKSMB& tclkBlock );
+  unique_ptr<ITCLKDecoderDriver> TCLKDecoderFactory( string driverName );
 }
 
 #endif

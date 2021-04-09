@@ -29,16 +29,14 @@ TEST_GROUP( TCLKFactoryCoreGroup )
 
 TEST( TCLKFactoryCoreGroup, ThrowsUnknown )
 {
-  TCLKSMB tclkBlock;
-  CHECK_THROWS( runtime_error, TCLKDecoderFactory( "unknown", tclkBlock ) );
+  CHECK_THROWS( runtime_error, TCLKDecoderFactory( "unknown" ) );
 }
 
 TEST( TCLKFactoryCoreGroup, ReturnsMock )
 {
-  TCLKSMB tclkBlock;
-  unique_ptr<ITCLKDecoderDriver> tclkDecoder = TCLKDecoderFactory( "mock", tclkBlock );
+  unique_ptr<ITCLKDecoderDriver> tclkDecoder = TCLKDecoderFactory( "mock" );
 
   CHECK( nullptr != tclkDecoder.get() );
 
-  STRCMP_EQUAL( "mock", tclkBlock.driverNameGet().c_str() );
+  STRCMP_EQUAL( "mock", tclkDecoder->nameGet().c_str() );
 }

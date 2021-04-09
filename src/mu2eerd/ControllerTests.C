@@ -355,3 +355,10 @@ TEST( OperationGroup, FaultSSM )
   
   CHECK_EQUAL( SSM_FAULT, ssm.currentStateGet() );
 }
+
+TEST( OperationGroup, TCLKStartup )
+{
+  auto& tclkSMB = _shmc->tclkBlockGet();
+
+  STRCMP_EQUAL( "mock", tclkSMB.driverNameGet().c_str() );
+}

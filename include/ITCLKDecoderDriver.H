@@ -75,6 +75,13 @@ namespace Mu2eER
     virtual unsigned int eventListMaxGet() const = 0;
 
     /**
+     * Get Name
+     *
+     * @return string Driver's name
+     */
+    virtual string nameGet() const = 0;
+
+    /**
      * Wait For Event
      *
      * Waits for one of the events in the TCLK Event List to occur.

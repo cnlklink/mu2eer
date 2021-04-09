@@ -26,10 +26,8 @@ namespace Mu2eER
   public:
     /**
      * Constructor
-     *
-     * @param tclkSharedMemoryBlock A reference to the shared memory block where TCLK status is published
      */
-    TCLKDecoderDriverMock( TCLKSMB& tclkSharedMemoryBlock );
+    TCLKDecoderDriverMock();
 
     /**
      * Destructor
@@ -51,6 +49,9 @@ namespace Mu2eER
      * Sets a sequence of TCLK events to be played back through calls to waitForEvents(..).
      */
     void eventSequenceSet( const vector<tclk_event_t>& sequence );
+
+    // Override
+    virtual string nameGet() const;
 
     // Override
     virtual tclk_event_t waitForEvents();

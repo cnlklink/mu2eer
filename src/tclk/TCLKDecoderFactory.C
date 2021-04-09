@@ -13,11 +13,11 @@
 
 namespace Mu2eER
 {
-  unique_ptr<ITCLKDecoderDriver> TCLKDecoderFactory( string driverName, TCLKSMB& tclkBlock )
+  unique_ptr<ITCLKDecoderDriver> TCLKDecoderFactory( string driverName )
   {
     if( 0 == driverName.compare( "mock" ) )
       {
-        return unique_ptr<ITCLKDecoderDriver>( new TCLKDecoderDriverMock( tclkBlock ) );
+        return unique_ptr<ITCLKDecoderDriver>( new TCLKDecoderDriverMock() );
       }
     else if( 0 == driverName.compare( "multicast" ) )
       {

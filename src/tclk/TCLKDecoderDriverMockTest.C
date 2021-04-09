@@ -16,11 +16,6 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
- * A shared memory block for the mock to dump it's state to
- */
-static TCLKSMB _tclkSMB;
-
-/**
  * A global TCLKDecoderDriverMock object used for all tests
  */
 static TCLKDecoderDriverMock* _gDriver;
@@ -35,7 +30,7 @@ TEST_GROUP( DecoderGroup )
   void setup()
   {
     // Create a new TCLKDecoderDriverMock for each test
-    _gDriver = new TCLKDecoderDriverMock( _tclkSMB );
+    _gDriver = new TCLKDecoderDriverMock();
   }
 
   void teardown()
@@ -45,32 +40,13 @@ TEST_GROUP( DecoderGroup )
 };
 
 /**
- * SMBGroup
+ * Get Driver Name Test
  *
- * Tests related to the shared memory interface.
+ * Tests that the name returned is "mock".
  */
-TEST_GROUP( SMBGroup )
+TEST( DecoderGroup, GetName )
 {
-  void setup()
-  {
-    // Create a new TCLKDecoderDriverMock for each test
-    _gDriver = new TCLKDecoderDriverMock( _tclkSMB );
-  }
-
-  void teardown()
-  {
-    delete _gDriver;
-  }
-};
-
-/**
- * Test SMB Initialization
- *
- * Tests that the shared memory block is initialized properly
- */
-TEST( SMBGroup, InitializeTest )
-{
-  STRCMP_EQUAL( "mock", _tclkSMB.driverNameGet().c_str() );
+  STRCMP_EQUAL( "mock", _gDriver->nameGet().c_str() );
 }
 
 /**

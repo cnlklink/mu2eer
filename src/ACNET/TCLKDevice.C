@@ -44,7 +44,7 @@ void TCLKDevice::eventCounterRead( Array<TCLKDevice::event_counter_read_t>& dest
   try
     {
       SharedMemoryClient shmc( _shmName );
-      dest[0] = shmc.tclkBlockGet().eventCounterGet();
+      dest[0] = shmc.tclkBlockGet().eventCounterGet( 0 );
     }
   catch( runtime_error e )
     {

@@ -28,6 +28,13 @@ namespace Mu2eER
   {
   public:
     /**
+     * Initialize
+     *
+     * Initialize the TCLK decoder and prepare to receive events.
+     */
+    void initialize();
+
+    /**
      * Constructor
      *
      * @param cm Reference to the configuration manager
@@ -40,6 +47,18 @@ namespace Mu2eER
      * TCLK decoder
      */
     unique_ptr<ITCLKDecoderDriver> _tclkDecoder;
+
+    /**
+     * TCLK Shared Memory Block
+     */
+    TCLKSMB& _sharedMemoryBlock;
+
+    /**
+     * Set the TCLK Decoder
+     *
+     * @param driverName The name of the TCLK decoder driver to be used
+     */
+    void _tclkDecoderSet( string driverName );
   };
 };
 

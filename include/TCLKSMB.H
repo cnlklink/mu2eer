@@ -45,9 +45,10 @@ namespace Mu2eER
     /**
      * Get Event Counter
      *
-     * @return A count of FTP reset events
+     * @param event TCLK event
+     * @return A count for the given TCLK event
      */
-    unsigned int eventCounterGet() const;
+    unsigned int eventCounterGet( uint8_t event ) const;
 
   private:
     /**
@@ -58,7 +59,12 @@ namespace Mu2eER
     /**
      * TCLK event counter
      */
-    unsigned int _eventCounter;
+    unsigned int _eventCounter[256];
+
+    /**
+     * Reset Event Counters
+     */
+    void _resetEventCounters();
   };
 };
 
