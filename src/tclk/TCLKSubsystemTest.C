@@ -6,7 +6,8 @@
  * @author jdiamond
  */
 
-#include <algorithm>
+#include <chrono>
+#include <thread>
 
 #include "CppUTest/TestHarness.h"
 
@@ -31,6 +32,34 @@ static TCLKSMB _tclkSMB;
 static TCLKSubsystem* _tclk;
 
 /**
+ * Construction Group
+ *
+ * Tests the construction of TCLKSubsystem.
+ */
+TEST_GROUP( TCLKSubsystemConstructionGroup )
+{
+  void setup()
+  {
+  }
+
+  void teardown()
+  {
+  }
+};
+
+/**
+ * Test Initial State
+ */
+TEST( TCLKSubsystemConstructionGroup, InitialState )
+{
+  TCLKSMB tclksmb;
+  TCLKSubsystem tclk( _cm, tclksmb );
+
+  STRCMP_EQUAL( "none", tclksmb.driverNameGet().c_str() );
+  CHECK_EQUAL( 0, tclksmb.eventCounterGet( 0x02 ) );
+}
+
+/**
  * Core Group
  *
  * Most tests.
@@ -47,15 +76,6 @@ TEST_GROUP( TCLKSubsystemCoreGroup )
     delete _tclk;
   }
 };
-
-/**
- * Test Initial State
- */
-TEST( TCLKSubsystemCoreGroup, InitialState )
-{
-  STRCMP_EQUAL( "none", _tclkSMB.driverNameGet().c_str() );
-  CHECK_EQUAL( 0, _tclkSMB.eventCounterGet( 0x02 ) );
-}
 
 /**
  * initialize() should set the driver name
@@ -76,8 +96,6 @@ TEST( TCLKSubsystemCoreGroup, FTPResetEventCounter )
 
   CHECK_EQUAL( 0, _tclkSMB.eventCounterGet( 0x02 ) );
 
-  /*
-    sleep( 5 );
-    CHECK_EQUAL( 1, _tclkSMB.eventCounterGet( 0x02 ) );
-  */
+  this_thread::sleep_for( chrono::seconds( 5 ) );
+  CHECK_EQUAL( 1, _tclkSMB.eventCounterGet( 0x02 ) );
 }

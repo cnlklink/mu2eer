@@ -17,7 +17,11 @@ namespace Mu2eER
   {
     if( 0 == driverName.compare( "mock" ) )
       {
-        return unique_ptr<ITCLKDecoderDriver>( new TCLKDecoderDriverMock() );
+        auto mock = new TCLKDecoderDriverMock();
+        
+        mock->eventSequenceSet( { 0x02 } );
+
+        return unique_ptr<ITCLKDecoderDriver>( mock );
       }
     else if( 0 == driverName.compare( "multicast" ) )
       {

@@ -20,9 +20,47 @@ TCLKSubsystem::TCLKSubsystem( const ConfigurationManager& cm, TCLKSMB& smb )
   _sharedMemoryBlock.driverNameSet( "none" );
 }
 
+TCLKSubsystem::~TCLKSubsystem()
+{
+  if( nullptr != _tclkDecoder.get() )
+    {
+      _stopEventReceiverThread();
+    }
+}
+
 void TCLKSubsystem::initialize()
 {
   _tclkDecoderSet( "mock" );
+
+  _registerTCLKEventsToReceive();
+  
+  _startEventReceiverThread();
+}
+
+void TCLKSubsystem::_registerTCLKEventsToReceive()
+{
+  _tclkDecoder->eventListAdd( ITCLKDecoderDriver::TCLK_FTP_RESET_EVENT );
+}
+
+void TCLKSubsystem::_startEventReceiverThread()
+{
+  _eventReceiverThread = unique_ptr<thread>( new thread( [this]() {
+        while( auto event = _tclkDecoder->waitForEvents() )
+          {
+            if( event == ITCLKDecoderDriver::TCLK_NEVER_EVENT )
+              {
+                // TODO - this is an error condition, need some way to trap it
+                break;
+              }
+
+            _sharedMemoryBlock.eventCounterIncrement( event );
+          }
+      } ) );
+}
+
+void TCLKSubsystem::_stopEventReceiverThread()
+{
+  _eventReceiverThread->join();
 }
 
 void TCLKSubsystem::_tclkDecoderSet( string driverName )

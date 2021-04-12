@@ -10,6 +10,7 @@
 #define TCLKSUBSYSTEM_H
 
 #include <memory>
+#include <thread>
 
 #include "ConfigurationManager.H"
 #include "ITCLKDecoderDriver.H"
@@ -42,7 +43,17 @@ namespace Mu2eER
      */
     TCLKSubsystem( const ConfigurationManager& cm, TCLKSMB& smb );
 
+    /**
+     * Destructor
+     */
+    ~TCLKSubsystem();
+
   private:
+    /**
+     * A thread for receiving and processing TCLK events from the TCLK decoder
+     */
+    unique_ptr<thread> _eventReceiverThread;
+
     /**
      * TCLK decoder
      */
@@ -52,6 +63,23 @@ namespace Mu2eER
      * TCLK Shared Memory Block
      */
     TCLKSMB& _sharedMemoryBlock;
+
+    /**
+     * Register TCLK Events to be Recieved
+     */
+    void _registerTCLKEventsToReceive();
+
+    /**
+     * Start Event Received Thread
+     *
+     * Instantiates a thread that waits and processes events received from the TCLK decoder.
+     */
+    void _startEventReceiverThread();
+
+    /**
+     * Stop Event Receiver Thread
+     */
+    void _stopEventReceiverThread();
 
     /**
      * Set the TCLK Decoder

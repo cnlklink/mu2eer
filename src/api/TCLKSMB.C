@@ -35,6 +35,11 @@ unsigned int TCLKSMB::eventCounterGet( uint8_t event ) const
   return _eventCounter[event];
 }
 
+void TCLKSMB::eventCounterIncrement( uint8_t event )
+{
+  _eventCounter[event]++;
+}
+
 void TCLKSMB::_resetEventCounters()
 {
   for( uint8_t i = 0; i < 255; i++ )

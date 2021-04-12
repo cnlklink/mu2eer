@@ -50,6 +50,13 @@ namespace Mu2eER
      */
     unsigned int eventCounterGet( uint8_t event ) const;
 
+    /**
+     * Increment Event Counter
+     *
+     * @param event TCLK event
+     */
+    void eventCounterIncrement( uint8_t event );
+
   private:
     /**
      * TCLK decoder driver name
