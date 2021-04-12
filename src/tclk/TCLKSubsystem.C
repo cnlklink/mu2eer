@@ -14,7 +14,8 @@ using namespace std;
 using namespace Mu2eER;
 
 TCLKSubsystem::TCLKSubsystem( const ConfigurationManager& cm, TCLKSMB& smb )
-  : _tclkDecoder( nullptr ),
+  : _configuration( cm ),
+    _tclkDecoder( nullptr ),
     _sharedMemoryBlock( smb )
 {
   _sharedMemoryBlock.driverNameSet( "none" );
@@ -30,7 +31,7 @@ TCLKSubsystem::~TCLKSubsystem()
 
 void TCLKSubsystem::initialize()
 {
-  _tclkDecoderSet( "mock" );
+  _tclkDecoderSet( _configuration.tclkDriverGet() );
 
   _registerTCLKEventsToReceive();
   

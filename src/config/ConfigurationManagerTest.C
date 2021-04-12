@@ -127,8 +127,8 @@ TEST( CoreGroup, ReloadConfig )
 
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );
 
-  _cm->tclkDriverSet( "real" );
-  STRCMP_EQUAL( "real", _cm->tclkDriverGet().c_str() );
+  _cm->tclkDriverSet( "onboard" );
+  STRCMP_EQUAL( "onboard", _cm->tclkDriverGet().c_str() );
 
   _cm->reload();
   STRCMP_EQUAL( "mock", _cm->tclkDriverGet().c_str() );

@@ -50,6 +50,11 @@ namespace Mu2eER
 
   private:
     /**
+     * Reference to the configuration manager
+     */
+    const ConfigurationManager& _configuration;
+
+    /**
      * A thread for receiving and processing TCLK events from the TCLK decoder
      */
     unique_ptr<thread> _eventReceiverThread;
