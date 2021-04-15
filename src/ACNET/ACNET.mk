@@ -67,7 +67,7 @@ acnet: acnet_adc acnet_mu2eerd acnet_ssm acnet_tclk
 acnet_adc: $(ACNET_LIBS_TARGET) $(ACNET_ADC_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_adc \
-		$(EES_ERL_LIBS)/$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
+		$(EES_ERL_LIBS)/cdev-$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
 		$(ACNET_ADC_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
@@ -75,7 +75,7 @@ acnet_adc: $(ACNET_LIBS_TARGET) $(ACNET_ADC_OBJS_PREFIX)
 acnet_mu2eerd: $(ACNET_LIBS_TARGET) $(ACNET_MU2EERD_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_mu2eerd \
-		$(EES_ERL_LIBS)/$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
+		$(EES_ERL_LIBS)/cdev-$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
 		$(ACNET_MU2EERD_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
@@ -83,7 +83,7 @@ acnet_mu2eerd: $(ACNET_LIBS_TARGET) $(ACNET_MU2EERD_OBJS_PREFIX)
 acnet_ssm: $(ACNET_LIBS_TARGET) $(ACNET_SSM_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_ssm \
-		$(EES_ERL_LIBS)/$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
+		$(EES_ERL_LIBS)/cdev-$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
 		$(ACNET_SSM_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
@@ -91,7 +91,7 @@ acnet_ssm: $(ACNET_LIBS_TARGET) $(ACNET_SSM_OBJS_PREFIX)
 acnet_tclk: $(ACNET_LIBS_TARGET) $(ACNET_TCLK_OBJS_PREFIX) 
 	@echo "-m-> Linking $@ (target)..."
 	$(EES_OUT) $(CXX) -o $(ACNET_TARGET_OUT)/acnet_tclk \
-		$(EES_ERL_LIBS)/$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
+		$(EES_ERL_LIBS)/cdev-$(EES_CDEV_VERSION)/priv/fef_driver_lib.o \
 		$(ACNET_TCLK_OBJS_TARGET) \
 		$(ACNET_LIBS_TARGET) \
 		$(EES_LDFLAGS) $(DEV_LIBS) -L$(MYLIBS) -lerl_interface -lei
