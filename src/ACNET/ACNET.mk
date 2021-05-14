@@ -102,7 +102,8 @@ acnet_tests: $(BIN_DIR) $(ACNET_TEST_OBJS_PREFIX) $(ACNET_ADC_OBJS_PREFIX) $(ACN
 		$(ACNET_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/mu2eerd/Controller.o \
 		$(ACNET_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(ACNET_HOST_OUT)/acnet_tests $(TEST_RUN_FLAGS)
 

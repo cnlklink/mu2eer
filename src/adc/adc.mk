@@ -46,6 +46,7 @@ adc_tests: $(BIN_DIR) $(HOST_BIN_DIR)/adc.a $(ADC_TEST_OBJS_PREFIX)
 	$(EES_OUT) $(HOST_CXX) -o $(ADC_HOST_OUT)/adc_tests \
 		$(ADC_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/adc.a \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(ADC_HOST_OUT)/adc_tests $(TEST_RUN_FLAGS)

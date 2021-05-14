@@ -51,6 +51,7 @@ mu2eerd_tests: $(MU2EERD_LIBS_HOST) $(MU2EERD_TEST_OBJS_PREFIX)
 	$(EES_OUT) $(HOST_CXX) -o $(MU2EERD_HOST_OUT)/mu2eerd_tests \
 		$(MU2EERD_TEST_OBJS_HOST) \
 		$(MU2EERD_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	$(EES_OUT)./$(MU2EERD_HOST_OUT)/mu2eerd_tests $(TEST_RUN_FLAGS)

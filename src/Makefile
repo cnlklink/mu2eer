@@ -1,5 +1,5 @@
 # Un-comment to display shell commands
-EES_OUT = 
+# EES_OUT = 
 
 # Configure ELSD build tools
 EES_PREFIX	         = $(prefix)

@@ -58,6 +58,7 @@ api_tests: $(API_LIBS_HOST) $(API_TEST_OBJS_PREFIX) mu2eerd/Controller.o
 		$(API_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/mu2eerd/Controller.o \
 		$(API_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(API_HOST_OUT)/api_tests $(TEST_RUN_FLAGS)

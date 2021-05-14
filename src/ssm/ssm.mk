@@ -50,6 +50,7 @@ ssm_tests: $(SSM_LIBS_HOST) $(SSM_TEST_OBJS_PREFIX)
 	$(EES_OUT) $(HOST_CXX) -o $(SSM_HOST_OUT)/ssm_tests \
 		$(SSM_TEST_OBJS_HOST) \
 		$(SSM_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(SSM_HOST_OUT)/ssm_tests $(TEST_RUN_FLAGS)

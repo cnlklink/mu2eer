@@ -72,6 +72,7 @@ mu2eercli_tests: $(MU2EERCLI_LIBS_HOST) $(MU2EERCLI_TEST_OBJS_PREFIX) mu2eerd/Co
 		$(MU2EERCLI_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/mu2eerd/Controller.o \
 		$(MU2EERCLI_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(MU2EERCLI_HOST_OUT)/mu2eercli_tests $(TEST_RUN_FLAGS)

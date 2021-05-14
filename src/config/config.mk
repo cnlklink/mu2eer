@@ -51,6 +51,7 @@ config_tests: $(HOST_BIN_DIR)/config.a $(CONFIG_TEST_OBJS_PREFIX)
 		$(CONFIG_TEST_OBJS_HOST) \
 		$(HOST_BIN_DIR)/config.a \
 		$(CONFIG_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(CONFIG_HOST_OUT)/config_tests $(TEST_RUN_FLAGS)

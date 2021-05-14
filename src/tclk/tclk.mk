@@ -55,6 +55,7 @@ tclk_tests: $(TCLK_LIBS_HOST) $(TCLK_TEST_OBJS_PREFIX)
 	$(EES_OUT) $(HOST_CXX) -o $(TCLK_HOST_OUT)/tclk_tests \
 		$(TCLK_TEST_OBJS_HOST) \
 		$(TCLK_LIBS_HOST) \
-		$(DEV_LIBS) $(TEST_FLAGS)
+		$(DEV_LIBS) $(TEST_FLAGS) \
+		-L$(HOST_LIB_DIR)
 	@echo "-m-> Running $@..."
 	@./$(TCLK_HOST_OUT)/tclk_tests $(TEST_RUN_FLAGS)
