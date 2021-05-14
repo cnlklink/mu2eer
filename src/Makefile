@@ -1,5 +1,5 @@
 # Un-comment to display shell commands
-# EES_OUT = 
+EES_OUT = 
 
 # Configure ELSD build tools
 EES_PREFIX	         = $(prefix)
@@ -36,9 +36,12 @@ TEST_FLAGS      = -lCppUTest -lCppUTestExt -fprofile-arcs -ftest-coverage
 # Flags passed when the tests are ran
 TEST_RUN_FLAGS  ?= -c
 
+# Library locations
+HOST_LIB_DIR	= /usr/local/products/lib
+
 # -lrt needed for POSIX shared memory
-DEV_LIBS        = -lconfig++ -lrt
-TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt
+DEV_LIBS        = -lconfig++ -lrt -lmcastrecv
+TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt -lmcastrecv
 
 EES_HOST_CPPFLAGS = -I/usr/local/products/include \
 	-I$(INC_DIR) \

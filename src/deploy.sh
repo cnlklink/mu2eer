@@ -44,7 +44,7 @@ fi
 
 if [ -n "$DT_FILE" ]; then
     DT_SOURCE=$STABLE_BUILD/output/images/$DT_FILE
-    DT_DEST=vxbuild1:$IMAGE_LOCATION/$DT_FILE
+    DT_DEST=vxbuild1:$IMAGE_LOCATION/linuxDT.dtb
     do_scp $DT_SOURCE $DT_DEST
 fi
 

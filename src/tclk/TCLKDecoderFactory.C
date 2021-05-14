@@ -25,7 +25,7 @@ namespace Mu2eER
       }
     else if( 0 == driverName.compare( "multicast" ) )
       {
-        throw runtime_error( "Not implemented yet" );
+        return unique_ptr<ITCLKDecoderDriver>( new MulticastTCLKDecoderDriver() );
       }
     else if( 0 == driverName.compare( "onboard" ) )
       {

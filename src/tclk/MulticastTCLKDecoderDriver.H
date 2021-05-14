@@ -15,6 +15,7 @@
 #include <mcastrecv.h>
 
 #include "ITCLKDecoderDriver.H"
+#include "TCLKSMB.H"
 
 namespace Mu2eER
 {
@@ -36,6 +37,21 @@ namespace Mu2eER
      * Desctructor
      */
     ~MulticastTCLKDecoderDriver();
+
+    // Override
+    virtual void eventListAdd( tclk_event_t event );
+
+    // Override
+    virtual vector<tclk_event_t> eventListGet() const;
+
+    // Override
+    virtual unsigned int eventListMaxGet() const;
+
+    // Override
+    virtual string nameGet() const;
+
+    // Override
+    virtual tclk_event_t waitForEvents();
 
   private:
     /**

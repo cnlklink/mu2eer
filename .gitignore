@@ -10,3 +10,4 @@ adc_tests
 tclk_tests
 bin
 docs
+gcov.result

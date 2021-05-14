@@ -18,7 +18,7 @@ BOOT_LOCATION=/fecode-bd/linux_boot/ees/srs
 IMAGE_FILE=zImage
 
 # Device tree filename
-DT_FILE="linuxDT.dtb"
+DT_FILE="linuxDT_mu2eer.dtb"
 
 # Rootfs filename
 ROOTFS_FILE=
