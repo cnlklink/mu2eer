@@ -299,12 +299,14 @@ void SSMDevice::initCollection( ReqInfo const* reqinfo )
   }
 
   if ( request_id == 0 )
-  {
-    syslog( LOG_INFO, "SSMDevice::initCollection(): ERROR - All ftp_requests are in use." );
-    throw Ex_FTPLIMIT;
-  }
-
-  request_index = i;
+    {
+      syslog( LOG_INFO, "SSMDevice::initCollection(): ERROR - All ftp_requests are in use." );
+      throw Ex_FTPLIMIT;
+    }
+  else
+    {
+      request_index = i;
+    }
 
   dataRate = (uint32_t)( 1000000.0 / ((float)evVal) );
 
