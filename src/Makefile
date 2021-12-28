@@ -72,6 +72,7 @@ DB_DIR		:= ../db
 SCP             = scp -q
 SSH             = ssh -K
 HOST_GCOV       = gcov -r
+STATIC_ANALYSIS	= cppcheck --error-exitcode=1
 
 TARGET_TEST_HOSTNAME = srsd
 
@@ -89,6 +90,8 @@ include tclk/tclk.mk
 
 # Compile all C++ modules
 %.o: %.C Makefile $(BIN_DIR)
+	@ echo "-m-> Static analysis of $< ..."
+	$(EES_OUT) $(STATIC_ANALYSIS) $<
 	@ echo "-m-> Compiling C++ file $< (target) ..."
 	$(EES_OUT) $(CXX) -c -o $(TARGET_BIN_DIR)/$*.o $(EES_CPPFLAGS) $<
 	@ echo "-m-> Compiling C++ file $< (host) ..."
