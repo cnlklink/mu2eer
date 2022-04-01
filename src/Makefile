@@ -11,7 +11,7 @@ EES_TARGET_BOARD_VARIANT = mu2eer
 EES_TARGET_OS            = linux
 EES_TARGET_OS_VERSION    = 4.1.22-ltsi
 EES_BR_BASE              = /usr/local/products/buildroot/achilles_mu2eer
-EES_CDEV_VERSION         = 1.4
+EES_CDEV_VERSION         = 1.5
 
 # Include ELSD build tools
 include /usr/local/products/elsd/include/elsd-latest.mk
