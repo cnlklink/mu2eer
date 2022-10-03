@@ -37,10 +37,10 @@ ACNET_TCLK_OBJS_HOST   = $(addprefix $(ACNET_HOST_OUT)/,$(ACNET_TCLK_OBJS))
 ACNET_TCLK_OBJS_TARGET = $(addprefix $(ACNET_TARGET_OUT)/,$(ACNET_TCLK_OBJS))
 
 ACNET_TEST_OBJS        = ADCDevice.o \
-	ADCDeviceTest.o \
+	ADCDeviceTests.o \
 	DaemonController.o \
 	Mu2eerdDevice.o \
-	Mu2eerdDeviceTest.o \
+	Mu2eerdDeviceTests.o \
 	SSMDevice.o \
 	SSMDeviceTests.o \
 	SystemController.o \
