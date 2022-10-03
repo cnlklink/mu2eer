@@ -13,7 +13,7 @@ ADC_OBJS_PREFIX      = $(addprefix adc/,$(ADC_OBJS))
 ADC_OBJS_HOST        = $(addprefix $(ADC_HOST_OUT)/,$(ADC_OBJS))
 ADC_OBJS_TARGET      = $(addprefix $(ADC_TARGET_OUT)/,$(ADC_OBJS))
 
-ADC_TEST_OBJS        = AllTests.o ADCDriverStubTest.o
+ADC_TEST_OBJS        = AllTests.o ADCDriverStubTests.o
 ADC_TEST_OBJS_PREFIX = $(addprefix adc/,$(ADC_TEST_OBJS))
 ADC_TEST_OBJS_HOST   = $(addprefix $(ADC_HOST_OUT)/,$(ADC_TEST_OBJS))
 

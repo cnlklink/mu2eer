@@ -22,7 +22,7 @@ TCLK_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_OBJS))
 TCLK_OBJS_HOST   = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_OBJS))
 TCLK_OBJS_TARGET = $(addprefix $(TCLK_TARGET_OUT)/,$(TCLK_OBJS))
 
-TCLK_TEST_OBJS   = AllTests.o TCLKDecoderDriverMockTest.o TCLKSubsystemTest.o TCLKFactoryTest.o
+TCLK_TEST_OBJS   = AllTests.o TCLKDecoderDriverMockTests.o TCLKSubsystemTests.o TCLKFactoryTests.o
 TCLK_TEST_OBJS_PREFIX = $(addprefix tclk/,$(TCLK_TEST_OBJS))
 TCLK_TEST_OBJS_HOST = $(addprefix $(TCLK_HOST_OUT)/,$(TCLK_TEST_OBJS))
 

@@ -17,7 +17,7 @@ CONFIG_OBJS_PREFIX = $(addprefix config/,$(CONFIG_OBJS))
 CONFIG_OBJS_HOST   = $(addprefix $(CONFIG_HOST_OUT)/,$(CONFIG_OBJS))
 CONFIG_OBJS_TARGET = $(addprefix $(CONFIG_TARGET_OUT)/,$(CONFIG_OBJS))
 
-CONFIG_TEST_OBJS   = AllTests.o ConfigurationManagerTest.o
+CONFIG_TEST_OBJS   = AllTests.o ConfigurationManagerTests.o
 CONFIG_TEST_OBJS_PREFIX = $(addprefix config/,$(CONFIG_TEST_OBJS))
 CONFIG_TEST_OBJS_HOST = $(addprefix $(CONFIG_HOST_OUT)/,$(CONFIG_TEST_OBJS))
 

@@ -15,6 +15,8 @@ EES_CDEV_VERSION         = 1.5
 
 # Include ELSD build tools
 include /usr/local/products/elsd/include/elsd-latest.mk
+EES_CROSS_TOOLS_PREFIX = $(EES_BR_BASE)/host/usr/bin/$(EES_TARGET_ARCH)-$(EES_TARGET_OS)$(EES_TARGET_ARCH2)
+EES_PREFIX             = $(EES_BR_BASE)/staging
 
 EES_CPPFLAGS	= -I$(INC_DIR) \
 	-I$(EES_CDEV_INC) \
@@ -45,6 +47,7 @@ TARGET_LIBS     = -lerl_interface -lei -lconfig++ -lrt -lmcastrecv
 
 EES_HOST_CPPFLAGS = -I/usr/local/products/include \
 	-I$(INC_DIR) \
+	-I/usr/local/include \
 	-fno-strict-aliasing \
 	-std=c++0x \
 	$(DEV_LIBS) \
@@ -92,8 +95,10 @@ include tclk/tclk.mk
 %.o: %.C Makefile $(BIN_DIR)
 	@ echo "-m-> Static analysis of $< ..."
 	$(EES_OUT) $(STATIC_ANALYSIS) $<
-	@ echo "-m-> Compiling C++ file $< (target) ..."
-	$(EES_OUT) $(CXX) -c -o $(TARGET_BIN_DIR)/$*.o $(EES_CPPFLAGS) $<
+	$(EES_OUT) if [[ "$*.C" != *"Tests.C" ]]; then \
+		echo "-m-> Compiling C++ file $< (target) ..."; \
+		$(CXX) -c -o $(TARGET_BIN_DIR)/$*.o $(EES_CPPFLAGS) $<; \
+	fi
 	@ echo "-m-> Compiling C++ file $< (host) ..."
 	$(EES_OUT) $(HOST_CXX) -c -o $(HOST_BIN_DIR)/$*.o $(EES_HOST_CPPFLAGS) $<
 	@ touch $*.o
