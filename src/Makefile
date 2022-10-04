@@ -143,6 +143,7 @@ $(BIN_DIR): $(ALL_OUT)
 # Install target used by ees-buildroot
 install_buildroot_target: install_buildroot_pkginfo
 	install -d $(EES_BIN)
+	mkdir -p $(EES_PREFIX)/etc/init.d
 	install -D -m 0755 $(@D)/../etc/init.d/* $(EES_PREFIX)/etc/init.d/
 	mkdir -p $(EES_PREFIX)/etc/mu2eer.d
 	install -D -m 0744 $(@D)/../etc/mu2eer.d/* $(EES_PREFIX)/etc/mu2eer.d/
