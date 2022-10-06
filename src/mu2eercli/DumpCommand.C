@@ -30,7 +30,6 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   std::ofstream fileToCreate("spill_data.csv");
   fileToCreate << "Entry, Ideal Spill Data, Actual Spill Data, Error Signal Data" << endl << endl;
   for (i = 0; i < size; i++) {
-    cout << i << ", " << ideal[i] << ", " << actual[i] << ", " << error[i] << endl;
     fileToCreate << i << ", " << ideal[i] << ", " << actual[i] << ", " << error[i] << endl;
   }
 
