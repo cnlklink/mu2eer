@@ -27,11 +27,9 @@ void DumpCommand::run( unsigned int argc, const char* argv[] )
   auto actual = _shmc.ssmBlockGet().actualSpillWaveFormGet();
   auto error = _shmc.ssmBlockGet().errorSignalWaveFormGet();
 
-  std::ofstream fileToCreate("spill_data.csv");
-  fileToCreate << "Entry, Ideal Spill Data, Actual Spill Data, Error Signal Data" << endl << endl;
-  for (i = 0; i < size; i++) {
-    fileToCreate << i << ", " << ideal[i] << ", " << actual[i] << ", " << error[i] << endl;
-  }
-
-  fileToCreate.close();
+  cout << "Entry, Ideal Spill Data, Actual Spill Data, Error Signal Data" << endl << endl;
+  for (i = 0; i < size; i++) 
+    {
+      cout << i << ", " << ideal[i] << ", " << actual[i] << ", " << error[i] << endl;
+    }
 }
