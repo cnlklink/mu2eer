@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 
 #include "CLI.H"
 #include "../mu2eerd/Controller.H"
@@ -226,6 +227,22 @@ TEST( DumpGroup, Run )
   const char *argv[] = { "mu2eercli", "dump" };
 
   _cli->run( argc, argv );
+}
+
+TEST( DumpGroup, RedirectCout )
+{
+  // Given cout has been redirected to testStream
+  stringstream testStream;
+  auto coutBuf = cout.rdbuf( testStream.rdbuf() );
+
+  // When I send the test string to cout...
+  cout << "testing...1.2.3...";
+
+  // Then the test string is stored in testStream...
+  STRCMP_EQUAL( "testing...1.2.3...", testStream.str().c_str() );
+
+  // but remember to cleanup cout!
+  cout.rdbuf( coutBuf );
 }
 
 /**

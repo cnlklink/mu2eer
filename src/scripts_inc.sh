@@ -24,7 +24,7 @@ DT_FILE="linuxDT_mu2eer.dtb"
 ROOTFS_FILE=
 
 # Dabbel files
-DABBEL_DIR=output/build/mu2eer-master/db
+DABBEL_DIR=build/mu2eer-master/db
 DABBEL_TEST_FILE=devices_test.dabbel
 DABBEL_PROD_FILE=
 

@@ -21,7 +21,7 @@ usage()
     printf "Usage: $0\n"
 }
 
-JENKINS_BUILDNUM_FILE=$STABLE_BUILD/output/target/etc/jenkins_build_number
+JENKINS_BUILDNUM_FILE=$STABLE_BUILD/target/etc/jenkins_build_number
 if [ ! -s "$JENKINS_BUILDNUM_FILE" ]; then
     printf "Jenkins build number file does not exist: $JENKINS_BUILDNUM_FILE.  Aborting!\n"
     exit 1;
@@ -37,19 +37,19 @@ printf "  Boot location is $BOOT_LOCATION\n"
 do_remote "Creating destination directory on vxbuild1", "mkdir -p $IMAGE_LOCATION"
 
 if [ -n "$IMAGE_FILE" ]; then
-    IMAGE_SOURCE=$STABLE_BUILD/output/images/$IMAGE_FILE
+    IMAGE_SOURCE=$STABLE_BUILD/images/$IMAGE_FILE
     IMAGE_DEST=vxbuild1:$IMAGE_LOCATION/$IMAGE_FILE
     do_scp $IMAGE_SOURCE $IMAGE_DEST
 fi
 
 if [ -n "$DT_FILE" ]; then
-    DT_SOURCE=$STABLE_BUILD/output/images/$DT_FILE
+    DT_SOURCE=$STABLE_BUILD/images/$DT_FILE
     DT_DEST=vxbuild1:$IMAGE_LOCATION/linuxDT.dtb
     do_scp $DT_SOURCE $DT_DEST
 fi
 
 if [ -n "$ROOTFS_FILE" ]; then
-    ROOTFS_SOURCE=$STABLE_BUILD/output/images/$ROOTFS_FILE
+    ROOTFS_SOURCE=$STABLE_BUILD/images/$ROOTFS_FILE
     ROOTFS_DEST=vxbuild1:$IMAGE_LOCATION/$ROOTFS_FILE
     do_scp $ROOTFS_SOURCE $ROOTFS_DEST
 fi
