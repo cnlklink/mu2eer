@@ -18,6 +18,16 @@ using namespace Mu2eER;
 using namespace std;
 
 /**
+ * Output stream
+ */
+static stringstream* _outputStream;
+
+/**
+ * cout streambuf
+ */
+static streambuf* _coutBuf = 0;
+
+/**
  * Global CLI object
  */
 static CLI* _cli;
@@ -58,11 +68,19 @@ TEST_GROUP( PIDGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
@@ -101,12 +119,21 @@ TEST_GROUP( ShutdownGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     Controller::testDaemonCleanup();
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
+
   }
 };
 
@@ -139,11 +166,19 @@ TEST_GROUP( ShowGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
@@ -174,11 +209,19 @@ TEST_GROUP( StartGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
@@ -209,11 +252,19 @@ TEST_GROUP( DumpGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
@@ -226,23 +277,15 @@ TEST( DumpGroup, Run )
   unsigned int argc = 2;
   const char *argv[] = { "mu2eercli", "dump" };
 
+  // When I execute the dump command
   _cli->run( argc, argv );
-}
 
-TEST( DumpGroup, RedirectCout )
-{
-  // Given cout has been redirected to testStream
-  stringstream testStream;
-  auto coutBuf = cout.rdbuf( testStream.rdbuf() );
+  // Then the header is in the output stream
+  STRCMP_CONTAINS( "Entry, Ideal Spill Data, Actual Spill Data, Error Signal Data\n\n", _outputStream->str().c_str() );
 
-  // When I send the test string to cout...
-  cout << "testing...1.2.3...";
-
-  // Then the test string is stored in testStream...
-  STRCMP_EQUAL( "testing...1.2.3...", testStream.str().c_str() );
-
-  // but remember to cleanup cout!
-  cout.rdbuf( coutBuf );
+  // And the value in the first sample is 15999
+  STRCMP_CONTAINS( "0, 15999, 15999, 0\n", _outputStream->str().c_str() );
+  STRCMP_CONTAINS( "15999, 0, 0, 0\n", _outputStream->str().c_str() );
 }
 
 /**
@@ -260,11 +303,19 @@ TEST_GROUP( FaultGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
@@ -307,11 +358,19 @@ TEST_GROUP( ResetGroup )
     shmc.waitForState( MU2EERD_RUNNING );
 
     _cli = new CLI( Controller::TEST_DAEMON_CMQ_NAME, Controller::TEST_DAEMON_SHM_NAME );
+
+    // Redirect cout to an empty output stream
+    _outputStream = new stringstream();
+    _coutBuf = cout.rdbuf( _outputStream->rdbuf() );
   }
 
   void teardown()
   {
     delete _cli;
+
+    // restore cout!
+    cout.rdbuf( _coutBuf );
+    delete _outputStream;
 
     ControlMQClient mqc( Controller::TEST_DAEMON_CMQ_NAME );
     mqc.shutdown();
